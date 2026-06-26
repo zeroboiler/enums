@@ -1,0 +1,50 @@
+{
+    "name": "novaforge/enums",
+    "description": "Zero-boilerplate smart enum system with attribute-based metadata, auto-casting, validation and serialization for Laravel",
+    "type": "library",
+    "license": "proprietary",
+    "version": "0.1.0",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.5",
+        "illuminate/contracts": "^13.0",
+        "illuminate/support": "^13.0",
+        "illuminate/validation": "^13.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.0",
+        "phpstan/phpstan": "^2.0",
+        "laravel/pint": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "NovaForge\\Enums\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NovaForge\\Enums\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "analyse": "phpstan analyse",
+        "lint": "pint"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NovaForge\\Enums\\EnumsServiceProvider"
+            ],
+            "aliases": {
+                "Enum": "NovaForge\\Enums\\Facades\\Enum"
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
