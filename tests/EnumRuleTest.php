@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use NovaForge\Enums\Rules\EnumRule;
-use NovaForge\Enums\Tests\Fixtures\UserStatus;
+use ZeroBoiler\Enums\Rules\EnumRule;
+use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
 
 describe('EnumRule', function () {
     it('passes for valid enum value', function () {

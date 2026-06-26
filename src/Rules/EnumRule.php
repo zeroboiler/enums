@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums\Rules;
+namespace ZeroBoiler\Enums\Rules;
 
 use BackedEnum;
 use Closure;

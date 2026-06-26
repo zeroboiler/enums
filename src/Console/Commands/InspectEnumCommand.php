@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums\Console\Commands;
+namespace ZeroBoiler\Enums\Console\Commands;
 
 use Illuminate\Console\Command;
 use ReflectionEnum;
@@ -11,11 +11,11 @@ use ReflectionEnum;
  * Inspect and display enum metadata.
  *
  * Usage:
- *   php artisan novaforge:enum-inspect "App\Enums\UserStatus"
+ *   php artisan zeroboiler:enum-inspect "App\Enums\UserStatus"
  */
 final class InspectEnumCommand extends Command
 {
-    protected $signature = 'novaforge:enum-inspect {class : The enum class FQN}';
+    protected $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
 
     protected $description = 'Inspect a NovaForge smart enum — show all metadata in a table';
 

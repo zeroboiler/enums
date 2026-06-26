@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use NovaForge\Enums\Tests\Fixtures\OrderStatus;
-use NovaForge\Enums\Tests\Fixtures\Priority;
-use NovaForge\Enums\Tests\Fixtures\UserStatus;
+use ZeroBoiler\Enums\Tests\Fixtures\OrderStatus;
+use ZeroBoiler\Enums\Tests\Fixtures\Priority;
+use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
 
 describe('UserStatus enum (full attributes)', function () {
     it('has correct per-case label', function () {

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums\Tests\Fixtures;
+namespace ZeroBoiler\Enums\Tests\Fixtures;
 
-use NovaForge\Enums\Attributes\Color;
-use NovaForge\Enums\Attributes\Description;
-use NovaForge\Enums\Attributes\EnumColor;
-use NovaForge\Enums\Enums;
-use NovaForge\Enums\Attributes\Icon;
-use NovaForge\Enums\Attributes\Label;
-use NovaForge\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Attributes\Description;
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Enums;
+use ZeroBoiler\Enums\Attributes\Icon;
+use ZeroBoiler\Enums\Attributes\Label;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
 
 /**
  * Full-featured test enum — uses class-level and per-case attributes.

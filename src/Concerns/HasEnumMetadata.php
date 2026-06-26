@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums\Concerns;
+namespace ZeroBoiler\Enums\Concerns;
 
 use BackedEnum;
-use NovaForge\Enums\Attributes\Color;
-use NovaForge\Enums\Attributes\Description;
-use NovaForge\Enums\Attributes\EnumColor;
-use NovaForge\Enums\Attributes\EnumDescription;
-use NovaForge\Enums\Attributes\EnumIcon;
-use NovaForge\Enums\Attributes\EnumLabel;
-use NovaForge\Enums\Attributes\Icon;
-use NovaForge\Enums\Attributes\Label;
+use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Attributes\Description;
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Attributes\EnumDescription;
+use ZeroBoiler\Enums\Attributes\EnumIcon;
+use ZeroBoiler\Enums\Attributes\EnumLabel;
+use ZeroBoiler\Enums\Attributes\Icon;
+use ZeroBoiler\Enums\Attributes\Label;
 use ReflectionEnum;
 use UnitEnum;
 

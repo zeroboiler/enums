@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums\Exceptions;
+namespace ZeroBoiler\Enums\Exceptions;
 
 use Exception;
 

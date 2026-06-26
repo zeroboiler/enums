@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums;
+namespace ZeroBoiler\Enums;
 
 use BackedEnum;
 

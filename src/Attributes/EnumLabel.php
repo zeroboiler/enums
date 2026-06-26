@@ -2,7 +2,7 @@
 
 declare(strict=1);
 
-namespace NovaForge\Enums\Attributes;
+namespace ZeroBoiler\Enums\Attributes;
 
 use Attribute;
 

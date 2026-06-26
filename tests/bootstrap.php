@@ -11,8 +11,8 @@ declare(strict_types=1);
 // Simple autoloader for the package (for standalone testing)
 spl_autoload_register(function (string $class): void {
     $prefixes = [
-        'NovaForge\\Enums\\' => __DIR__ . '/../src/',
-        'NovaForge\\Enums\\Tests\\' => __DIR__ . '/',
+        'ZeroBoiler\\Enums\\' => __DIR__ . '/../src/',
+        'ZeroBoiler\\Enums\\Tests\\' => __DIR__ . '/',
     ];
 
     foreach ($prefixes as $prefix => $baseDir) {

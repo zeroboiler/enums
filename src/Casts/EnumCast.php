@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums\Casts;
+namespace ZeroBoiler\Enums\Casts;
 
 use BackedEnum;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;

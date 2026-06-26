@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums\Facades;
+namespace ZeroBoiler\Enums\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -15,6 +15,6 @@ final class Enum extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'novaforge.enum';
+        return 'zeroboiler.enum';
     }
 }

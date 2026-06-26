@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums\Tests\Fixtures;
+namespace ZeroBoiler\Enums\Tests\Fixtures;
 
-use NovaForge\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
 
 /**
  * Minimal enum — no attributes, auto-generate everything.

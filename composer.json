@@ -1,5 +1,5 @@
 {
-    "name": "novaforge/enums",
+    "name": "zeroboiler/enums",
     "description": "Zero-boilerplate smart enum system with attribute-based metadata, auto-casting, validation and serialization for Laravel",
     "type": "library",
     "license": "proprietary",
@@ -19,12 +19,12 @@
     },
     "autoload": {
         "psr-4": {
-            "NovaForge\\Enums\\": "src/"
+            "ZeroBoiler\\Enums\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NovaForge\\Enums\\Tests\\": "tests/"
+            "ZeroBoiler\\Enums\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -35,10 +35,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "NovaForge\\Enums\\EnumsServiceProvider"
+                "ZeroBoiler\\Enums\\EnumsServiceProvider"
             ],
             "aliases": {
-                "Enum": "NovaForge\\Enums\\Facades\\Enum"
+                "Enum": "ZeroBoiler\\Enums\\Facades\\Enum"
             }
         }
     },

@@ -1,4 +1,4 @@
-# NovaForge Enums
+# ZeroBoiler Enums
 
 Zero-boilerplate smart enum system for Laravel.
 
@@ -11,17 +11,17 @@ Zero-boilerplate smart enum system for Laravel.
 - **Validation rule** — `EnumRule::for(UserStatus::class)`
 - **Bulk helpers** — `forSelect()`, `forApi()`, `values()`, `labels()`
 - **Reverse lookup** — `tryFromLabel('Active User')`
-- **CLI tools** — `novaforge:enum-test`, `novaforge:enum-inspect`
+- **CLI tools** — `zeroboiler:enum-test`, `zeroboiler:enum-inspect`
 
 ## Usage
 
 ```php
-use NovaForge\Enums\Attributes\EnumColor;
-use NovaForge\Enums\Attributes\Color;
-use NovaForge\Enums\Attributes\Label;
-use NovaForge\Enums\Attributes\Icon;
-use NovaForge\Enums\Attributes\Description;
-use NovaForge\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Attributes\Label;
+use ZeroBoiler\Enums\Attributes\Icon;
+use ZeroBoiler\Enums\Attributes\Description;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
 
 #[EnumColor(success: ['active'], danger: ['banned'], warning: ['pending', 'suspended'])]
 enum UserStatus: string
@@ -83,7 +83,7 @@ protected $casts = [
 ### Validation
 
 ```php
-use NovaForge\Enums\Rules\EnumRule;
+use ZeroBoiler\Enums\Rules\EnumRule;
 
 'status' => ['required', EnumRule::for(UserStatus::class)],
 ```
@@ -91,10 +91,10 @@ use NovaForge\Enums\Rules\EnumRule;
 ### CLI Commands
 
 ```bash
-php artisan novaforge:enum-test "App\Enums\UserStatus"
-php artisan novaforge:enum-inspect "App\Enums\UserStatus"
+php artisan zeroboiler:enum-test "App\Enums\UserStatus"
+php artisan zeroboiler:enum-inspect "App\Enums\UserStatus"
 ```
 
 ## License
 
-Proprietary — © NovaForge
+Proprietary — © ZeroBoiler

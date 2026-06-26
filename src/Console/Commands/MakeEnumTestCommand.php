@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums\Console\Commands;
+namespace ZeroBoiler\Enums\Console\Commands;
 
 use Illuminate\Console\Command;
-use NovaForge\Enums\Support\EnumTestGenerator;
+use ZeroBoiler\Enums\Support\EnumTestGenerator;
 use ReflectionEnum;
 
 /**
  * Generate Pest tests for an enum class.
  *
  * Usage:
- *   php artisan novaforge:enum-test "App\Enums\UserStatus"
- *   php artisan novaforge:enum-test "App\Enums\UserStatus" --dir=tests/Unit/Enums
+ *   php artisan zeroboiler:enum-test "App\Enums\UserStatus"
+ *   php artisan zeroboiler:enum-test "App\Enums\UserStatus" --dir=tests/Unit/Enums
  */
 final class MakeEnumTestCommand extends Command
 {
-    protected $signature = 'novaforge:enum-test {class : The enum class FQN} {--dir= : Output directory}';
+    protected $signature = 'zeroboiler:enum-test {class : The enum class FQN} {--dir= : Output directory}';
 
     protected $description = 'Generate Pest tests for a NovaForge smart enum';
 

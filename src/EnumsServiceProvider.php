@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace NovaForge\Enums;
+namespace ZeroBoiler\Enums;
 
 use Illuminate\Support\ServiceProvider;
-use NovaForge\Enums\Console\Commands\InspectEnumCommand;
-use NovaForge\Enums\Console\Commands\MakeEnumTestCommand;
+use ZeroBoiler\Enums\Console\Commands\InspectEnumCommand;
+use ZeroBoiler\Enums\Console\Commands\MakeEnumTestCommand;
 
 final class EnumsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton('novaforge.enum', function () {
+        $this->app->singleton('zeroboiler.enum', function () {
             return new EnumManager();
         });
     }
