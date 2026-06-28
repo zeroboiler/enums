@@ -1,4 +1,7 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
 
 declare(strict_types=1);
 
@@ -15,12 +18,12 @@ use BackedEnum;
 final class EnumManager
 {
     /**
-     * @param  class-string<\BackedEnum>  $enumClass
+     * @param  class-string<BackedEnum>  $enumClass
      * @return list<array{value: string|int, label: string}>
      */
     public function forSelect(string $enumClass): array
     {
-        if (!method_exists($enumClass, 'forSelect')) {
+        if (! method_exists($enumClass, 'forSelect')) {
             throw new \BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
@@ -30,12 +33,12 @@ final class EnumManager
     }
 
     /**
-     * @param  class-string<\BackedEnum>  $enumClass
+     * @param  class-string<BackedEnum>  $enumClass
      * @return list<array<string, mixed>>
      */
     public function forApi(string $enumClass): array
     {
-        if (!method_exists($enumClass, 'forApi')) {
+        if (! method_exists($enumClass, 'forApi')) {
             throw new \BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
@@ -45,11 +48,11 @@ final class EnumManager
     }
 
     /**
-     * @param  class-string<\BackedEnum>  $enumClass
+     * @param  class-string<BackedEnum>  $enumClass
      */
     public function tryFromLabel(string $enumClass, string $label): ?BackedEnum
     {
-        if (!method_exists($enumClass, 'tryFromLabel')) {
+        if (! method_exists($enumClass, 'tryFromLabel')) {
             throw new \BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );

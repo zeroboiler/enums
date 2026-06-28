@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
+
 declare(strict_types=1);
 
 namespace ZeroBoiler\Enums\Console\Commands;
@@ -15,22 +19,24 @@ use ReflectionEnum;
  */
 final class InspectEnumCommand extends Command
 {
+    #[\Override]
     protected $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
 
+    #[\Override]
     protected $description = 'Inspect a NovaForge smart enum — show all metadata in a table';
 
     public function handle(): int
     {
         $enumClass = (string) $this->argument('class');
 
-        if (!enum_exists($enumClass)) {
+        if (! enum_exists($enumClass)) {
             $this->error("Enum class '{$enumClass}' not found.");
 
             return self::FAILURE;
         }
 
         $reflection = new ReflectionEnum($enumClass);
-        $shortName  = $reflection->getShortName();
+        $shortName = $reflection->getShortName();
 
         $this->info("Enum: {$shortName}");
         $this->newLine();
@@ -40,11 +46,11 @@ final class InspectEnumCommand extends Command
             $value = method_exists($case, 'value') ? $case->value : null;
 
             $rows[] = [
-                'Name'        => $case->name,
-                'Value'       => $value ?? '—',
-                'Label'       => $this->safeCall($case, 'label'),
-                'Color'       => $this->safeCall($case, 'color'),
-                'Icon'        => $this->safeCall($case, 'icon') ?? '—',
+                'Name' => $case->name,
+                'Value' => $value ?? '—',
+                'Label' => $this->safeCall($case, 'label'),
+                'Color' => $this->safeCall($case, 'color'),
+                'Icon' => $this->safeCall($case, 'icon') ?? '—',
                 'Description' => $this->safeCall($case, 'description') ?? '—',
             ];
         }
@@ -56,7 +62,7 @@ final class InspectEnumCommand extends Command
 
     private function safeCall(object $case, string $method): ?string
     {
-        if (!method_exists($case, $method)) {
+        if (! method_exists($case, $method)) {
             return null;
         }
 

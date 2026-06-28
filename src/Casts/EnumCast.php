@@ -1,4 +1,7 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
 
 declare(strict_types=1);
 
@@ -6,7 +9,6 @@ namespace ZeroBoiler\Enums\Casts;
 
 use BackedEnum;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 /**
@@ -22,25 +24,18 @@ use UnitEnum;
  */
 class EnumCast implements CastsAttributes
 {
-    /** @var class-string<T> */
-    private string $enumClass;
-
     /**
      * @param  class-string<T>  $enumClass
      */
-    public function __construct(string $enumClass)
-    {
-        $this->enumClass = $enumClass;
-    }
+    public function __construct(private readonly string $enumClass) {}
 
     /**
      * Cast raw value to enum instance.
      *
-     * @param  Model  $model
      * @param  string|int|null  $value
      * @return T|null
      */
-    public function get($model, string $key, $value, array $attributes)
+    public function get(object $model, string $key, $value, array $attributes)
     {
         if ($value === null) {
             return null;
@@ -55,11 +50,10 @@ class EnumCast implements CastsAttributes
     /**
      * Transform enum to storable value.
      *
-     * @param  Model  $model
      * @param  T|UnitEnum|null  $value
      * @return string|int|null
      */
-    public function set($model, string $key, $value, array $attributes)
+    public function set(object $model, string $key, $value, array $attributes)
     {
         if ($value === null) {
             return null;
@@ -72,10 +66,7 @@ class EnumCast implements CastsAttributes
         // Already a raw value — validate it
         /** @var T $enumClass */
         $enumClass = $this->enumClass;
-
-        if ($enumClass::tryFrom($value) !== null) {
-            return $value;
-        }
+        $enumClass::tryFrom($value);
 
         return $value;
     }
@@ -83,11 +74,10 @@ class EnumCast implements CastsAttributes
     /**
      * Serialize enum for JSON (API resources, etc).
      *
-     * @param  Model  $model
      * @param  T|null  $value
      * @return string|int|null
      */
-    public function serialize($model, string $key, $value, array $attributes)
+    public function serialize(object $model, string $key, $value, array $attributes)
     {
         return $value instanceof BackedEnum ? $value->value : $value;
     }

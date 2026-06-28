@@ -19,7 +19,5 @@
             "separate": "bottom"
         }
     },
-    "exclude": {
-        "tests/Fixtures": true
-    }
+    "exclude": ["tests/Fixtures"]
 }

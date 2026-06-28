@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
+
 declare(strict_types=1);
 
 namespace ZeroBoiler\Enums;
@@ -10,11 +14,10 @@ use ZeroBoiler\Enums\Console\Commands\MakeEnumTestCommand;
 
 final class EnumsServiceProvider extends ServiceProvider
 {
+    #[\Override]
     public function register(): void
     {
-        $this->app->singleton('zeroboiler.enum', function () {
-            return new EnumManager();
-        });
+        $this->app->singleton('zeroboiler.enum', fn (): EnumManager => new EnumManager);
     }
 
     public function boot(): void

@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
+
+declare(strict_types=1);
 
 declare(strict=1);
 
@@ -20,8 +25,8 @@ use Attribute;
 final class EnumLabel
 {
     /**
-     * @param array<string, string>|null $labels  Map of case value => label (class-level)
-     * @param string|null               $label   Single label (case-level)
+     * @param  array<string, string>|null  $labels  Map of case value => label (class-level)
+     * @param  string|null  $label  Single label (case-level)
      */
     public function __construct(
         public ?array $labels = null,

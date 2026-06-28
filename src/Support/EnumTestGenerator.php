@@ -1,17 +1,12 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
 
 declare(strict_types=1);
 
 namespace ZeroBoiler\Enums\Support;
 
-use ZeroBoiler\Enums\Attributes\Color;
-use ZeroBoiler\Enums\Attributes\Description;
-use ZeroBoiler\Enums\Attributes\EnumColor;
-use ZeroBoiler\Enums\Attributes\EnumDescription;
-use ZeroBoiler\Enums\Attributes\EnumIcon;
-use ZeroBoiler\Enums\Attributes\EnumLabel;
-use ZeroBoiler\Enums\Attributes\Icon;
-use ZeroBoiler\Enums\Attributes\Label;
 use ReflectionEnum;
 
 /**
@@ -28,11 +23,11 @@ class EnumTestGenerator
     public static function generate(string $enumClass): string
     {
         $reflection = new ReflectionEnum($enumClass);
-        $shortName  = $reflection->getShortName();
-        $cases      = $enumClass::cases();
-        $namespace  = $reflection->getNamespaceName();
+        $shortName = $reflection->getShortName();
+        $cases = $enumClass::cases();
+        $namespace = $reflection->getNamespaceName();
 
-        $testNamespace = str_replace('App\\', 'Tests\\', $namespace) . '\\' . $shortName;
+        str_replace('App\\', 'Tests\\', $namespace);
 
         $caseTests = '';
         foreach ($cases as $case) {

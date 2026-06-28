@@ -1,49 +1,52 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
 
 declare(strict_types=1);
 
 use ZeroBoiler\Enums\Rules\EnumRule;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
 
-describe('EnumRule', function () {
-    it('passes for valid enum value', function () {
-        $rule    = EnumRule::for(UserStatus::class);
-        $failed  = false;
+describe('EnumRule', function (): void {
+    it('passes for valid enum value', function (): void {
+        $rule = EnumRule::for(UserStatus::class);
+        $failed = false;
 
-        $rule->validate('status', 'active', function () use (&$failed) {
+        $rule->validate('status', 'active', function () use (&$failed): void {
             $failed = true;
         });
 
         expect($failed)->toBeFalse();
     });
 
-    it('fails for invalid enum value', function () {
-        $rule    = EnumRule::for(UserStatus::class);
-        $failed  = false;
+    it('fails for invalid enum value', function (): void {
+        $rule = EnumRule::for(UserStatus::class);
+        $failed = false;
 
-        $rule->validate('status', 'unknown', function () use (&$failed) {
+        $rule->validate('status', 'unknown', function () use (&$failed): void {
             $failed = true;
         });
 
         expect($failed)->toBeTrue();
     });
 
-    it('fails for non-string/non-int value', function () {
-        $rule    = EnumRule::for(UserStatus::class);
-        $failed  = false;
+    it('fails for non-string/non-int value', function (): void {
+        $rule = EnumRule::for(UserStatus::class);
+        $failed = false;
 
-        $rule->validate('status', ['array'], function () use (&$failed) {
+        $rule->validate('status', ['array'], function () use (&$failed): void {
             $failed = true;
         });
 
         expect($failed)->toBeTrue();
     });
 
-    it('includes allowed values in error message', function () {
-        $rule    = EnumRule::for(UserStatus::class);
+    it('includes allowed values in error message', function (): void {
+        $rule = EnumRule::for(UserStatus::class);
         $message = null;
 
-        $rule->validate('status', 'unknown', function ($msg) use (&$message) {
+        $rule->validate('status', 'unknown', function ($msg) use (&$message): void {
             $message = $msg;
         });
 

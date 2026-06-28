@@ -1,10 +1,14 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
 
 declare(strict_types=1);
 
 namespace ZeroBoiler\Enums\Concerns;
 
 use BackedEnum;
+use ReflectionEnum;
 use ZeroBoiler\Enums\Attributes\Color;
 use ZeroBoiler\Enums\Attributes\Description;
 use ZeroBoiler\Enums\Attributes\EnumColor;
@@ -13,8 +17,7 @@ use ZeroBoiler\Enums\Attributes\EnumIcon;
 use ZeroBoiler\Enums\Attributes\EnumLabel;
 use ZeroBoiler\Enums\Attributes\Icon;
 use ZeroBoiler\Enums\Attributes\Label;
-use ReflectionEnum;
-use UnitEnum;
+use ZeroBoiler\Enums\EnumCache;
 
 /**
  * Smart enum trait — zero boilerplate metadata, serialization and helpers.
@@ -56,17 +59,8 @@ use UnitEnum;
  */
 trait HasEnumMetadata
 {
-    /**
-     * Cache for reflection and metadata lookups (per enum class).
-     *
-     * @var array<string, array{
-     *     labels: array<string, string>,
-     *     descriptions: array<string, string>,
-     *     colors: array<string, string>,
-     *     icons: array<string, string>
-     * }>
-     */
-    private static array $_metadataCache = [];
+    // Cache is managed externally to avoid property restrictions in PHP enums
+    // See EnumCache class for caching implementation
 
     /**
      * Get the human-readable label for this case.
@@ -164,12 +158,12 @@ trait HasEnumMetadata
         foreach (self::cases() as $case) {
             $value = $case instanceof BackedEnum ? $case->value : $case->name;
             $result[] = [
-                'value'       => $value,
-                'name'        => $case->name,
-                'label'       => $case->label(),
+                'value' => $value,
+                'name' => $case->name,
+                'label' => $case->label(),
                 'description' => $case->description(),
-                'color'       => $case->color(),
-                'icon'        => $case->icon(),
+                'color' => $case->color(),
+                'icon' => $case->icon(),
             ];
         }
 
@@ -198,7 +192,7 @@ trait HasEnumMetadata
     public static function values(): array
     {
         return array_map(
-            static fn(self $case) => $case instanceof BackedEnum ? $case->value : $case->name,
+            static fn (self $case) => $case instanceof BackedEnum ? $case->value : $case->name,
             self::cases(),
         );
     }
@@ -210,7 +204,7 @@ trait HasEnumMetadata
      */
     public static function labels(): array
     {
-        return array_map(static fn(self $case) => $case->label(), self::cases());
+        return array_map(static fn (self $case): string => $case->label(), self::cases());
     }
 
     /**
@@ -222,14 +216,17 @@ trait HasEnumMetadata
     {
         $name = $this->name;
 
-        // Convert SCREAMING_SNAKE_CASE to Title Case
-        $label = str_replace('_', ' ', strtolower($name));
+        // Check if it's SCREAMING_SNAKE_CASE (all uppercase)
+        if ($name === strtoupper((string) $name)) {
+            // Convert ACTIVE -> active -> Active (replace underscores with spaces)
+            $label = str_replace('_', ' ', strtolower($name));
 
-        // Convert camelCase to Title Case (if no underscores were found)
-        if ($label === strtolower($name)) {
-            $label = preg_replace('/(?<!^)([A-Z])/', ' $1', $name) ?? $name;
-            $label = strtolower($label);
+            return ucwords(trim($label));
         }
+
+        // Convert camelCase to Title Case
+        $label = preg_replace('/(?<!^)([A-Z])/', ' $1', (string) $name) ?? $name;
+        $label = strtolower((string) $label);
 
         return ucwords(trim($label));
     }
@@ -244,17 +241,18 @@ trait HasEnumMetadata
     {
         $enumClass = static::class;
 
-        if (isset(self::$_metadataCache[$enumClass])) {
-            return self::$_metadataCache[$enumClass];
+        // Use external cache to avoid property restrictions in PHP enums
+        $cache = EnumCache::getInstance();
+        if ($cache->has($enumClass)) {
+            return $cache->get($enumClass);
         }
 
         $reflection = new ReflectionEnum($enumClass);
-        $value = $this instanceof BackedEnum ? $this->value : $this->name;
 
-        $labels       = [];
+        $labels = [];
         $descriptions = [];
-        $colors       = [];
-        $icons        = [];
+        $colors = [];
+        $icons = [];
 
         // Parse class-level attributes
         foreach ($reflection->getAttributes() as $attr) {
@@ -289,34 +287,41 @@ trait HasEnumMetadata
             }
         }
 
-        // Parse per-case attributes (override class-level)
-        $caseReflection = $reflection->getCase($this->name);
+        // Parse per-case attributes (override class-level) for ALL cases
+        foreach (self::cases() as $case) {
+            $caseReflection = $reflection->getCase($case->name);
+            $value = $case instanceof BackedEnum ? $case->value : $case->name;
 
-        foreach ($caseReflection->getAttributes() as $attr) {
-            $instance = $attr->newInstance();
+            foreach ($caseReflection->getAttributes() as $attr) {
+                $instance = $attr->newInstance();
 
-            if ($instance instanceof Label) {
-                $labels[$value] = $instance->value;
-            }
+                if ($instance instanceof Label) {
+                    $labels[$value] = $instance->value;
+                }
 
-            if ($instance instanceof Description) {
-                $descriptions[$value] = $instance->value;
-            }
+                if ($instance instanceof Description) {
+                    $descriptions[$value] = $instance->value;
+                }
 
-            if ($instance instanceof Color) {
-                $colors[$value] = $instance->value;
-            }
+                if ($instance instanceof Color) {
+                    $colors[$value] = $instance->value;
+                }
 
-            if ($instance instanceof Icon) {
-                $icons[$value] = $instance->value;
+                if ($instance instanceof Icon) {
+                    $icons[$value] = $instance->value;
+                }
             }
         }
 
-        return self::$_metadataCache[$enumClass] = [
-            'labels'       => $labels,
+        $metadata = [
+            'labels' => $labels,
             'descriptions' => $descriptions,
-            'colors'       => $colors,
-            'icons'        => $icons,
+            'colors' => $colors,
+            'icons' => $icons,
         ];
+
+        $cache->set($enumClass, $metadata);
+
+        return $metadata;
     }
 }

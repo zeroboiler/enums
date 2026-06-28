@@ -1,14 +1,16 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
 
 declare(strict_types=1);
 
 use ZeroBoiler\Enums\Casts\EnumCast;
-use ZeroBoiler\Enums\Tests\Fixtures\OrderStatus;
 use ZeroBoiler\Enums\Tests\Fixtures\Priority;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
 
-describe('EnumCast', function () {
-    it('casts database value to enum instance', function () {
+describe('EnumCast', function (): void {
+    it('casts database value to enum instance', function (): void {
         $cast = new EnumCast(UserStatus::class);
 
         $result = $cast->get(
@@ -21,7 +23,7 @@ describe('EnumCast', function () {
         expect($result)->toBe(UserStatus::ACTIVE);
     });
 
-    it('returns null for null value', function () {
+    it('returns null for null value', function (): void {
         $cast = new EnumCast(UserStatus::class);
 
         $result = $cast->get(
@@ -34,7 +36,7 @@ describe('EnumCast', function () {
         expect($result)->toBeNull();
     });
 
-    it('returns null for invalid value', function () {
+    it('returns null for invalid value', function (): void {
         $cast = new EnumCast(UserStatus::class);
 
         $result = $cast->get(
@@ -47,7 +49,7 @@ describe('EnumCast', function () {
         expect($result)->toBeNull();
     });
 
-    it('sets enum instance to its value', function () {
+    it('sets enum instance to its value', function (): void {
         $cast = new EnumCast(UserStatus::class);
 
         $result = $cast->set(
@@ -60,7 +62,7 @@ describe('EnumCast', function () {
         expect($result)->toBe('banned');
     });
 
-    it('sets null for null value', function () {
+    it('sets null for null value', function (): void {
         $cast = new EnumCast(UserStatus::class);
 
         $result = $cast->set(
@@ -73,7 +75,7 @@ describe('EnumCast', function () {
         expect($result)->toBeNull();
     });
 
-    it('works with int-backed enums', function () {
+    it('works with int-backed enums', function (): void {
         $cast = new EnumCast(Priority::class);
 
         $result = $cast->get(
@@ -86,7 +88,7 @@ describe('EnumCast', function () {
         expect($result)->toBe(Priority::HIGH);
     });
 
-    it('serializes enum to its value', function () {
+    it('serializes enum to its value', function (): void {
         $cast = new EnumCast(UserStatus::class);
 
         $result = $cast->serialize(

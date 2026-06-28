@@ -1,4 +1,7 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
 
 declare(strict_types=1);
 
@@ -7,7 +10,7 @@ namespace ZeroBoiler\Enums\Rules;
 use BackedEnum;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use UnitEnum;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 /**
  * Universal enum validation rule.
@@ -22,23 +25,17 @@ use UnitEnum;
  *
  * NovaForge version provides better error messages and works with metadata.
  */
-final class EnumRule implements ValidationRule
+final readonly class EnumRule implements ValidationRule
 {
-    /** @var class-string<\BackedEnum> */
-    private string $enumClass;
-
     /**
-     * @param  class-string<\BackedEnum>  $enumClass
+     * @param  class-string<BackedEnum>  $enumClass
      */
-    public function __construct(string $enumClass)
-    {
-        $this->enumClass = $enumClass;
-    }
+    public function __construct(private string $enumClass) {}
 
     /**
      * Named constructor for readability.
      *
-     * @param  class-string<\BackedEnum>  $enumClass
+     * @param  class-string<BackedEnum>  $enumClass
      */
     public static function for(string $enumClass): self
     {
@@ -46,31 +43,30 @@ final class EnumRule implements ValidationRule
     }
 
     /**
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  Closure(string): void  $fail
+     * @param  Closure(string, string|null=):PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        /** @var class-string<\BackedEnum> $enumClass */
+        /** @var class-string<BackedEnum> $enumClass */
         $enumClass = $this->enumClass;
 
-        if (!is_string($value) && !is_int($value)) {
-            $fail($this->message($attribute, $value));
+        if (! is_string($value) && ! is_int($value)) {
+            $fail($this->message($attribute));
+
             return;
         }
 
         if ($enumClass::tryFrom($value) === null) {
-            $fail($this->message($attribute, $value));
+            $fail($this->message($attribute));
         }
     }
 
     /**
      * Generate a descriptive error message.
      */
-    private function message(string $attribute, mixed $value): string
+    private function message(string $attribute): string
     {
-        /** @var class-string<\BackedEnum> $enumClass */
+        /** @var class-string<BackedEnum> $enumClass */
         $enumClass = $this->enumClass;
 
         // Check if enum uses HasEnumMetadata

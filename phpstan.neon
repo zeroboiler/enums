@@ -6,3 +6,5 @@ parameters:
         - tests/*
     treatPhpDocTypesAsCertain: false
     reportUnmatchedIgnoredErrors: false
+    bootstrapFiles:
+        - vendor/larastan/larastan/bootstrap.php

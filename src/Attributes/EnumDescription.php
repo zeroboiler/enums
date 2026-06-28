@@ -1,4 +1,7 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
 
 declare(strict_types=1);
 
@@ -20,8 +23,8 @@ use Attribute;
 final class EnumDescription
 {
     /**
-     * @param array<string, string>|null $descriptions  Map of case value => description (class-level)
-     * @param string|null               $description    Single description (case-level)
+     * @param  array<string, string>|null  $descriptions  Map of case value => description (class-level)
+     * @param  string|null  $description  Single description (case-level)
      */
     public function __construct(
         public ?array $descriptions = null,

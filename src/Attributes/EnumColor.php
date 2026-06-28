@@ -1,4 +1,7 @@
 <?php
+/**
+ * This file is part of ZeroBoiler, licensed under the proprietary license.
+ */
 
 declare(strict_types=1);
 
@@ -21,11 +24,11 @@ use Attribute;
 final class EnumColor
 {
     /**
-     * @param array<string>  $success   Case values that map to "success"
-     * @param array<string>  $danger    Case values that map to "danger"
-     * @param array<string>  $warning   Case values that map to "warning"
-     * @param array<string>  $info      Case values that map to "info"
-     * @param array<string>  $secondary Case values that map to "secondary"
+     * @param  array<string>  $success  Case values that map to "success"
+     * @param  array<string>  $danger  Case values that map to "danger"
+     * @param  array<string>  $warning  Case values that map to "warning"
+     * @param  array<string>  $info  Case values that map to "info"
+     * @param  array<string>  $secondary  Case values that map to "secondary"
      */
     public function __construct(
         public array $success = [],

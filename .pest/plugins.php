@@ -1,15 +1,14 @@
 <?php
-/**
- * This file is part of ZeroBoiler, licensed under the proprietary license.
- */
-
-declare(strict_types=1);
 
 /*
 |--------------------------------------------------------------------------
-| Pest Configuration
+| Pest Plugins
 |--------------------------------------------------------------------------
 */
 
-uses()
-    ->in(__DIR__);
+use Tests\TestCase;
+
+// Uncomment if you have arch tests
+// use Pest\Arch\Expectations\ToBeUsedIn;
+
+// No additional plugins configured
