@@ -9,6 +9,7 @@ namespace ZeroBoiler\Enums\Rules;
 
 use BackedEnum;
 use Closure;
+use UnitEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
@@ -28,14 +29,14 @@ use Illuminate\Translation\PotentiallyTranslatedString;
 final readonly class EnumRule implements ValidationRule
 {
     /**
-     * @param  class-string<BackedEnum>  $enumClass
+     * @param  class-string<UnitEnum>  $enumClass
      */
     public function __construct(private string $enumClass) {}
 
     /**
      * Named constructor for readability.
      *
-     * @param  class-string<BackedEnum>  $enumClass
+     * @param  class-string<UnitEnum>  $enumClass
      */
     public static function for(string $enumClass): self
     {
@@ -47,17 +48,27 @@ final readonly class EnumRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        /** @var class-string<BackedEnum> $enumClass */
+        /** @var class-string<\UnitEnum> $enumClass */
         $enumClass = $this->enumClass;
 
-        if (! is_string($value) && ! is_int($value)) {
-            $fail($this->message($attribute));
+        if (is_a($enumClass, BackedEnum::class, true)) {
+            if ((! is_string($value) && ! is_int($value)) || $enumClass::tryFrom($value) === null) {
+                $fail($this->message($attribute));
+            }
+        } elseif (is_a($enumClass, UnitEnum::class, true)) {
+            // For pure enums, match by case name
+            if (! is_string($value)) {
+                $fail($this->message($attribute));
 
-            return;
-        }
+                return;
+            }
 
-        if ($enumClass::tryFrom($value) === null) {
-            $fail($this->message($attribute));
+            $validNames = array_map(fn (UnitEnum $case) => $case->name, $enumClass::cases());
+            if (! in_array($value, $validNames, true)) {
+                $fail($this->message($attribute));
+            }
+        } else {
+            $fail("The {$attribute} field must be a valid enum.");
         }
     }
 
@@ -66,7 +77,7 @@ final readonly class EnumRule implements ValidationRule
      */
     private function message(string $attribute): string
     {
-        /** @var class-string<BackedEnum> $enumClass */
+        /** @var class-string<UnitEnum> $enumClass */
         $enumClass = $this->enumClass;
 
         // Check if enum uses HasEnumMetadata

@@ -63,10 +63,15 @@ class EnumCast implements CastsAttributes
             return $value->value;
         }
 
-        // Already a raw value — validate it
-        /** @var T $enumClass */
+        // Validate raw value — throw on invalid
+        /** @var class-string<BackedEnum> $enumClass */
         $enumClass = $this->enumClass;
-        $enumClass::tryFrom($value);
+
+        if ($enumClass::tryFrom($value) === null) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid value [%s] for enum %s', $value, $enumClass)
+            );
+        }
 
         return $value;
     }

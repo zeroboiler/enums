@@ -5,8 +5,6 @@
 
 declare(strict_types=1);
 
-declare(strict=1);
-
 namespace ZeroBoiler\Enums\Attributes;
 
 use Attribute;

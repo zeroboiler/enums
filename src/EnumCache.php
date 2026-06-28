@@ -81,4 +81,21 @@ final class EnumCache
     {
         unset($this->cache[$enumClass]);
     }
+
+    /**
+     * Flush the entire cache (alias for clear, semantically explicit for resets).
+     */
+    public static function flush(): void
+    {
+        $instance = self::getInstance();
+        $instance->cache = [];
+    }
+
+    /**
+     * Reset the singleton instance — primarily for testing.
+     */
+    public static function resetInstance(): void
+    {
+        self::$instance = null;
+    }
 }
