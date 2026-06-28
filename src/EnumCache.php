@@ -28,6 +28,12 @@ final class EnumCache
      */
     private array $cache = [];
 
+    /** @var array<string, float> Cache creation timestamps per enum class */
+    private array $cacheTimestamps = [];
+
+    /** Cache TTL in seconds (default: 300 = 5 minutes) */
+    private int $ttl = 300;
+
     private function __construct()
     {
         // Singleton
@@ -44,7 +50,19 @@ final class EnumCache
 
     public function has(string $enumClass): bool
     {
-        return isset($this->cache[$enumClass]);
+        // Auto-expire stale cache entries
+        if (isset($this->cache[$enumClass])) {
+            $age = microtime(true) - ($this->cacheTimestamps[$enumClass] ?? 0);
+            if ($age > $this->ttl) {
+                unset($this->cache[$enumClass], $this->cacheTimestamps[$enumClass]);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -71,11 +89,21 @@ final class EnumCache
     public function set(string $enumClass, array $metadata): void
     {
         $this->cache[$enumClass] = $metadata;
+        $this->cacheTimestamps[$enumClass] = microtime(true);
+    }
+
+    /**
+     * Set the cache TTL (seconds). Useful for testing or long-running processes.
+     */
+    public function setTtl(int $ttl): void
+    {
+        $this->ttl = $ttl;
     }
 
     public function clear(): void
     {
         $this->cache = [];
+        $this->cacheTimestamps = [];
     }
 
     public function clearClass(string $enumClass): void
@@ -90,6 +118,7 @@ final class EnumCache
     {
         $instance = self::getInstance();
         $instance->cache = [];
+        $instance->cacheTimestamps = [];
     }
 
     /**
