@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of ZeroBoiler, licensed under the proprietary license.
  */
@@ -9,9 +10,9 @@ namespace ZeroBoiler\Enums\Rules;
 
 use BackedEnum;
 use Closure;
-use UnitEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
+use UnitEnum;
 
 /**
  * Universal enum validation rule.
@@ -19,6 +20,7 @@ use Illuminate\Translation\PotentiallyTranslatedString;
  * Usage in a Form Request / DTO:
  *
  *   'status' => ['required', EnumRule::for(UserStatus::class)],
+ *   'status' => ['nullable', EnumRule::for(UserStatus::class)], // optional field
  *
  * Or inline:
  *
@@ -30,8 +32,12 @@ final readonly class EnumRule implements ValidationRule
 {
     /**
      * @param  class-string<UnitEnum>  $enumClass
+     * @param  bool  $nullable  When true, null values pass validation.
      */
-    public function __construct(private string $enumClass) {}
+    public function __construct(
+        private string $enumClass,
+        private bool $nullable = false,
+    ) {}
 
     /**
      * Named constructor for readability.
@@ -44,15 +50,32 @@ final readonly class EnumRule implements ValidationRule
     }
 
     /**
+     * Create a nullable instance of this rule.
+     */
+    public function nullable(): self
+    {
+        return new self($this->enumClass, true);
+    }
+
+    /**
      * @param  Closure(string, string|null=):PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        /** @var class-string<\UnitEnum> $enumClass */
+        // Allow null for optional fields when nullable is enabled
+        if ($value === null) {
+            if (! $this->nullable) {
+                $fail($this->message($attribute));
+            }
+
+            return;
+        }
+
+        /** @var class-string<UnitEnum> $enumClass */
         $enumClass = $this->enumClass;
 
         if (is_a($enumClass, BackedEnum::class, true)) {
-            if ((! is_string($value) && ! is_int($value)) || $enumClass::tryFrom($value) === null) {
+            if ((! is_string($value) && ! is_int($value)) || ! $enumClass::tryFrom($value) instanceof BackedEnum) {
                 $fail($this->message($attribute));
             }
         } elseif (is_a($enumClass, UnitEnum::class, true)) {
@@ -63,7 +86,7 @@ final readonly class EnumRule implements ValidationRule
                 return;
             }
 
-            $validNames = array_map(fn (UnitEnum $case) => $case->name, $enumClass::cases());
+            $validNames = array_map(fn (UnitEnum $case): string => $case->name, $enumClass::cases());
             if (! in_array($value, $validNames, true)) {
                 $fail($this->message($attribute));
             }
