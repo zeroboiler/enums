@@ -10,7 +10,6 @@ namespace ZeroBoiler\Enums\Casts;
 
 use BackedEnum;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use UnitEnum;
 
 /**
  * Universal enum cast — works with any backed enum.
@@ -22,18 +21,23 @@ use UnitEnum;
  *   ];
  *
  * @template T of \BackedEnum
+ *
+ * @implements CastsAttributes<int|string, int|string|null>
  */
 class EnumCast implements CastsAttributes
 {
     /**
      * @param  class-string<T>  $enumClass
      */
-    public function __construct(private readonly string $enumClass) {}
+    public function __construct(
+        private readonly string $enumClass,
+    ) {}
 
     /**
      * Cast raw value to enum instance.
      *
-     * @param  string|int|null  $value
+     * @param  int|string|null  $value
+     * @param  array<string, mixed>  $attributes
      * @return T|null
      */
     public function get(object $model, string $key, $value, array $attributes)
@@ -42,7 +46,7 @@ class EnumCast implements CastsAttributes
             return null;
         }
 
-        /** @var T $enumClass */
+        /** @var class-string<T> $enumClass */
         $enumClass = $this->enumClass;
 
         return $enumClass::tryFrom($value);
@@ -51,10 +55,10 @@ class EnumCast implements CastsAttributes
     /**
      * Transform enum to storable value.
      *
-     * @param  T|UnitEnum|null  $value
-     * @return string|int|null
+     * @param  BackedEnum|int|string|null  $value
+     * @param  array<string, mixed>  $attributes
      */
-    public function set(object $model, string $key, $value, array $attributes)
+    public function set(object $model, string $key, $value, array $attributes): int|string|null
     {
         if ($value === null) {
             return null;
@@ -62,6 +66,12 @@ class EnumCast implements CastsAttributes
 
         if ($value instanceof BackedEnum) {
             return $value->value;
+        }
+
+        if (! is_int($value) && ! is_string($value)) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid value type for enum %s', $this->enumClass)
+            );
         }
 
         // Validate raw value — throw on invalid
@@ -80,10 +90,10 @@ class EnumCast implements CastsAttributes
     /**
      * Serialize enum for JSON (API resources, etc).
      *
-     * @param  T|null  $value
-     * @return string|int|null
+     * @param  BackedEnum|int|string|null  $value
+     * @param  array<string, mixed>  $attributes
      */
-    public function serialize(object $model, string $key, $value, array $attributes)
+    public function serialize(object $model, string $key, $value, array $attributes): int|string|null
     {
         return $value instanceof BackedEnum ? $value->value : $value;
     }

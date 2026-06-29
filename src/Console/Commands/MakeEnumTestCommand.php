@@ -40,7 +40,7 @@ final class MakeEnumTestCommand extends Command
         $reflection = new ReflectionEnum($enumClass);
         $shortName = $reflection->getShortName();
 
-        $defaultDir = base_path('tests/Unit/Enums');
+        $defaultDir = \function_exists('base_path') ? base_path('tests/Unit/Enums') : getcwd().'/tests/Unit/Enums';
         $dir = (string) ($this->option('dir') ?? $defaultDir);
         $path = rtrim($dir, '/')."/{$shortName}Test.php";
 
@@ -55,7 +55,7 @@ final class MakeEnumTestCommand extends Command
         }
 
         $content = EnumTestGenerator::generate($enumClass);
-        $relative = str_replace(base_path().'/', '', $path);
+        $relative = str_replace(\function_exists('base_path') ? base_path().'/' : getcwd().'/', '', $path);
 
         file_put_contents($path, $content);
 

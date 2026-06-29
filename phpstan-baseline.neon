@@ -1,0 +1,61 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method ZeroBoiler\\Enums\\Support\\EnumMetadataResolver\:\:resolveClassColors\(\) has parameter \$reflection with generic class ReflectionEnum but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Support/EnumMetadataResolver.php
+
+		-
+			message: '#^Method ZeroBoiler\\Enums\\Support\\EnumMetadataResolver\:\:resolveClassDescriptions\(\) has parameter \$reflection with generic class ReflectionEnum but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Support/EnumMetadataResolver.php
+
+		-
+			message: '#^Method ZeroBoiler\\Enums\\Support\\EnumMetadataResolver\:\:resolveClassIcons\(\) has parameter \$reflection with generic class ReflectionEnum but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Support/EnumMetadataResolver.php
+
+		-
+			message: '#^Method ZeroBoiler\\Enums\\Support\\EnumMetadataResolver\:\:resolveClassLabels\(\) has parameter \$reflection with generic class ReflectionEnum but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Support/EnumMetadataResolver.php
+
+		-
+			message: '#^Method ZeroBoiler\\Enums\\Support\\EnumMetadataResolver\:\:resolvePerCaseAttributes\(\) has parameter \$reflection with generic class ReflectionEnum but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Support/EnumMetadataResolver.php
+
+		-
+			message: '#^Parameter &\$metadata by\-ref type of method ZeroBoiler\\Enums\\Support\\EnumMetadataResolver\:\:resolvePerCaseAttributes\(\) expects array\{labels\: array\<string, string\>, descriptions\: array\<string, string\>, colors\: array\<string, string\>, icons\: array\<string, string\>\}, array\{labels\: array\<string\>, descriptions\: array\<string\>, colors\: array\<string\>, icons\: non\-empty\-array\<string\>\} given\.$#'
+			identifier: parameterByRef.type
+			count: 1
+			path: src/Support/EnumMetadataResolver.php
+
+		-
+			message: '#^Parameter &\$metadata by\-ref type of method ZeroBoiler\\Enums\\Support\\EnumMetadataResolver\:\:resolvePerCaseAttributes\(\) expects array\{labels\: array\<string, string\>, descriptions\: array\<string, string\>, colors\: array\<string, string\>, icons\: array\<string, string\>\}, array\{labels\: array\<string\>, descriptions\: array\<string\>, colors\: non\-empty\-array\<string\>, icons\: array\<string\>\} given\.$#'
+			identifier: parameterByRef.type
+			count: 1
+			path: src/Support/EnumMetadataResolver.php
+
+		-
+			message: '#^Parameter &\$metadata by\-ref type of method ZeroBoiler\\Enums\\Support\\EnumMetadataResolver\:\:resolvePerCaseAttributes\(\) expects array\{labels\: array\<string, string\>, descriptions\: array\<string, string\>, colors\: array\<string, string\>, icons\: array\<string, string\>\}, array\{labels\: array\<string\>, descriptions\: non\-empty\-array\<string\>, colors\: array\<string\>, icons\: array\<string\>\} given\.$#'
+			identifier: parameterByRef.type
+			count: 1
+			path: src/Support/EnumMetadataResolver.php
+
+		-
+			message: '#^Parameter &\$metadata by\-ref type of method ZeroBoiler\\Enums\\Support\\EnumMetadataResolver\:\:resolvePerCaseAttributes\(\) expects array\{labels\: array\<string, string\>, descriptions\: array\<string, string\>, colors\: array\<string, string\>, icons\: array\<string, string\>\}, array\{labels\: non\-empty\-array\<string\>, descriptions\: array\<string\>, colors\: array\<string\>, icons\: array\<string\>\} given\.$#'
+			identifier: parameterByRef.type
+			count: 1
+			path: src/Support/EnumMetadataResolver.php
+
+		-
+			message: '#^Variable \$enumClass in PHPDoc tag @var does not match any variable in the foreach loop\: \$case$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Support/EnumMetadataResolver.php

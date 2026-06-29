@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace ZeroBoiler\Enums\Console\Commands;
 
+use BackedEnum;
 use Illuminate\Console\Command;
 use ReflectionEnum;
 
@@ -43,7 +44,7 @@ final class InspectEnumCommand extends Command
 
         $rows = [];
         foreach ($enumClass::cases() as $case) {
-            $value = method_exists($case, 'value') ? $case->value : null;
+            $value = $case instanceof BackedEnum ? $case->value : null;
 
             $rows[] = [
                 'Name' => $case->name,

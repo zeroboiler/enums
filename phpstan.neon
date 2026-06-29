@@ -1,3 +1,6 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: 6
     paths:
@@ -8,3 +11,5 @@ parameters:
     reportUnmatchedIgnoredErrors: false
     bootstrapFiles:
         - vendor/larastan/larastan/bootstrap.php
+    ignoreErrors:
+        - "#Trait .*HasEnumMetadata is used zero times#"
