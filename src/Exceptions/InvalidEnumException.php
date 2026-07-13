@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of ZeroBoiler, licensed under the proprietary license.
  */
@@ -13,8 +14,14 @@ final class InvalidEnumException extends Exception
 {
     public static function value(string $enumClass, mixed $value): self
     {
-        $type = get_debug_type($value);
+        if ($value instanceof \BackedEnum) {
+            $descriptor = $value::class.'::'.$value->name.' (value: '.var_export($value->value, true).')';
+        } else {
+            $descriptor = var_export($value, true).' ('.get_debug_type($value).')';
+        }
 
-        return new self("Value [{$type}] is not a valid case of [{$enumClass}].");
+        $shortName = substr($enumClass, (int) strrpos($enumClass, '\\') + 1);
+
+        return new self("Value [{$descriptor}] is not a valid case of enum [{$shortName}] ({$enumClass}).");
     }
 }

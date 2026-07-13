@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 use ZeroBoiler\Enums\Casts\EnumCast;
+use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Tests\Fixtures\Priority;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
 use ZeroBoiler\Enums\Tests\Fixtures\ZeroPriority;
@@ -151,7 +152,7 @@ describe('EnumCast Edge Cases', function (): void {
     });
 
     describe('set() edge cases', function (): void {
-        it('throws InvalidArgumentException for invalid enum class in set()', function (): void {
+        it('throws InvalidEnumException for invalid enum class in set()', function (): void {
             $cast = new EnumCast(UserStatus::class);
 
             expect(fn (): mixed => $cast->set(
@@ -159,10 +160,10 @@ describe('EnumCast Edge Cases', function (): void {
                 key: 'status',
                 value: 'invalid-status',
                 attributes: [],
-            ))->toThrow(InvalidArgumentException::class);
+            ))->toThrow(InvalidEnumException::class);
         });
 
-        it('throws InvalidArgumentException for non-int/string value in set()', function (): void {
+        it('throws InvalidEnumException for non-int/string value in set()', function (): void {
             $cast = new EnumCast(UserStatus::class);
 
             expect(fn (): mixed => $cast->set(
@@ -170,24 +171,20 @@ describe('EnumCast Edge Cases', function (): void {
                 key: 'status',
                 value: ['array'],
                 attributes: [],
-            ))->toThrow(InvalidArgumentException::class);
+            ))->toThrow(InvalidEnumException::class);
         });
 
-        it('accepts valid BackedEnum instance from different enum in set()', function (): void {
+        it('throws InvalidEnumException for wrong enum instance in set()', function (): void {
             $cast = new EnumCast(UserStatus::class);
 
             // Passing a Priority enum (different enum class) to a UserStatus cast
-            // The cast only checks if it's a BackedEnum, not if it's the correct enum
-            $result = $cast->set(
+            // must throw — cross-enum assignment is a bug (Issue #7)
+            expect(fn (): mixed => $cast->set(
                 model: new class {},
                 key: 'status',
                 value: Priority::HIGH,
                 attributes: [],
-            );
-
-            // This returns the enum's value (3) which is wrong for UserStatus
-            // Documenting current behavior — this is a known limitation
-            expect($result)->toBe(3);
+            ))->toThrow(InvalidEnumException::class);
         });
 
         it('handles valid raw int value in set() for int-backed enum', function (): void {
@@ -211,7 +208,7 @@ describe('EnumCast Edge Cases', function (): void {
                 key: 'priority',
                 value: 999,
                 attributes: [],
-            ))->toThrow(InvalidArgumentException::class);
+            ))->toThrow(InvalidEnumException::class);
         });
 
         it('handles valid raw string value in set() for string-backed enum', function (): void {
@@ -235,7 +232,7 @@ describe('EnumCast Edge Cases', function (): void {
                 key: 'status',
                 value: 'nonexistent',
                 attributes: [],
-            ))->toThrow(InvalidArgumentException::class);
+            ))->toThrow(InvalidEnumException::class);
         });
     });
 
