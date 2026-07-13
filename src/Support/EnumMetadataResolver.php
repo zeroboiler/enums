@@ -29,8 +29,6 @@ use ZeroBoiler\Enums\EnumCache;
  */
 final class EnumMetadataResolver
 {
-    private static ?EnumCache $cache = null;
-
     /**
      * Resolve all metadata for an enum class.
      *
@@ -39,7 +37,7 @@ final class EnumMetadataResolver
      */
     public static function resolve(string $enumClass): array
     {
-        $cache = self::getCache();
+        $cache = EnumCache::getInstance();
         if ($cache->has($enumClass)) {
             return $cache->get($enumClass);
         }
@@ -164,14 +162,5 @@ final class EnumMetadataResolver
                 }
             }
         }
-    }
-
-    private static function getCache(): EnumCache
-    {
-        if (! self::$cache instanceof EnumCache) {
-            self::$cache = EnumCache::getInstance();
-        }
-
-        return self::$cache;
     }
 }

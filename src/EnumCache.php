@@ -13,6 +13,10 @@ namespace ZeroBoiler\Enums;
  *
  * PHP enums cannot have properties, so we use an external cache class.
  * This is a singleton that caches metadata per enum class.
+ *
+ * For long-lived processes (Octane, Swoole, RoadRunner), the cache is
+ * automatically flushed at the end of each request via
+ * EnumsServiceProvider::registerCacheFlushing().
  */
 final class EnumCache
 {
@@ -113,6 +117,9 @@ final class EnumCache
 
     /**
      * Flush the entire cache (alias for clear, semantically explicit for resets).
+     *
+     * Called automatically at the end of each request by
+     * EnumsServiceProvider in long-lived process environments.
      */
     public static function flush(): void
     {
