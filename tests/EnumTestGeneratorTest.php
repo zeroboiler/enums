@@ -14,7 +14,7 @@ describe('EnumTestGenerator', function (): void {
     it('generates valid PHP starting with opening tag', function (): void {
         $content = EnumTestGenerator::generate(UserStatus::class);
 
-        expect($content)->toStartWith("<?php");
+        expect($content)->toStartWith('<?php');
     });
 
     it('includes declare strict types', function (): void {
@@ -47,8 +47,8 @@ describe('EnumTestGenerator', function (): void {
     it('generates forSelect and forApi test assertions', function (): void {
         $content = EnumTestGenerator::generate(OrderStatus::class);
 
-        expect($content)->toContain("forSelect()");
-        expect($content)->toContain("forApi()");
+        expect($content)->toContain('forSelect()');
+        expect($content)->toContain('forApi()');
     });
 
     it('does not contain stray namespace transformation artifacts', function (): void {
