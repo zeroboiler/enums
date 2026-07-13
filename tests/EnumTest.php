@@ -1,10 +1,13 @@
 <?php
+
 /**
  * This file is part of ZeroBoiler, licensed under the proprietary license.
  */
 
 declare(strict_types=1);
 
+use ZeroBoiler\Enums\Exceptions\AmbiguousLabelException;
+use ZeroBoiler\Enums\Tests\Fixtures\AmbiguousStatus;
 use ZeroBoiler\Enums\Tests\Fixtures\OrderStatus;
 use ZeroBoiler\Enums\Tests\Fixtures\Priority;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
@@ -95,6 +98,35 @@ describe('UserStatus bulk methods', function (): void {
 
     it('reverse label lookup is case-insensitive', function (): void {
         expect(UserStatus::tryFromLabel('ACTIVE USER'))->toBe(UserStatus::ACTIVE);
+    });
+
+    it('returns null for unknown label in strict mode', function (): void {
+        expect(UserStatus::tryFromLabel('ACTIVE USER', strict: true))->toBeNull();
+    });
+
+    it('matches case-sensitively in strict mode', function (): void {
+        expect(UserStatus::tryFromLabel('Active User', strict: true))->toBe(UserStatus::ACTIVE);
+    });
+});
+
+describe('AmbiguousStatus enum (ambiguous labels)', function (): void {
+    it('throws on ambiguous case-insensitive match', function (): void {
+        expect(fn () => AmbiguousStatus::tryFromLabel('new'))
+            ->toThrow(AmbiguousLabelException::class);
+    });
+
+    it('exact match wins over case-insensitive match', function (): void {
+        expect(AmbiguousStatus::tryFromLabel('NEW'))->toBe(AmbiguousStatus::NEW_ORDER);
+        expect(AmbiguousStatus::tryFromLabel('New'))->toBe(AmbiguousStatus::NEW_ITEM);
+    });
+
+    it('strict mode avoids ambiguity exception', function (): void {
+        expect(fn () => AmbiguousStatus::tryFromLabel('new', strict: true))
+            ->not->toThrow(AmbiguousLabelException::class);
+    });
+
+    it('returns null for unknown label', function (): void {
+        expect(AmbiguousStatus::tryFromLabel('Nonexistent'))->toBeNull();
     });
 });
 

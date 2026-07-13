@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of ZeroBoiler, licensed under the proprietary license.
  */
@@ -49,8 +50,9 @@ final class EnumManager
 
     /**
      * @param  class-string<BackedEnum>  $enumClass
+     * @param  bool  $strict  Case-sensitive matching when true.
      */
-    public function tryFromLabel(string $enumClass, string $label): ?BackedEnum
+    public function tryFromLabel(string $enumClass, string $label, bool $strict = false): ?BackedEnum
     {
         if (! method_exists($enumClass, 'tryFromLabel')) {
             throw new \BadMethodCallException(
@@ -58,6 +60,6 @@ final class EnumManager
             );
         }
 
-        return $enumClass::tryFromLabel($label);
+        return $enumClass::tryFromLabel($label, $strict);
     }
 }
