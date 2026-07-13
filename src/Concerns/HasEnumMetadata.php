@@ -94,7 +94,6 @@ trait HasEnumMetadata
      */
     public static function tryFromLabel(string $label, bool $strict = false): ?static
     {
-        $exact = null;
         $caseInsensitive = null;
         $ambiguous = false;
 
@@ -111,7 +110,7 @@ trait HasEnumMetadata
             }
 
             // Track case-insensitive matches for ambiguity detection.
-            if (strcasecmp($caseLabel, $label) === 0) {
+            if (strcasecmp((string) $caseLabel, $label) === 0) {
                 if ($caseInsensitive !== null) {
                     $ambiguous = true;
                 }

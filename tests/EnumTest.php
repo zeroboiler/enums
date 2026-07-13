@@ -111,7 +111,7 @@ describe('UserStatus bulk methods', function (): void {
 
 describe('AmbiguousStatus enum (ambiguous labels)', function (): void {
     it('throws on ambiguous case-insensitive match', function (): void {
-        expect(fn () => AmbiguousStatus::tryFromLabel('new'))
+        expect(fn (): ?AmbiguousStatus => AmbiguousStatus::tryFromLabel('new'))
             ->toThrow(AmbiguousLabelException::class);
     });
 
@@ -121,7 +121,7 @@ describe('AmbiguousStatus enum (ambiguous labels)', function (): void {
     });
 
     it('strict mode avoids ambiguity exception', function (): void {
-        expect(fn () => AmbiguousStatus::tryFromLabel('new', strict: true))
+        expect(fn (): ?AmbiguousStatus => AmbiguousStatus::tryFromLabel('new', strict: true))
             ->not->toThrow(AmbiguousLabelException::class);
     });
 
