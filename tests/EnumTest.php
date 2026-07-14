@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of ZeroBoiler, licensed under the proprietary license.
  */
@@ -93,8 +94,23 @@ describe('UserStatus bulk methods', function (): void {
         expect(UserStatus::tryFromLabel('Unknown'))->toBeNull();
     });
 
-    it('reverse label lookup is case-insensitive', function (): void {
+    it('reverse label lookup falls back to case-insensitive when unambiguous', function (): void {
         expect(UserStatus::tryFromLabel('ACTIVE USER'))->toBe(UserStatus::ACTIVE);
+        expect(UserStatus::tryFromLabel('inactive'))->toBe(UserStatus::INACTIVE);
+    });
+
+    it('reverse label lookup prefers exact match over case-insensitive', function (): void {
+        // Exact match should always win
+        expect(UserStatus::tryFromLabel('Active User'))->toBe(UserStatus::ACTIVE);
+    });
+
+    it('fromLabel throws ValueError for unknown label', function (): void {
+        expect(fn (): UserStatus => UserStatus::fromLabel('Unknown'))
+            ->toThrow(ValueError::class);
+    });
+
+    it('fromLabel returns case for valid label', function (): void {
+        expect(UserStatus::fromLabel('Active User'))->toBe(UserStatus::ACTIVE);
     });
 });
 

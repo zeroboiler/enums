@@ -84,15 +84,51 @@ trait HasEnumMetadata
         ], self::cases());
     }
 
+    /**
+     * Reverse label lookup — finds the enum case by its label.
+     *
+     * Matching strategy (prevents ambiguous results):
+     * 1. Exact (case-sensitive) match — always wins.
+     * 2. Case-insensitive fallback — only if exactly one case matches.
+     * 3. Returns null when multiple cases match case-insensitively (ambiguous).
+     */
     public static function tryFromLabel(string $label): ?static
     {
+        // 1. Exact (case-sensitive) match
         foreach (self::cases() as $case) {
-            if (strcasecmp($case->label(), $label) === 0) {
+            if ($case->label() === $label) {
                 return $case;
             }
         }
 
-        return null;
+        // 2. Case-insensitive fallback — collect all matches
+        $matches = array_filter(
+            self::cases(),
+            static fn (self $case): bool => strcasecmp($case->label(), $label) === 0
+        );
+
+        // 3. Only return if unambiguous (exactly one match)
+        return count($matches) === 1 ? array_values($matches)[0] : null;
+    }
+
+    /**
+     * Reverse label lookup — throws when the label is not found.
+     *
+     * @throws \ValueError When no case matches the label.
+     */
+    public static function fromLabel(string $label): static
+    {
+        $case = self::tryFromLabel($label);
+
+        if ($case === null) {
+            $labels = implode(', ', self::labels());
+
+            throw new \ValueError(
+                sprintf('"%s" is not a valid label for enum %s. Valid labels: %s', $label, static::class, $labels)
+            );
+        }
+
+        return $case;
     }
 
     /**
