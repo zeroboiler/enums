@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of ZeroBoiler, licensed under the proprietary license.
  */
@@ -86,6 +87,35 @@ describe('EnumCast', function (): void {
         );
 
         expect($result)->toBe(Priority::HIGH);
+    });
+
+    it('throws when setting a BackedEnum from a different enum class', function (): void {
+        $cast = new EnumCast(UserStatus::class);
+
+        expect(fn (): mixed => $cast->set(
+            model: new class {},
+            key: 'status',
+            value: Priority::HIGH,
+            attributes: [],
+        ))->toThrow(InvalidArgumentException::class);
+    });
+
+    it('throws when setting a BackedEnum from a different enum class with informative message', function (): void {
+        $cast = new EnumCast(UserStatus::class);
+
+        try {
+            $cast->set(
+                model: new class {},
+                key: 'status',
+                value: Priority::HIGH,
+                attributes: [],
+            );
+            expect(false)->toBeTrue('Expected InvalidArgumentException to be thrown');
+        } catch (InvalidArgumentException $e) {
+            expect($e->getMessage())
+                ->toContain(UserStatus::class)
+                ->toContain(Priority::class);
+        }
     });
 
     it('serializes enum to its value', function (): void {
