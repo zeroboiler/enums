@@ -14,6 +14,7 @@ use BackedEnum;
  *
  *   Enum::forSelect(UserStatus::class);
  *   Enum::forApi(UserStatus::class);
+ *   Enum::tryFromLabel(UserStatus::class, 'Active User');
  */
 final class EnumManager
 {
@@ -48,7 +49,11 @@ final class EnumManager
     }
 
     /**
+     * Perform a reverse label-to-case lookup via the enum's trait method.
+     *
      * @param  class-string<BackedEnum>  $enumClass
+     * @param  string  $label  The human-readable label to search for (case-insensitive).
+     * @return BackedEnum|null  The matching enum case, or null if no match found.
      */
     public function tryFromLabel(string $enumClass, string $label): ?BackedEnum
     {
@@ -58,6 +63,7 @@ final class EnumManager
             );
         }
 
+        /** @var BackedEnum|null */
         return $enumClass::tryFromLabel($label);
     }
 }
