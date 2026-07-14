@@ -6,6 +6,7 @@
 
 declare(strict_types=1);
 
+use Pest\Mixins\Expectation;
 use ZeroBoiler\Enums\Casts\EnumCast;
 use ZeroBoiler\Enums\Tests\Fixtures\Priority;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
@@ -192,9 +193,9 @@ describe('EnumCast Edge Cases', function (): void {
                 key: 'status',
                 value: Priority::HIGH,
                 attributes: [],
-            ))->toThrow(fn (InvalidArgumentException $e) => expect($e->getMessage())
-                ->toContain('ZeroBoiler\Enums\Tests\Fixtures\UserStatus')
-                ->and($e->getMessage())->toContain('ZeroBoiler\Enums\Tests\Fixtures\Priority'));
+            ))->toThrow(fn (InvalidArgumentException $e): Expectation => expect($e->getMessage())
+                ->toContain(UserStatus::class)
+                ->and($e->getMessage())->toContain(Priority::class));
         });
 
         it('handles valid raw int value in set() for int-backed enum', function (): void {
