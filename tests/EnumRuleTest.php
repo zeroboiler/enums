@@ -59,12 +59,12 @@ describe('EnumRule', function (): void {
 
 describe('EnumRule constructor validation', function (): void {
     it('throws InvalidArgumentException for non-existent class', function (): void {
-        expect(fn () => new EnumRule('\\NonExistent\\FakeEnum'))
+        expect(fn (): EnumRule => new EnumRule('\\NonExistent\\FakeEnum'))
             ->toThrow(InvalidArgumentException::class);
     });
 
     it('throws InvalidArgumentException for non-enum class', function (): void {
-        expect(fn () => new EnumRule(stdClass::class))
+        expect(fn (): EnumRule => new EnumRule(stdClass::class))
             ->toThrow(InvalidArgumentException::class);
     });
 
@@ -81,7 +81,7 @@ describe('EnumRule constructor validation', function (): void {
     });
 
     it('for() factory also validates the enum class', function (): void {
-        expect(fn () => EnumRule::for('\\NonExistent\\FakeEnum'))
+        expect(fn (): EnumRule => EnumRule::for('\\NonExistent\\FakeEnum'))
             ->toThrow(InvalidArgumentException::class);
     });
 });
