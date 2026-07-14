@@ -108,7 +108,7 @@ trait HasEnumMetadata
         );
 
         // 3. Only return if unambiguous (exactly one match)
-        return count($matches) === 1 ? array_values($matches)[0] : null;
+        return count($matches) === 1 ? array_first($matches) : null;
     }
 
     /**
