@@ -100,4 +100,28 @@ describe('EnumCast', function (): void {
 
         expect($result)->toBe('active');
     });
+
+    it('throws when setting a BackedEnum from a different class', function (): void {
+        $cast = new EnumCast(UserStatus::class);
+
+        expect(fn (): mixed => $cast->set(
+            model: new class {},
+            key: 'status',
+            value: Priority::HIGH,
+            attributes: [],
+        ))->toThrow(InvalidArgumentException::class);
+    });
+
+    it('accepts the correct enum instance in set()', function (): void {
+        $cast = new EnumCast(UserStatus::class);
+
+        $result = $cast->set(
+            model: new class {},
+            key: 'status',
+            value: UserStatus::PENDING,
+            attributes: [],
+        );
+
+        expect($result)->toBe('pending');
+    });
 });
