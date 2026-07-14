@@ -12,6 +12,7 @@ use BackedEnum;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
+use InvalidArgumentException;
 use UnitEnum;
 
 /**
@@ -33,11 +34,21 @@ final readonly class EnumRule implements ValidationRule
     /**
      * @param  class-string<UnitEnum>  $enumClass
      * @param  bool  $nullable  When true, null values pass validation.
+     *
+     * @throws InvalidArgumentException If the class does not exist or is not a UnitEnum.
      */
     public function __construct(
         private string $enumClass,
         private bool $nullable = false,
-    ) {}
+    ) {
+        if (! enum_exists($enumClass)) {
+            throw new InvalidArgumentException("Class [{$enumClass}] is not a valid enum.");
+        }
+
+        if (! is_subclass_of($enumClass, UnitEnum::class)) {
+            throw new InvalidArgumentException("Class [{$enumClass}] must be a UnitEnum or BackedEnum.");
+        }
+    }
 
     /**
      * Named constructor for readability.
