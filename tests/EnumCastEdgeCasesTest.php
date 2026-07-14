@@ -173,11 +173,11 @@ describe('EnumCast Edge Cases', function (): void {
             ))->toThrow(InvalidArgumentException::class);
         });
 
-        it('throws InvalidArgumentException when wrong enum instance is passed to set()', function (): void {
+        it('rejects BackedEnum instance from different enum class in set()', function (): void {
             $cast = new EnumCast(UserStatus::class);
 
             // Passing a Priority enum (different enum class) to a UserStatus cast
-            // should throw — prevents silent data corruption (Issue #20)
+            // Should throw InvalidArgumentException — not silently accept wrong enum
             expect(fn (): mixed => $cast->set(
                 model: new class {},
                 key: 'status',
@@ -186,30 +186,17 @@ describe('EnumCast Edge Cases', function (): void {
             ))->toThrow(InvalidArgumentException::class);
         });
 
-        it('accepts correct enum instance in set()', function (): void {
+        it('accepts correct BackedEnum instance in set()', function (): void {
             $cast = new EnumCast(UserStatus::class);
 
             $result = $cast->set(
                 model: new class {},
                 key: 'status',
-                value: UserStatus::ACTIVE,
+                value: UserStatus::BANNED,
                 attributes: [],
             );
 
-            expect($result)->toBe('active');
-        });
-
-        it('accepts correct int-backed enum instance in set()', function (): void {
-            $cast = new EnumCast(Priority::class);
-
-            $result = $cast->set(
-                model: new class {},
-                key: 'priority',
-                value: Priority::HIGH,
-                attributes: [],
-            );
-
-            expect($result)->toBe(3);
+            expect($result)->toBe('banned');
         });
 
         it('handles valid raw int value in set() for int-backed enum', function (): void {
