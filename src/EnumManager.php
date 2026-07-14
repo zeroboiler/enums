@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of ZeroBoiler, licensed under the proprietary license.
  */
@@ -53,7 +54,7 @@ final class EnumManager
      *
      * @param  class-string<BackedEnum>  $enumClass
      * @param  string  $label  The human-readable label to search for (case-insensitive).
-     * @return BackedEnum|null  The matching enum case, or null if no match found.
+     * @return BackedEnum|null The matching enum case, or null if no match found.
      */
     public function tryFromLabel(string $enumClass, string $label): ?BackedEnum
     {

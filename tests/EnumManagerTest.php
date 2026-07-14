@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of ZeroBoiler, licensed under the proprietary license.
  */
@@ -35,7 +36,7 @@ describe('EnumManager', function (): void {
 
         it('throws BadMethodCallException for enum without trait', function (): void {
             expect(fn () => $this->manager->forSelect('NonExistentClass'))
-                ->toThrow(\BadMethodCallException::class);
+                ->toThrow(BadMethodCallException::class);
         });
     });
 
@@ -88,12 +89,12 @@ describe('EnumManager', function (): void {
         it('returns a BackedEnum instance', function (): void {
             $result = $this->manager->tryFromLabel(UserStatus::class, 'Active User');
 
-            expect($result)->toBeInstanceOf(\BackedEnum::class);
+            expect($result)->toBeInstanceOf(BackedEnum::class);
         });
 
         it('throws BadMethodCallException for enum without trait', function (): void {
             expect(fn () => $this->manager->tryFromLabel('NonExistentClass', 'test'))
-                ->toThrow(\BadMethodCallException::class);
+                ->toThrow(BadMethodCallException::class);
         });
     });
 });
