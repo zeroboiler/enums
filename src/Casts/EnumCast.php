@@ -10,6 +10,7 @@ namespace ZeroBoiler\Enums\Casts;
 
 use BackedEnum;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use InvalidArgumentException;
 
 /**
  * Universal enum cast — works with any backed enum.
@@ -65,11 +66,17 @@ class EnumCast implements CastsAttributes
         }
 
         if ($value instanceof BackedEnum) {
+            if (! $value instanceof $this->enumClass) {
+                throw new InvalidArgumentException(
+                    sprintf('Expected instance of %s, got %s', $this->enumClass, $value::class)
+                );
+            }
+
             return $value->value;
         }
 
         if (! is_int($value) && ! is_string($value)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('Invalid value type for enum %s', $this->enumClass)
             );
         }
@@ -79,7 +86,7 @@ class EnumCast implements CastsAttributes
         $enumClass = $this->enumClass;
 
         if ($enumClass::tryFrom($value) === null) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('Invalid value [%s] for enum %s', $value, $enumClass)
             );
         }
