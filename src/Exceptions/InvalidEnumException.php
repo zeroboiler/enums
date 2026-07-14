@@ -17,4 +17,16 @@ final class InvalidEnumException extends Exception
 
         return new self("Value [{$type}] is not a valid case of [{$enumClass}].");
     }
+
+    /**
+     * @param  list<string>  $matchedLabels
+     */
+    public static function ambiguousLabel(string $enumClass, string $label, array $matchedLabels): self
+    {
+        $labels = implode(', ', $matchedLabels);
+
+        return new self(
+            "Label [{$label}] ambiguously matches multiple cases in [{$enumClass}]: {$labels}. Provide an exact match."
+        );
+    }
 }

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace ZeroBoiler\Enums\Concerns;
 
 use BackedEnum;
+use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 
 /**
@@ -86,13 +87,29 @@ trait HasEnumMetadata
 
     public static function tryFromLabel(string $label): ?static
     {
+        // 1. Exact case-sensitive match — always unambiguous.
         foreach (self::cases() as $case) {
-            if (strcasecmp($case->label(), $label) === 0) {
+            if ($case->label() === $label) {
                 return $case;
             }
         }
 
-        return null;
+        // 2. Case-insensitive fallback — collect all matches to detect ambiguity.
+        /** @var list<self> $insensitiveMatches */
+        $insensitiveMatches = [];
+        foreach (self::cases() as $case) {
+            if (strcasecmp($case->label(), $label) === 0) {
+                $insensitiveMatches[] = $case;
+            }
+        }
+
+        if (\count($insensitiveMatches) > 1) {
+            $labels = array_map(static fn (self $case): string => $case->label(), $insensitiveMatches);
+
+            throw InvalidEnumException::ambiguousLabel(static::class, $label, $labels);
+        }
+
+        return $insensitiveMatches[0] ?? null;
     }
 
     /**
