@@ -173,20 +173,42 @@ describe('EnumCast Edge Cases', function (): void {
             ))->toThrow(InvalidArgumentException::class);
         });
 
-        it('accepts valid BackedEnum instance from different enum in set()', function (): void {
+        it('throws InvalidArgumentException when wrong enum instance is passed to set()', function (): void {
             $cast = new EnumCast(UserStatus::class);
 
             // Passing a Priority enum (different enum class) to a UserStatus cast
-            // The cast only checks if it's a BackedEnum, not if it's the correct enum
-            $result = $cast->set(
+            // should throw — prevents silent data corruption (Issue #20)
+            expect(fn (): mixed => $cast->set(
                 model: new class {},
                 key: 'status',
                 value: Priority::HIGH,
                 attributes: [],
+            ))->toThrow(InvalidArgumentException::class);
+        });
+
+        it('accepts correct enum instance in set()', function (): void {
+            $cast = new EnumCast(UserStatus::class);
+
+            $result = $cast->set(
+                model: new class {},
+                key: 'status',
+                value: UserStatus::ACTIVE,
+                attributes: [],
             );
 
-            // This returns the enum's value (3) which is wrong for UserStatus
-            // Documenting current behavior — this is a known limitation
+            expect($result)->toBe('active');
+        });
+
+        it('accepts correct int-backed enum instance in set()', function (): void {
+            $cast = new EnumCast(Priority::class);
+
+            $result = $cast->set(
+                model: new class {},
+                key: 'priority',
+                value: Priority::HIGH,
+                attributes: [],
+            );
+
             expect($result)->toBe(3);
         });
 
