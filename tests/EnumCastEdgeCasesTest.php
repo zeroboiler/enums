@@ -151,7 +151,7 @@ describe('EnumCast Edge Cases', function (): void {
     });
 
     describe('set() edge cases', function (): void {
-        it('throws InvalidArgumentException for invalid enum class in set()', function (): void {
+        it('throws InvalidArgumentException for invalid raw string value in set()', function (): void {
             $cast = new EnumCast(UserStatus::class);
 
             expect(fn (): mixed => $cast->set(
@@ -173,21 +173,30 @@ describe('EnumCast Edge Cases', function (): void {
             ))->toThrow(InvalidArgumentException::class);
         });
 
-        it('accepts valid BackedEnum instance from different enum in set()', function (): void {
+        it('throws InvalidArgumentException for wrong enum instance in set()', function (): void {
             $cast = new EnumCast(UserStatus::class);
 
             // Passing a Priority enum (different enum class) to a UserStatus cast
-            // The cast only checks if it's a BackedEnum, not if it's the correct enum
-            $result = $cast->set(
+            // must throw — prevents silent data corruption (#20)
+            expect(fn (): mixed => $cast->set(
                 model: new class {},
                 key: 'status',
                 value: Priority::HIGH,
                 attributes: [],
+            ))->toThrow(InvalidArgumentException::class);
+        });
+
+        it('accepts correct enum instance in set()', function (): void {
+            $cast = new EnumCast(UserStatus::class);
+
+            $result = $cast->set(
+                model: new class {},
+                key: 'status',
+                value: UserStatus::ACTIVE,
+                attributes: [],
             );
 
-            // This returns the enum's value (3) which is wrong for UserStatus
-            // Documenting current behavior — this is a known limitation
-            expect($result)->toBe(3);
+            expect($result)->toBe('active');
         });
 
         it('handles valid raw int value in set() for int-backed enum', function (): void {
