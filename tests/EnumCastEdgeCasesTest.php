@@ -207,7 +207,7 @@ describe('EnumCast Edge Cases', function (): void {
                 key: 'status',
                 value: Priority::HIGH,
                 attributes: [],
-            ))->toThrow(InvalidArgumentException::class, 'ZeroBoiler\\Enums\\Tests\\Fixtures\\UserStatus');
+            ))->toThrow(InvalidArgumentException::class, UserStatus::class);
         });
 
         it('handles valid raw int value in set() for int-backed enum', function (): void {
