@@ -19,7 +19,7 @@ use InvalidArgumentException;
  *
  *   protected $casts = [
  *       'status' => UserStatus::class,  // works automatically
- *   ];
+ *   ],
  *
  * @template T of \BackedEnum
  *
@@ -69,7 +69,7 @@ class EnumCast implements CastsAttributes
             if (! $value instanceof $this->enumClass) {
                 throw new InvalidArgumentException(
                     sprintf(
-                        'Expected enum instance of %s, got %s',
+                        'Expected instance of [%s], got [%s]',
                         $this->enumClass,
                         $value::class,
                     ),

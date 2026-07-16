@@ -177,13 +177,13 @@ describe('EnumCast Edge Cases', function (): void {
             $cast = new EnumCast(UserStatus::class);
 
             // Passing a Priority enum (different enum class) to a UserStatus cast
-            // must throw — previously silently returned the wrong value
+            // must throw — prevents silent data corruption (Issue #20)
             expect(fn (): mixed => $cast->set(
                 model: new class {},
                 key: 'status',
                 value: Priority::HIGH,
                 attributes: [],
-            ))->toThrow(InvalidArgumentException::class);
+            ))->toThrow(InvalidArgumentException::class, 'Expected instance of');
         });
 
         it('accepts correct enum instance in set()', function (): void {
@@ -197,6 +197,17 @@ describe('EnumCast Edge Cases', function (): void {
             );
 
             expect($result)->toBe('active');
+        });
+
+        it('throws with descriptive message containing both enum class names', function (): void {
+            $cast = new EnumCast(UserStatus::class);
+
+            expect(fn (): mixed => $cast->set(
+                model: new class {},
+                key: 'status',
+                value: Priority::HIGH,
+                attributes: [],
+            ))->toThrow(InvalidArgumentException::class, 'ZeroBoiler\\Enums\\Tests\\Fixtures\\UserStatus');
         });
 
         it('handles valid raw int value in set() for int-backed enum', function (): void {
