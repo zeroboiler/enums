@@ -92,7 +92,18 @@ final readonly class EnumRule implements ValidationRule
         $enumClass = $this->enumClass;
 
         if (is_a($enumClass, BackedEnum::class, true)) {
-            if ((! is_string($value) && ! is_int($value)) || ! $enumClass::tryFrom($value) instanceof BackedEnum) {
+            if (! is_string($value) && ! is_int($value)) {
+                $fail($this->message($attribute));
+
+                return;
+            }
+
+            try {
+                if (! $enumClass::tryFrom($value) instanceof BackedEnum) {
+                    $fail($this->message($attribute));
+                }
+            } catch (\TypeError) {
+                // Type mismatch (e.g., int for string-backed enum)
                 $fail($this->message($attribute));
             }
         } elseif (is_a($enumClass, UnitEnum::class, true)) {
