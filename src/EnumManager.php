@@ -53,10 +53,11 @@ final class EnumManager
      * Perform a reverse label-to-case lookup via the enum's trait method.
      *
      * @param  class-string<BackedEnum>  $enumClass
-     * @param  string  $label  The human-readable label to search for (case-insensitive).
+     * @param  string  $label  The human-readable label to search for.
+     * @param  bool  $strict  When true, only case-sensitive exact matches are accepted.
      * @return BackedEnum|null The matching enum case, or null if no match found.
      */
-    public function tryFromLabel(string $enumClass, string $label): ?BackedEnum
+    public function tryFromLabel(string $enumClass, string $label, bool $strict = false): ?BackedEnum
     {
         if (! method_exists($enumClass, 'tryFromLabel')) {
             throw new \BadMethodCallException(
@@ -65,6 +66,6 @@ final class EnumManager
         }
 
         /** @var BackedEnum|null */
-        return $enumClass::tryFromLabel($label);
+        return $enumClass::tryFromLabel($label, $strict);
     }
 }
