@@ -174,4 +174,16 @@ final class EnumMetadataResolver
 
         return self::$cache;
     }
+
+    /**
+     * Reset the internal cache reference.
+     *
+     * Useful in long-lived processes (Octane/Swoole) or tests
+     * where EnumCache::resetInstance() has been called and the
+     * resolver needs to re-acquire the new instance.
+     */
+    public static function resetCache(): void
+    {
+        self::$cache = null;
+    }
 }

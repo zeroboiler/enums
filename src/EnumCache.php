@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace ZeroBoiler\Enums;
 
+use ZeroBoiler\Enums\Support\EnumMetadataResolver;
+
 /**
  * Cache for enum metadata to avoid property restrictions in PHP enums.
  *
@@ -113,12 +115,19 @@ final class EnumCache
 
     /**
      * Flush the entire cache (alias for clear, semantically explicit for resets).
+     *
+     * Called automatically between requests under Laravel Octane / Swoole
+     * via EnumsServiceProvider. Can also be called manually.
      */
     public static function flush(): void
     {
         $instance = self::getInstance();
         $instance->cache = [];
         $instance->cacheTimestamps = [];
+
+        // Reset the resolver's cached reference so it re-acquires
+        // the (now-empty) EnumCache instance on next access.
+        EnumMetadataResolver::resetCache();
     }
 
     /**
