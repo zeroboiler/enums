@@ -54,4 +54,25 @@ describe('EnumRule', function (): void {
         expect($message)->toContain('active');
         expect($message)->toContain('banned');
     });
+
+    it('throws InvalidArgumentException for non-existent class', function (): void {
+        expect(fn (): EnumRule => new EnumRule('App\\NonExistent\\FakeEnum'))
+            ->toThrow(InvalidArgumentException::class, 'does not exist');
+    });
+
+    it('throws InvalidArgumentException for non-enum class', function (): void {
+        expect(fn (): EnumRule => new EnumRule(stdClass::class))
+            ->toThrow(InvalidArgumentException::class, 'does not exist or is not an enum');
+    });
+
+    it('throws via for() factory for invalid class', function (): void {
+        expect(fn (): EnumRule => EnumRule::for('App\\Fake'))
+            ->toThrow(InvalidArgumentException::class);
+    });
+
+    it('accepts BackedEnum classes in constructor', function (): void {
+        $rule = new EnumRule(UserStatus::class);
+
+        expect($rule)->toBeInstanceOf(EnumRule::class);
+    });
 });
