@@ -53,7 +53,7 @@ describe('Bug Fix Tests', function (): void {
         });
 
         it('throws for non-enum class', function (): void {
-            expect(fn (): EnumRule => new EnumRule(\stdClass::class))
+            expect(fn (): EnumRule => new EnumRule(stdClass::class))
                 ->toThrow(InvalidArgumentException::class);
         });
 
