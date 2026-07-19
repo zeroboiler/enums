@@ -54,7 +54,12 @@ final class EnumMetadataResolver
         ];
 
         // Per-case attributes override class-level
-        self::resolvePerCaseAttributes($reflection, $enumClass, $metadata);
+        $perCase = self::resolvePerCaseAttributes($reflection, $enumClass);
+
+        $metadata['labels'] = array_merge($metadata['labels'], $perCase['labels']);
+        $metadata['descriptions'] = array_merge($metadata['descriptions'], $perCase['descriptions']);
+        $metadata['colors'] = array_merge($metadata['colors'], $perCase['colors']);
+        $metadata['icons'] = array_merge($metadata['icons'], $perCase['icons']);
 
         $cache->set($enumClass, $metadata);
 
@@ -62,6 +67,7 @@ final class EnumMetadataResolver
     }
 
     /**
+     * @param  ReflectionEnum<UnitEnum>  $reflection
      * @return array<string, string>
      */
     private static function resolveClassLabels(ReflectionEnum $reflection): array
@@ -78,6 +84,7 @@ final class EnumMetadataResolver
     }
 
     /**
+     * @param  ReflectionEnum<UnitEnum>  $reflection
      * @return array<string, string>
      */
     private static function resolveClassDescriptions(ReflectionEnum $reflection): array
@@ -94,6 +101,7 @@ final class EnumMetadataResolver
     }
 
     /**
+     * @param  ReflectionEnum<UnitEnum>  $reflection
      * @return array<string, string>
      */
     private static function resolveClassColors(ReflectionEnum $reflection): array
@@ -114,6 +122,7 @@ final class EnumMetadataResolver
     }
 
     /**
+     * @param  ReflectionEnum<UnitEnum>  $reflection
      * @return array<string, string>
      */
     private static function resolveClassIcons(ReflectionEnum $reflection): array
@@ -122,7 +131,6 @@ final class EnumMetadataResolver
         foreach ($reflection->getAttributes() as $attr) {
             $instance = $attr->newInstance();
             if ($instance instanceof EnumIcon && $instance->default) {
-                /** @var UnitEnum $enumClass */
                 $enumClass = $reflection->getName();
                 foreach ($enumClass::cases() as $case) {
                     $caseValue = $case instanceof BackedEnum ? $case->value : $case->name;
@@ -135,11 +143,17 @@ final class EnumMetadataResolver
     }
 
     /**
-     * @param  array{labels: array<string,string>, descriptions: array<string,string>, colors: array<string,string>, icons: array<string,string>}  $metadata
+     * @param  ReflectionEnum<UnitEnum>  $reflection
+     * @param  class-string<UnitEnum>  $enumClass
+     * @return array{labels: array<string,string>, descriptions: array<string,string>, colors: array<string,string>, icons: array<string,string>}
      */
-    private static function resolvePerCaseAttributes(ReflectionEnum $reflection, string $enumClass, array &$metadata): void
+    private static function resolvePerCaseAttributes(ReflectionEnum $reflection, string $enumClass): array
     {
-        /** @var UnitEnum $enumClass */
+        $labels = [];
+        $descriptions = [];
+        $colors = [];
+        $icons = [];
+
         foreach ($enumClass::cases() as $case) {
             $caseReflection = $reflection->getCase($case->name);
             $value = $case instanceof BackedEnum ? $case->value : $case->name;
@@ -148,22 +162,29 @@ final class EnumMetadataResolver
                 $instance = $attr->newInstance();
 
                 if ($instance instanceof Label) {
-                    $metadata['labels'][$value] = $instance->value;
+                    $labels[$value] = $instance->value;
                 }
 
                 if ($instance instanceof Description) {
-                    $metadata['descriptions'][$value] = $instance->value;
+                    $descriptions[$value] = $instance->value;
                 }
 
                 if ($instance instanceof Color) {
-                    $metadata['colors'][$value] = $instance->value;
+                    $colors[$value] = $instance->value;
                 }
 
                 if ($instance instanceof Icon) {
-                    $metadata['icons'][$value] = $instance->value;
+                    $icons[$value] = $instance->value;
                 }
             }
         }
+
+        return [
+            'labels' => $labels,
+            'descriptions' => $descriptions,
+            'colors' => $colors,
+            'icons' => $icons,
+        ];
     }
 
     private static function getCache(): EnumCache
