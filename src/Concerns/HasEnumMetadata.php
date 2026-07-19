@@ -91,14 +91,22 @@ trait HasEnumMetadata
      * 1. Exact (case-sensitive) match — always wins.
      * 2. Case-insensitive fallback — only if exactly one case matches.
      * 3. Returns null when multiple cases match case-insensitively (ambiguous).
+     *
+     * @param  bool  $strict  When true, only case-sensitive exact matches are accepted
+     *                        (no case-insensitive fallback). Default: false.
      */
-    public static function tryFromLabel(string $label): ?static
+    public static function tryFromLabel(string $label, bool $strict = false): ?static
     {
         // 1. Exact (case-sensitive) match
         foreach (self::cases() as $case) {
             if ($case->label() === $label) {
                 return $case;
             }
+        }
+
+        // In strict mode, no fallback
+        if ($strict) {
+            return null;
         }
 
         // 2. Case-insensitive fallback — collect all matches
@@ -114,11 +122,13 @@ trait HasEnumMetadata
     /**
      * Reverse label lookup — throws when the label is not found.
      *
+     * @param  bool  $strict  When true, only case-sensitive exact matches are accepted.
+     *
      * @throws \ValueError When no case matches the label.
      */
-    public static function fromLabel(string $label): static
+    public static function fromLabel(string $label, bool $strict = false): static
     {
-        $case = self::tryFromLabel($label);
+        $case = self::tryFromLabel($label, $strict);
 
         if ($case === null) {
             $labels = implode(', ', self::labels());
