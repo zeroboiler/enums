@@ -48,9 +48,12 @@ final class EnumManager
     }
 
     /**
+     * Resolve an enum case from its label.
+     *
      * @param  class-string<BackedEnum>  $enumClass
+     * @param  bool  $strict  When true, use case-sensitive matching.
      */
-    public function tryFromLabel(string $enumClass, string $label): ?BackedEnum
+    public function tryFromLabel(string $enumClass, string $label, bool $strict = false): ?BackedEnum
     {
         if (! method_exists($enumClass, 'tryFromLabel')) {
             throw new \BadMethodCallException(
@@ -58,6 +61,6 @@ final class EnumManager
             );
         }
 
-        return $enumClass::tryFromLabel($label);
+        return $enumClass::tryFromLabel($label, $strict);
     }
 }

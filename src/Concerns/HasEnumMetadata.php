@@ -84,11 +84,22 @@ trait HasEnumMetadata
         ], self::cases());
     }
 
-    public static function tryFromLabel(string $label): ?static
+    public static function tryFromLabel(string $label, bool $strict = false): ?static
     {
         foreach (self::cases() as $case) {
-            if (strcasecmp($case->label(), $label) === 0) {
-                return $case;
+            if ($strict) {
+                if ($case->label() === $label) {
+                    return $case;
+                }
+            } elseif (strcasecmp($case->label(), $label) === 0) {
+                // Case-insensitive match — check for ambiguity (#1)
+                // On ambiguity, return null to avoid silent incorrect results
+                $matches = array_filter(
+                    self::cases(),
+                    static fn (self $c): bool => strcasecmp($c->label(), $label) === 0
+                );
+
+                return count($matches) === 1 ? $case : null;
             }
         }
 

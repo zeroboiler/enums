@@ -65,6 +65,13 @@ class EnumCast implements CastsAttributes
         }
 
         if ($value instanceof BackedEnum) {
+            // Ensure the enum instance belongs to the correct class (#20)
+            if (! $value instanceof $this->enumClass) {
+                throw new \InvalidArgumentException(
+                    sprintf('Expected instance of %s, got %s', $this->enumClass, $value::class)
+                );
+            }
+
             return $value->value;
         }
 
@@ -74,7 +81,7 @@ class EnumCast implements CastsAttributes
             );
         }
 
-        // Validate raw value — throw on invalid
+        // Validate raw value — throw on invalid (#7)
         /** @var class-string<BackedEnum> $enumClass */
         $enumClass = $this->enumClass;
 

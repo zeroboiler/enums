@@ -37,7 +37,13 @@ final readonly class EnumRule implements ValidationRule
     public function __construct(
         private string $enumClass,
         private bool $nullable = false,
-    ) {}
+    ) {
+        if (! enum_exists($enumClass)) {
+            throw new \InvalidArgumentException(
+                "Class {$enumClass} is not a valid enum or does not exist."
+            );
+        }
+    }
 
     /**
      * Named constructor for readability.

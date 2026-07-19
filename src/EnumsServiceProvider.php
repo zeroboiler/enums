@@ -28,5 +28,12 @@ final class EnumsServiceProvider extends ServiceProvider
                 InspectEnumCommand::class,
             ]);
         }
+
+        // Flush enum cache between requests in long-lived processes (#8)
+        if ($this->app->bound('request')) {
+            $this->app->terminating(static function (): void {
+                EnumCache::flush();
+            });
+        }
     }
 }
