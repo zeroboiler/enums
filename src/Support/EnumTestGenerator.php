@@ -26,9 +26,6 @@ class EnumTestGenerator
         $reflection = new ReflectionEnum($enumClass);
         $shortName = $reflection->getShortName();
         $cases = $enumClass::cases();
-        $namespace = $reflection->getNamespaceName();
-
-        str_replace('App\\', 'Tests\\', $namespace);
 
         $caseTests = '';
         foreach ($cases as $case) {
