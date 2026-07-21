@@ -15,11 +15,20 @@ use Attribute;
  *
  *   #[Label('Active User')]
  *   case ACTIVE = 'active';
+ *
+ * With translation:
+ *   #[Label(translationKey: 'user_status.active')]
+ *   case ACTIVE = 'active';
  */
 #[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
 final class Label
 {
+    /**
+     * @param  string|null  $value  Static label text
+     * @param  string|null  $translationKey  Translation key, resolved via __('enums.{translationKey}')
+     */
     public function __construct(
-        public string $value,
+        public ?string $value = null,
+        public ?string $translationKey = null,
     ) {}
 }
