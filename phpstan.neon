@@ -8,5 +8,6 @@ parameters:
     reportUnmatchedIgnoredErrors: false
     bootstrapFiles:
         - vendor/larastan/larastan/bootstrap.php
+        - stubs/translation.php
     ignoreErrors:
         - "#Trait .*HasEnumMetadata is used zero times#"

@@ -110,7 +110,7 @@ final class EnumCache
 
     public function clearClass(string $enumClass): void
     {
-        unset($this->cache[$enumClass]);
+        unset($this->cache[$enumClass], $this->cacheTimestamps[$enumClass]);
     }
 
     /**

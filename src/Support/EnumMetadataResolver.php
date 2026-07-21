@@ -32,6 +32,13 @@ final class EnumMetadataResolver
     private static ?EnumCache $cache = null;
 
     /**
+     * Memoized attribute instances per enum class.
+     *
+     * @var array<string, list<object>>
+     */
+    private static array $attributeCache = [];
+
+    /**
      * Resolve all metadata for an enum class.
      *
      * @param  class-string  $enumClass
@@ -73,10 +80,16 @@ final class EnumMetadataResolver
     private static function resolveClassLabels(ReflectionEnum $reflection): array
     {
         $labels = [];
-        foreach ($reflection->getAttributes() as $attr) {
-            $instance = $attr->newInstance();
-            if ($instance instanceof EnumLabel && $instance->labels) {
-                $labels = $instance->labels;
+        foreach (self::getClassAttributes($reflection) as $instance) {
+            if ($instance instanceof EnumLabel) {
+                if ($instance->translationKeys) {
+                    foreach ($instance->translationKeys as $caseValue => $key) {
+                        $labels[$caseValue] = __('enums.'.$key);
+                    }
+                }
+                if ($instance->labels) {
+                    $labels = array_merge($labels, $instance->labels);
+                }
             }
         }
 
@@ -90,8 +103,7 @@ final class EnumMetadataResolver
     private static function resolveClassDescriptions(ReflectionEnum $reflection): array
     {
         $descriptions = [];
-        foreach ($reflection->getAttributes() as $attr) {
-            $instance = $attr->newInstance();
+        foreach (self::getClassAttributes($reflection) as $instance) {
             if ($instance instanceof EnumDescription && $instance->descriptions) {
                 $descriptions = $instance->descriptions;
             }
@@ -107,8 +119,7 @@ final class EnumMetadataResolver
     private static function resolveClassColors(ReflectionEnum $reflection): array
     {
         $colors = [];
-        foreach ($reflection->getAttributes() as $attr) {
-            $instance = $attr->newInstance();
+        foreach (self::getClassAttributes($reflection) as $instance) {
             if ($instance instanceof EnumColor) {
                 foreach (['success', 'danger', 'warning', 'info', 'secondary'] as $color) {
                     foreach ($instance->$color as $caseValue) {
@@ -128,8 +139,7 @@ final class EnumMetadataResolver
     private static function resolveClassIcons(ReflectionEnum $reflection): array
     {
         $icons = [];
-        foreach ($reflection->getAttributes() as $attr) {
-            $instance = $attr->newInstance();
+        foreach (self::getClassAttributes($reflection) as $instance) {
             if ($instance instanceof EnumIcon && $instance->default) {
                 $enumClass = $reflection->getName();
                 foreach ($enumClass::cases() as $case) {
@@ -155,14 +165,15 @@ final class EnumMetadataResolver
         $icons = [];
 
         foreach ($enumClass::cases() as $case) {
-            $caseReflection = $reflection->getCase($case->name);
             $value = $case instanceof BackedEnum ? $case->value : $case->name;
 
-            foreach ($caseReflection->getAttributes() as $attr) {
-                $instance = $attr->newInstance();
-
+            foreach (self::getCaseAttributes($reflection, $case->name) as $instance) {
                 if ($instance instanceof Label) {
-                    $labels[$value] = $instance->value;
+                    if ($instance->translationKey !== null) {
+                        $labels[$value] = __('enums.'.$instance->translationKey);
+                    } elseif ($instance->value !== null) {
+                        $labels[$value] = $instance->value;
+                    }
                 }
 
                 if ($instance instanceof Description) {
@@ -187,6 +198,51 @@ final class EnumMetadataResolver
         ];
     }
 
+    /**
+     * Get all attribute instances for an enum class (memoized).
+     *
+     * @param  ReflectionEnum<UnitEnum>  $reflection
+     * @return list<object>
+     */
+    private static function getClassAttributes(ReflectionEnum $reflection): array
+    {
+        $className = $reflection->getName();
+
+        if (isset(self::$attributeCache["class:{$className}"])) {
+            return self::$attributeCache["class:{$className}"];
+        }
+
+        $instances = [];
+        foreach ($reflection->getAttributes() as $attr) {
+            $instances[] = $attr->newInstance();
+        }
+
+        return self::$attributeCache["class:{$className}"] = $instances;
+    }
+
+    /**
+     * Get all attribute instances for a specific enum case (memoized).
+     *
+     * @param  ReflectionEnum<UnitEnum>  $reflection
+     * @return list<object>
+     */
+    private static function getCaseAttributes(ReflectionEnum $reflection, string $caseName): array
+    {
+        $cacheKey = "case:{$reflection->getName()}:{$caseName}";
+
+        if (isset(self::$attributeCache[$cacheKey])) {
+            return self::$attributeCache[$cacheKey];
+        }
+
+        $instances = [];
+        $caseReflection = $reflection->getCase($caseName);
+        foreach ($caseReflection->getAttributes() as $attr) {
+            $instances[] = $attr->newInstance();
+        }
+
+        return self::$attributeCache[$cacheKey] = $instances;
+    }
+
     private static function getCache(): EnumCache
     {
         if (! self::$cache instanceof EnumCache) {
@@ -206,5 +262,6 @@ final class EnumMetadataResolver
     public static function resetCache(): void
     {
         self::$cache = null;
+        self::$attributeCache = [];
     }
 }

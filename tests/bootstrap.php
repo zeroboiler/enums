@@ -8,15 +8,15 @@ declare(strict_types=1);
 
 /*
 |--------------------------------------------------------------------------
-| Test bootstrap for NovaForge Enums package
+| Test bootstrap for ZeroBoiler Enums package
 |--------------------------------------------------------------------------
 */
 
 // Simple autoloader for the package (for standalone testing)
 spl_autoload_register(function (string $class): void {
     $prefixes = [
-        'ZeroBoiler\\Enums\\' => __DIR__.'/../src/',
-        'ZeroBoiler\\Enums\\Tests\\' => __DIR__.'/',
+        'ZeroBoiler\Enums\\' => __DIR__.'/../src/',
+        'ZeroBoiler\Enums\Tests\\' => __DIR__.'/',
     ];
 
     foreach ($prefixes as $prefix => $baseDir) {
@@ -31,3 +31,17 @@ spl_autoload_register(function (string $class): void {
         }
     }
 });
+
+/*
+|--------------------------------------------------------------------------
+| Translation helper polyfill for standalone tests
+|--------------------------------------------------------------------------
+| In a Laravel app, __() is provided by the framework. In standalone tests,
+| we provide a simple fallback that returns the translation key as-is.
+*/
+if (! function_exists('__')) {
+    function __(string $key, array $replace = [], ?string $locale = null): string|array
+    {
+        return $key;
+    }
+}
