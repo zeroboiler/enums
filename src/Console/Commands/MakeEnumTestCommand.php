@@ -21,10 +21,8 @@ use ZeroBoiler\Enums\Support\EnumTestGenerator;
  */
 final class MakeEnumTestCommand extends Command
 {
-    #[\Override]
     protected $signature = 'zeroboiler:enum-test {class : The enum class FQN} {--dir= : Output directory}';
 
-    #[\Override]
     protected $description = 'Generate Pest tests for a NovaForge smart enum';
 
     public function handle(): int

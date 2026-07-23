@@ -20,10 +20,8 @@ use ReflectionEnum;
  */
 final class InspectEnumCommand extends Command
 {
-    #[\Override]
     protected $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
 
-    #[\Override]
     protected $description = 'Inspect a NovaForge smart enum — show all metadata in a table';
 
     public function handle(): int
