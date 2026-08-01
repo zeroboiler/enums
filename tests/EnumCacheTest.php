@@ -77,6 +77,28 @@ describe('EnumCache', function (): void {
         expect($cache->has('ExpiringEnum'))->toBeFalse();
     });
 
+    it('expires entries with negative TTL', function (): void {
+        $cache = EnumCache::getInstance();
+        $cache->setTtl(-1);
+
+        $data = ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []];
+        $cache->set('NegativeTtlEnum', $data);
+
+        expect($cache->has('NegativeTtlEnum'))->toBeFalse();
+    });
+
+    it('get returns stale data even after TTL expiry (no auto-evict on get)', function (): void {
+        $cache = EnumCache::getInstance();
+        $cache->setTtl(0);
+
+        $data = ['labels' => ['k' => 'v'], 'descriptions' => [], 'colors' => [], 'icons' => []];
+        $cache->set('StaleEnum', $data);
+
+        // has() returns false (expired), but get() still returns the raw data
+        expect($cache->has('StaleEnum'))->toBeFalse();
+        expect($cache->get('StaleEnum'))->toBe($data);
+    });
+
     it('resetInstance creates a fresh singleton', function (): void {
         $first = EnumCache::getInstance();
         $first->set('BeforeReset', ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []]);

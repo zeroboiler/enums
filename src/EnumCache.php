@@ -50,10 +50,15 @@ final class EnumCache
 
     public function has(string $enumClass): bool
     {
+        // TTL <= 0 means no caching — entries are always stale
+        if ($this->ttl <= 0) {
+            return false;
+        }
+
         // Auto-expire stale cache entries
         if (isset($this->cache[$enumClass])) {
             $age = microtime(true) - ($this->cacheTimestamps[$enumClass] ?? 0);
-            if ($age > $this->ttl) {
+            if ($age >= $this->ttl) {
                 unset($this->cache[$enumClass], $this->cacheTimestamps[$enumClass]);
 
                 return false;
