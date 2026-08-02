@@ -59,21 +59,21 @@ describe('EnumManager', function (): void {
     it('throws BadMethodCallException for forSelect on non-trait enum', function (): void {
         $manager = new EnumManager;
 
-        expect(fn () => $manager->forSelect('stdClass'))
+        expect(fn (): array => $manager->forSelect('stdClass'))
             ->toThrow(BadMethodCallException::class);
     });
 
     it('throws BadMethodCallException for forApi on non-trait enum', function (): void {
         $manager = new EnumManager;
 
-        expect(fn () => $manager->forApi('stdClass'))
+        expect(fn (): array => $manager->forApi('stdClass'))
             ->toThrow(BadMethodCallException::class);
     });
 
     it('throws BadMethodCallException for tryFromLabel on non-trait enum', function (): void {
         $manager = new EnumManager;
 
-        expect(fn () => $manager->tryFromLabel('stdClass', 'x'))
+        expect(fn (): ?\BackedEnum => $manager->tryFromLabel('stdClass', 'x'))
             ->toThrow(BadMethodCallException::class);
     });
 
