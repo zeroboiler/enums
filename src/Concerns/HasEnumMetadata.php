@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace ZeroBoiler\Enums\Concerns;
 
 use BackedEnum;
+use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 
 /**
@@ -93,6 +94,60 @@ trait HasEnumMetadata
         }
 
         return null;
+    }
+
+    /**
+     * Resolve a case by its enum name (e.g. 'ACTIVE' → UserStatus::ACTIVE).
+     *
+     * Unlike PHP's native tryFrom() which works on *values* of backed enums,
+     * this method works on *case names* and supports both backed and pure enums.
+     *
+     * @param  string  $name  The case name (e.g. 'ACTIVE', 'PENDING')
+     * @return static|null The enum case, or null if not found
+     */
+    public static function tryFromName(string $name): ?static
+    {
+        foreach (self::cases() as $case) {
+            if ($case->name === $name) {
+                return $case;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Resolve a case by its enum name, throwing on failure.
+     *
+     * @param  string  $name  The case name (e.g. 'ACTIVE', 'PENDING')
+     *
+     * @throws InvalidEnumException If no case with the given name exists
+     */
+    public static function fromName(string $name): static
+    {
+        $case = self::tryFromName($name);
+
+        if ($case === null) {
+            throw InvalidEnumException::forName(static::class, $name);
+        }
+
+        return $case;
+    }
+
+    /**
+     * Check if a case with the given name exists on this enum.
+     *
+     * @param  string  $name  The case name (e.g. 'ACTIVE')
+     */
+    public static function hasCase(string $name): bool
+    {
+        foreach (self::cases() as $case) {
+            if ($case->name === $name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
