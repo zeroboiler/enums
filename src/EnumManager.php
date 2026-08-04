@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace ZeroBoiler\Enums;
 
-use BackedEnum;
-
 /**
  * Runtime enum helper — accessible via `Enum` facade or injected.
  *
@@ -19,7 +17,7 @@ use BackedEnum;
 final class EnumManager
 {
     /**
-     * @param  class-string<BackedEnum>  $enumClass
+     * @param  class-string<\UnitEnum>  $enumClass
      * @return list<array{value: string|int, label: string}>
      */
     public function forSelect(string $enumClass): array
@@ -34,7 +32,7 @@ final class EnumManager
     }
 
     /**
-     * @param  class-string<BackedEnum>  $enumClass
+     * @param  class-string<\UnitEnum>  $enumClass
      * @return list<array<string, mixed>>
      */
     public function forApi(string $enumClass): array
@@ -49,9 +47,9 @@ final class EnumManager
     }
 
     /**
-     * @param  class-string<BackedEnum>  $enumClass
+     * @param  class-string<\UnitEnum>  $enumClass
      */
-    public function tryFromLabel(string $enumClass, string $label): ?BackedEnum
+    public function tryFromLabel(string $enumClass, string $label): ?\BackedEnum
     {
         if (! method_exists($enumClass, 'tryFromLabel')) {
             throw new \BadMethodCallException(

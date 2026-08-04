@@ -80,8 +80,15 @@ final class EnumMetadataResolver
             }
 
             if ($instance instanceof EnumColor) {
-                foreach (['success', 'danger', 'warning', 'info', 'secondary'] as $colorName) {
-                    foreach ($instance->$colorName as $caseValue) {
+                $colorMap = [
+                    'success' => $instance->success,
+                    'danger' => $instance->danger,
+                    'warning' => $instance->warning,
+                    'info' => $instance->info,
+                    'secondary' => $instance->secondary,
+                ];
+                foreach ($colorMap as $colorName => $caseValues) {
+                    foreach ($caseValues as $caseValue) {
                         $colors[$caseValue] = $colorName;
                     }
                 }
