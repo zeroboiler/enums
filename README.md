@@ -2,6 +2,18 @@
 
 Zero-boilerplate smart enum system for Laravel.
 
+## Installation
+
+```bash
+composer require zeroboiler/enums
+```
+
+The package auto-registers via Laravel's package discovery. No manual configuration needed.
+
+**Requirements:**
+- PHP 8.5+
+- Laravel 13+
+
 ## Features
 
 - **Attribute-based metadata** — `#[Label]`, `#[Color]`, `#[Icon]`, `#[Description]`
