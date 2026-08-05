@@ -118,6 +118,21 @@ php artisan zeroboiler:enum-test "App\Enums\UserStatus"
 php artisan zeroboiler:enum-inspect "App\Enums\UserStatus"
 ```
 
+### Enum Facade / Manager
+
+```php
+use ZeroBoiler\Enums\Facades\Enum;
+
+// Generate select options
+$options = Enum::forSelect(UserStatus::class);
+
+// Full API metadata
+$api = Enum::forApi(UserStatus::class);
+
+// Reverse lookup by label
+$case = Enum::tryFromLabel(UserStatus::class, 'Active User');
+```
+
 ## License
 
 Proprietary — © ZeroBoiler
