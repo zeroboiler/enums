@@ -6,12 +6,6 @@
 
 declare(strict_types=1);
 
-/**
- * Shared Rector configuration for all ZeroBoiler packages.
- *
- * Copy this file to each package root as `rector.php` and adjust paths.
- */
-
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
