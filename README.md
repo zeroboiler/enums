@@ -22,7 +22,8 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 - **Eloquent auto-cast** — works with any backed enum
 - **Validation rule** — `EnumRule::for(UserStatus::class)`
 - **Bulk helpers** — `forSelect()`, `forApi()`, `values()`, `labels()`
-- **Reverse lookup** — `tryFromLabel('Active User')`
+- **Reverse lookup** — `tryFromLabel('Active User')`, `tryFromName('ACTIVE')`, `fromName('ACTIVE')`
+- **Name lookup** — `hasCase('ACTIVE')`
 - **CLI tools** — `zeroboiler:enum-test`, `zeroboiler:enum-inspect`
 
 ## Usage
@@ -78,10 +79,17 @@ UserStatus::values();    // ['active', 'inactive', 'pending', 'suspended', 'bann
 UserStatus::labels();    // ['Active User', 'Inactive', ...]
 ```
 
-### Reverse Lookup
+### Lookup
 
 ```php
+// By label (case-insensitive)
 UserStatus::tryFromLabel('Active User'); // UserStatus::ACTIVE
+
+// By case name
+UserStatus::tryFromName('ACTIVE');      // UserStatus::ACTIVE
+UserStatus::fromName('ACTIVE');         // UserStatus::ACTIVE (throws InvalidEnumException)
+UserStatus::hasCase('ACTIVE');          // true
+UserStatus::hasCase('UNKNOWN');         // false
 ```
 
 ### Eloquent Cast
