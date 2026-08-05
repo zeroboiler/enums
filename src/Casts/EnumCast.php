@@ -67,6 +67,12 @@ class EnumCast implements CastsAttributes
         }
 
         if ($value instanceof BackedEnum) {
+            if (! $value instanceof $this->enumClass) {
+                throw new \InvalidArgumentException(
+                    sprintf('Expected enum %s, got %s', $this->enumClass, get_debug_type($value))
+                );
+            }
+
             return $value->value;
         }
 
