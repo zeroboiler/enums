@@ -154,6 +154,24 @@ $cache = EnumCache::getInstance();
 $cache->setTtl(0);  // disable caching (always fresh)
 ```
 
+## Testing
+
+```bash
+# Run the full test suite
+composer test
+
+# Run PHPStan analysis (level 9, no baseline)
+composer analyse
+
+# Run code style checker
+composer lint
+
+# Run all quality checks at once
+composer ci
+```
+
+All checks must pass before merging. The package targets PHPStan level 9 with a clean baseline (zero suppressed errors).
+
 ## License
 
 Proprietary — © ZeroBoiler
