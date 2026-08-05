@@ -133,6 +133,27 @@ $api = Enum::forApi(UserStatus::class);
 $case = Enum::tryFromLabel(UserStatus::class, 'Active User');
 ```
 
+## Advanced
+
+### Cache Management
+
+Enum metadata is cached per-class to avoid repeated reflection. In most cases
+this is transparent, but you can manage the cache for testing or long-running processes:
+
+```php
+use ZeroBoiler\Enums\EnumCache;
+
+// Flush all cached metadata (useful after deployment)
+EnumCache::flush();
+
+// Reset the singleton instance (for testing)
+EnumCache::resetInstance();
+
+// Configure TTL for dev environments (handled automatically by service provider)
+$cache = EnumCache::getInstance();
+$cache->setTtl(0);  // disable caching (always fresh)
+```
+
 ## License
 
 Proprietary — © ZeroBoiler
