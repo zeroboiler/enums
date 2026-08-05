@@ -25,7 +25,7 @@ final class MakeEnumTestCommand extends Command
     protected $signature = 'zeroboiler:enum-test {class : The enum class FQN} {--dir= : Output directory}';
 
     #[\Override]
-    protected $description = 'Generate Pest tests for a NovaForge smart enum';
+    protected $description = 'Generate Pest tests for a ZeroBoiler smart enum';
 
     public function handle(): int
     {

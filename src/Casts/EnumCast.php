@@ -14,7 +14,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 /**
  * Universal enum cast — works with any backed enum.
  *
- * Auto-detected by NovaForge enums. No need to manually register:
+ * Auto-detected by ZeroBoiler enums. No need to manually register:
  *
  *   protected $casts = [
  *       'status' => UserStatus::class,  // works automatically

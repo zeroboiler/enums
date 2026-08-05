@@ -24,7 +24,7 @@ final class InspectEnumCommand extends Command
     protected $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
 
     #[\Override]
-    protected $description = 'Inspect a NovaForge smart enum — show all metadata in a table';
+    protected $description = 'Inspect a ZeroBoiler smart enum — show all metadata in a table';
 
     public function handle(): int
     {

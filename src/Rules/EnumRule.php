@@ -26,7 +26,7 @@ use UnitEnum;
  *
  *   Rule::enum(UserStatus::class)  // Laravel built-in (also works)
  *
- * NovaForge version provides better error messages and works with metadata.
+ * ZeroBoiler version provides better error messages and works with metadata.
  */
 final readonly class EnumRule implements ValidationRule
 {
