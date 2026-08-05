@@ -36,6 +36,7 @@ class EnumCast implements CastsAttributes
     /**
      * Cast raw value to enum instance.
      *
+     * @param  object  $model
      * @param  int|string|null  $value
      * @param  array<string, mixed>  $attributes
      * @return T|null
@@ -55,7 +56,8 @@ class EnumCast implements CastsAttributes
     /**
      * Transform enum to storable value.
      *
-     * @param  BackedEnum|int|string|null  $value
+     * @param  object  $model
+     * @param  \BackedEnum|int|string|null  $value
      * @param  array<string, mixed>  $attributes
      */
     public function set(object $model, string $key, $value, array $attributes): int|string|null
@@ -90,7 +92,8 @@ class EnumCast implements CastsAttributes
     /**
      * Serialize enum for JSON (API resources, etc).
      *
-     * @param  BackedEnum|int|string|null  $value
+     * @param  object  $model
+     * @param  \BackedEnum|int|string|null  $value
      * @param  array<string, mixed>  $attributes
      */
     public function serialize(object $model, string $key, $value, array $attributes): int|string|null
