@@ -64,12 +64,12 @@ describe('HasEnumMetadata::fromName', function (): void {
     });
 
     it('throws InvalidEnumException for a non-existent case name', function (): void {
-        expect(fn () => UserStatus::fromName('NON_EXISTENT'))
+        expect(fn (): UserStatus => UserStatus::fromName('NON_EXISTENT'))
             ->toThrow(InvalidEnumException::class);
     });
 
     it('throws InvalidEnumException for empty string', function (): void {
-        expect(fn () => OrderStatus::fromName(''))
+        expect(fn (): OrderStatus => OrderStatus::fromName(''))
             ->toThrow(InvalidEnumException::class);
     });
 
@@ -85,7 +85,7 @@ describe('HasEnumMetadata::fromName', function (): void {
     });
 
     it('is case-sensitive', function (): void {
-        expect(fn () => OrderStatus::fromName('pending'))
+        expect(fn (): OrderStatus => OrderStatus::fromName('pending'))
             ->toThrow(InvalidEnumException::class);
     });
 });

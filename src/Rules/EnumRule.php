@@ -82,7 +82,7 @@ final readonly class EnumRule implements ValidationRule
             }
 
             /** @var class-string<BackedEnum> $enumClass */
-            if ($enumClass::tryFrom($value) === null) {
+            if (!$enumClass::tryFrom($value) instanceof \BackedEnum) {
                 $fail($this->message($attribute));
             }
         } elseif (is_a($enumClass, UnitEnum::class, true)) {
