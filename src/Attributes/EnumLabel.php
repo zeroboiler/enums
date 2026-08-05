@@ -28,6 +28,7 @@ final class EnumLabel
      * @param  string|null  $label  Single label (case-level)
      */
     public function __construct(
+        /** @var array<string, string>|null */
         public ?array $labels = null,
         public ?string $label = null,
     ) {}

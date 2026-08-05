@@ -21,15 +21,14 @@ use ZeroBoiler\Enums\Support\EnumTestGenerator;
  */
 final class MakeEnumTestCommand extends Command
 {
-    #[\Override]
     protected $signature = 'zeroboiler:enum-test {class : The enum class FQN} {--dir= : Output directory}';
 
-    #[\Override]
     protected $description = 'Generate Pest tests for a ZeroBoiler smart enum';
 
     public function handle(): int
     {
-        $enumClass = (string) $this->argument('class');
+        /** @var string $enumClass */
+        $enumClass = $this->argument('class');
 
         if (! enum_exists($enumClass)) {
             $this->error("Enum class '{$enumClass}' not found.");

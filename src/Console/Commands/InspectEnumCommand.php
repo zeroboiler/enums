@@ -20,15 +20,14 @@ use ReflectionEnum;
  */
 final class InspectEnumCommand extends Command
 {
-    #[\Override]
     protected $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
 
-    #[\Override]
     protected $description = 'Inspect a ZeroBoiler smart enum — show all metadata in a table';
 
     public function handle(): int
     {
-        $enumClass = (string) $this->argument('class');
+        /** @var string $enumClass */
+        $enumClass = $this->argument('class');
 
         if (! enum_exists($enumClass)) {
             $this->error("Enum class '{$enumClass}' not found.");

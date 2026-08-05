@@ -60,9 +60,13 @@ final class EnumMetadataResolver
      */
     private static function buildMetadata(string $enumClass): array
     {
+        /** @var array<string, string> $labels */
         $labels = [];
+        /** @var array<string, string> $descriptions */
         $descriptions = [];
+        /** @var array<string, string> $colors */
         $colors = [];
+        /** @var array<string, string> $icons */
         $icons = [];
 
         // --- Class-level attributes ---
@@ -96,7 +100,7 @@ final class EnumMetadataResolver
 
             if ($instance instanceof EnumIcon && $instance->default) {
                 foreach ($enumClass::cases() as $case) {
-                    $caseValue = $case instanceof BackedEnum ? $case->value : $case->name;
+                    $caseValue = (string) ($case instanceof BackedEnum ? $case->value : $case->name);
                     $icons[$caseValue] = $instance->default;
                 }
             }
@@ -105,7 +109,7 @@ final class EnumMetadataResolver
         // --- Per-case attributes (override class-level) ---
         foreach ($enumClass::cases() as $case) {
             $caseReflection = $reflection->getCase($case->name);
-            $value = $case instanceof BackedEnum ? $case->value : $case->name;
+            $value = (string) ($case instanceof BackedEnum ? $case->value : $case->name);
 
             foreach ($caseReflection->getAttributes() as $attr) {
                 $instance = $attr->newInstance();

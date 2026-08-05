@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace ZeroBoiler\Enums\Support;
 
 use ReflectionEnum;
+use UnitEnum;
 
 /**
  * Utility for generating Pest tests for enums.
@@ -19,7 +20,7 @@ final class EnumTestGenerator
     /**
      * Generate test file content for an enum class.
      *
-     * @param  class-string  $enumClass
+     * @param  class-string<UnitEnum>  $enumClass
      */
     public static function generate(string $enumClass): string
     {
