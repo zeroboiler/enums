@@ -7,7 +7,6 @@ namespace ZeroBoiler\Enums\Tests\Fixtures;
 use ZeroBoiler\Enums\Attributes\Color;
 use ZeroBoiler\Enums\Attributes\Description;
 use ZeroBoiler\Enums\Attributes\EnumColor;
-use ZeroBoiler\Enums\Enums;
 use ZeroBoiler\Enums\Attributes\Icon;
 use ZeroBoiler\Enums\Attributes\Label;
 use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
