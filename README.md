@@ -135,6 +135,40 @@ $case = Enum::tryFromLabel(UserStatus::class, 'Active User');
 
 ## Advanced
 
+### Class-Level Attributes
+
+In addition to per-case attributes, you can set defaults at the class level:
+
+```php
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Attributes\EnumLabel;
+use ZeroBoiler\Enums\Attributes\EnumIcon;
+use ZeroBoiler\Enums\Attributes\EnumDescription;
+
+#[EnumColor(success: ['active', 'paid'], danger: ['banned'])]
+#[EnumLabel(labels: ['active' => 'Active User', 'banned' => 'Banned User'])]
+#[EnumIcon(default: 'heroicon-o-question-mark-circle')]
+#[EnumDescription(descriptions: ['active' => 'Fully active user', 'banned' => 'Permanently banned'])]
+enum UserStatus: string
+{
+    use HasEnumMetadata;
+
+    case ACTIVE = 'active';
+    case BANNED = 'banned';
+}
+```
+
+| Attribute | Level | Description |
+|-----------|-------|-------------|
+| `#[EnumColor(...)]` | Class + Case | Map case values to UI colors (`success`, `danger`, `warning`, `info`, `secondary`) |
+| `#[EnumLabel(labels: [...])]` | Class + Case | Set labels for multiple cases at once (class-level) or a single case (case-level) |
+| `#[EnumDescription(descriptions: [...])]` | Class + Case | Set descriptions for multiple cases at once (class-level) or a single case (case-level) |
+| `#[EnumIcon(default: '...')]` | Class + Case | Set a default icon for all cases (class-level) or override per case |
+| `#[Label('...')]` | Case | Human-readable label for a single case (overrides class-level) |
+| `#[Color('...')]` | Case | UI color for a single case (overrides class-level) |
+| `#[Icon('...')]` | Case | Icon for a single case (overrides class-level) |
+| `#[Description('...')]` | Case | Description for a single case (overrides class-level) |
+
 ### Cache Management
 
 Enum metadata is cached per-class to avoid repeated reflection. In most cases
