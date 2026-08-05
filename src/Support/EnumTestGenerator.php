@@ -14,7 +14,7 @@ use ReflectionEnum;
  * Utility for generating Pest tests for enums.
  * Used by the `zeroboiler:enum-test` artisan command.
  */
-class EnumTestGenerator
+final class EnumTestGenerator
 {
     /**
      * Generate test file content for an enum class.
