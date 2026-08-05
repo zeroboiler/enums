@@ -6,6 +6,7 @@ parameters:
         - tests/*
     treatPhpDocTypesAsCertain: false
     reportUnmatchedIgnoredErrors: false
+    phpVersion: 80500
     bootstrapFiles:
         - vendor/larastan/larastan/bootstrap.php
     ignoreErrors:

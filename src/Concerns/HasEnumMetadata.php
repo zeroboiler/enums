@@ -19,6 +19,15 @@ use ZeroBoiler\Enums\Support\EnumMetadataResolver;
  */
 trait HasEnumMetadata
 {
+    /**
+     * Get the human-readable label for this enum case.
+     *
+     * Resolved from per-case #[Label] attribute, then class-level
+     * #[EnumLabel], then auto-generated from the case name.
+     *
+     *   SCREAMING_SNAKE_CASE → Title Case
+     *   camelCase → Title Case
+     */
     public function label(): string
     {
         $meta = EnumMetadataResolver::resolve(static::class);
@@ -29,6 +38,12 @@ trait HasEnumMetadata
             ?? $this->generateLabel();
     }
 
+    /**
+     * Get the human-readable description for this enum case.
+     *
+     * Resolved from per-case #[Description] attribute, then class-level
+     * #[EnumDescription], or null if not defined.
+     */
     public function description(): ?string
     {
         $meta = EnumMetadataResolver::resolve(static::class);
@@ -39,6 +54,12 @@ trait HasEnumMetadata
             ?? null;
     }
 
+    /**
+     * Get the color for this enum case.
+     *
+     * Resolved from per-case #[Color] attribute, then class-level
+     * #[EnumColor], or defaults to 'secondary'.
+     */
     public function color(): string
     {
         $meta = EnumMetadataResolver::resolve(static::class);
@@ -49,6 +70,12 @@ trait HasEnumMetadata
             ?? 'secondary';
     }
 
+    /**
+     * Get the icon for this enum case.
+     *
+     * Resolved from per-case #[Icon] attribute, then class-level
+     * #[EnumIcon], or null if not defined.
+     */
     public function icon(): ?string
     {
         $meta = EnumMetadataResolver::resolve(static::class);
@@ -85,6 +112,11 @@ trait HasEnumMetadata
         ], self::cases());
     }
 
+    /**
+     * Resolve an enum case by its human-readable label (case-insensitive).
+     *
+     * Iterates all cases and compares labels using strcasecmp.
+     */
     public static function tryFromLabel(string $label): ?static
     {
         foreach (self::cases() as $case) {
@@ -145,6 +177,11 @@ trait HasEnumMetadata
     }
 
     /**
+     * Get all backed values or case names for this enum.
+     *
+     * For backed enums returns the backed values (int|string).
+     * For pure enums returns the case names (string).
+     *
      * @return list<string|int>
      */
     public static function values(): array
@@ -156,6 +193,8 @@ trait HasEnumMetadata
     }
 
     /**
+     * Get all labels for every enum case, in case declaration order.
+     *
      * @return list<string>
      */
     public static function labels(): array

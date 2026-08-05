@@ -58,7 +58,13 @@ final readonly class EnumRule implements ValidationRule
     }
 
     /**
-     * @param  Closure(string, string|null=):PotentiallyTranslatedString  $fail
+     * Validate the attribute value against the enum class.
+     *
+     * For backed enums: validates that the value matches a valid backed value.
+     * For pure enums: validates that the value string matches a case name.
+     * Null values are rejected unless the nullable flag is set.
+     *
+     * @param  Closure(string, string|null=): PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
