@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static list<array{value: string|int, label: string}> forSelect(string $enumClass)
  * @method static list<array{value: string|int, name: string, label: string, description: ?string, color: string, icon: ?string}> forApi(string $enumClass)
- * @method static ?\BackedEnum tryFromLabel(string $enumClass, string $label)
+ * @method static ?\UnitEnum tryFromLabel(string $enumClass, string $label)
  */
 final class Enum extends Facade
 {

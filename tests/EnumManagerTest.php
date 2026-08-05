@@ -6,6 +6,7 @@
 
 declare(strict_types=1);
 
+use UnitEnum;
 use ZeroBoiler\Enums\EnumCache;
 use ZeroBoiler\Enums\EnumManager;
 use ZeroBoiler\Enums\Tests\Fixtures\Priority;
@@ -44,7 +45,7 @@ describe('EnumManager', function (): void {
         // UserStatus::ACTIVE has #[Label('Active User')]
         $result = $manager->tryFromLabel(UserStatus::class, 'Active User');
 
-        expect($result)->toBeInstanceOf(BackedEnum::class);
+        expect($result)->toBeInstanceOf(UnitEnum::class);
         expect($result)->toBe(UserStatus::ACTIVE);
     });
 
@@ -73,7 +74,7 @@ describe('EnumManager', function (): void {
     it('throws BadMethodCallException for tryFromLabel on non-trait enum', function (): void {
         $manager = new EnumManager;
 
-        expect(fn (): ?\BackedEnum => $manager->tryFromLabel('stdClass', 'x'))
+        expect(fn (): ?\UnitEnum => $manager->tryFromLabel('stdClass', 'x'))
             ->toThrow(BadMethodCallException::class);
     });
 

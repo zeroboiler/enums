@@ -49,7 +49,7 @@ final class EnumManager
     /**
      * @param  class-string<\UnitEnum>  $enumClass
      */
-    public function tryFromLabel(string $enumClass, string $label): ?\BackedEnum
+    public function tryFromLabel(string $enumClass, string $label): ?\UnitEnum
     {
         if (! method_exists($enumClass, 'tryFromLabel')) {
             throw new \BadMethodCallException(
