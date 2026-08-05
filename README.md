@@ -106,6 +106,9 @@ protected $casts = [
 use ZeroBoiler\Enums\Rules\EnumRule;
 
 'status' => ['required', EnumRule::for(UserStatus::class)],
+
+// Nullable field
+'status' => [EnumRule::for(UserStatus::class)->nullable()],
 ```
 
 ### CLI Commands
