@@ -141,13 +141,7 @@ trait HasEnumMetadata
      */
     public static function hasCase(string $name): bool
     {
-        foreach (self::cases() as $case) {
-            if ($case->name === $name) {
-                return true;
-            }
-        }
-
-        return false;
+        return self::tryFromName($name) !== null;
     }
 
     /**
