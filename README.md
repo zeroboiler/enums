@@ -1,6 +1,7 @@
 # ZeroBoiler Enums
 
-Zero-boilerplate smart enum system for Laravel.
+Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
+auto-casting, validation, serialization, and CLI tooling.
 
 ## Installation
 
@@ -13,6 +14,58 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 **Requirements:**
 - PHP 8.5+
 - Laravel 13+
+
+## Type System
+
+ZeroBoiler Enums works with **both** PHP enum types:
+
+| Type | Backing | Use Case |
+|------|---------|----------|
+| **Backed Enum (string)** | `enum Foo: string` | Database columns, API payloads — most common |
+| **Backed Enum (int)** | `enum Bar: int` | Status codes, priority levels, flags |
+| **Pure Enum** | `enum Baz` | State machines, feature flags without storage |
+
+All metadata features (`label()`, `color()`, `icon()`, `description()`) work identically
+across both backed and pure enums. For backed enums, `forSelect()` and `values()` return
+the **backed value** (not the case name). For pure enums, the **case name** is used instead.
+
+### Resolution Priority
+
+Metadata is resolved in this order (later wins):
+
+1. **Per-case attribute** — `#[Label('Custom')]`, `#[Color('success')]`, etc.
+2. **Class-level attribute** — `#[EnumLabel(...)]`, `#[EnumColor(...)]`, etc.
+3. **Auto-generated** — Only for labels: `SCREAMING_SNAKE_CASE → Title Case`
+
+Colors default to `'secondary'` and icons/descriptions default to `null` when not set.
+
+### Architecture
+
+```
+┌─────────────────────────────────────┐
+│          Your Enum                  │
+│  enum UserStatus: string            │
+│  {                                  │
+│      use HasEnumMetadata;  ◄────────┼── Trait provides all public API
+│  }                                  │
+└──────────┬──────────────────────────┘
+           │ reads via
+           ▼
+┌─────────────────────────────────────┐
+│  EnumMetadataResolver               │  Reads #[Label], #[Color], etc.
+│  ├─ Reads class-level attributes    │  via ReflectionEnum
+│  ├─ Reads per-case attributes       │
+│  └─ Merges & caches result         │
+└──────────┬──────────────────────────┘
+           │ caches in
+           ▼
+┌─────────────────────────────────────┐
+│  EnumCache (Singleton)              │  TTL-based per-class cache
+│  ├─ has($class) → bool              │  Prevents repeated reflection
+│  ├─ get($class) → array            │
+│  └─ TTL default: 300s (5 min)      │
+└─────────────────────────────────────┘
+```
 
 ## Features
 
@@ -131,6 +184,54 @@ $api = Enum::forApi(UserStatus::class);
 
 // Reverse lookup by label
 $case = Enum::tryFromLabel(UserStatus::class, 'Active User');
+```
+
+### Integer-Backed Enum Example
+
+```php
+#[EnumColor(success: [3, 4], danger: [1], warning: [2])]
+enum Priority: int
+{
+    use HasEnumMetadata;
+
+    #[Color('danger')]
+    case CRITICAL = 1;
+
+    #[Color('warning')]
+    case HIGH = 2;
+
+    #[Color('success')]
+    case LOW = 3;
+
+    case NONE = 4;
+}
+
+Priority::HIGH->label();         // "High" (auto-generated)
+Priority::HIGH->color();         // "warning" (per-case override)
+Priority::CRITICAL->value;       // 1 (int backed)
+Priority::values();              // [1, 2, 3, 4]
+Priority::forSelect();           // [['value' => 1, 'label' => 'Critical'], ...]
+```
+
+### Pure Enum Example
+
+```php
+enum FeatureFlag
+{
+    use HasEnumMetadata;
+
+    #[Icon('heroicon-o-shield-check')]
+    #[Description('Two-factor authentication for all users')]
+    case TWO_FACTOR_AUTH;
+
+    #[Description('Dark mode theme support')]
+    case DARK_MODE;
+}
+
+FeatureFlag::TWO_FACTOR_AUTH->label();       // "Two Factor Auth"
+FeatureFlag::TWO_FACTOR_AUTH->value;        // NOT AVAILABLE (pure enum)
+FeatureFlag::values();                      // ['TWO_FACTOR_AUTH', 'DARK_MODE'] (case names)
+FeatureFlag::forSelect();                   // [['value' => 'TWO_FACTOR_AUTH', 'label' => 'Two Factor Auth'], ...]
 ```
 
 ## Advanced
