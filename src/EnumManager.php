@@ -8,17 +8,26 @@ declare(strict_types=1);
 
 namespace ZeroBoiler\Enums;
 
+use UnitEnum;
+
 /**
  * Runtime enum helper — accessible via `Enum` facade or injected.
  *
+ * Provides runtime access to enum metadata without direct trait usage.
+ *
  *   Enum::forSelect(UserStatus::class);
  *   Enum::forApi(UserStatus::class);
+ *   Enum::tryFromLabel(UserStatus::class, 'Active User');
  */
 final class EnumManager
 {
     /**
-     * @param  class-string<\UnitEnum>  $enumClass
+     * Generate select options for an enum class.
+     *
+     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
      * @return list<array{value: string|int, label: string}>
+     *
+     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
      */
     public function forSelect(string $enumClass): array
     {
@@ -28,12 +37,17 @@ final class EnumManager
             );
         }
 
+        /** @var list<array{value: string|int, label: string}> */
         return $enumClass::forSelect();
     }
 
     /**
-     * @param  class-string<\UnitEnum>  $enumClass
-     * @return list<array<string, mixed>>
+     * Generate full API metadata for an enum class.
+     *
+     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @return list<array{value: string|int, name: string, label: string, description: ?string, color: string, icon: ?string}>
+     *
+     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
      */
     public function forApi(string $enumClass): array
     {
@@ -43,11 +57,17 @@ final class EnumManager
             );
         }
 
+        /** @var list<array{value: string|int, name: string, label: string, description: ?string, color: string, icon: ?string}> */
         return $enumClass::forApi();
     }
 
     /**
-     * @param  class-string<\UnitEnum>  $enumClass
+     * Resolve an enum case by its human-readable label (case-insensitive).
+     *
+     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @return \UnitEnum|null The matching case, or null if no label matches
+     *
+     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
      */
     public function tryFromLabel(string $enumClass, string $label): ?\UnitEnum
     {

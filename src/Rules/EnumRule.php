@@ -93,6 +93,7 @@ final readonly class EnumRule implements ValidationRule
                 return;
             }
 
+            /** @var list<string> $validNames */
             $validNames = array_map(fn (UnitEnum $case): string => $case->name, $enumClass::cases());
             if (! in_array($value, $validNames, true)) {
                 $fail($this->message($attribute));
