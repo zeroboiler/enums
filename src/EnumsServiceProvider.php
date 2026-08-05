@@ -20,6 +20,7 @@ final class EnumsServiceProvider extends ServiceProvider
         $this->app->singleton('zeroboiler.enum', fn (): EnumManager => new EnumManager);
     }
 
+    #[\Override]
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
