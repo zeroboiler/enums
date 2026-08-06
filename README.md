@@ -434,6 +434,22 @@ $cache->setTtl(0);  // disable caching (always fresh)
 | `Enum::forApi(string)` | Generate full API metadata |
 | `Enum::tryFromLabel(string, string)` | Resolve by label |
 
+### Exception Hierarchy
+
+```
+InvalidEnumException (extends Exception)
+├─ value($enumClass, $value)  — Invalid backed value lookup
+└─ forName($enumClass, $name)  — Invalid case name lookup
+```
+
+Thrown by:
+- `fromName()` when the case name doesn't exist
+- `InvalidEnumException::value()` when a backed value is invalid (available for custom error handling)
+
+> **Note:** `EnumRule` does **not** throw `InvalidEnumException`. It uses Laravel's
+> `ValidationRule` interface and fails silently via the `$fail` callback,
+> producing standard Laravel validation error messages.
+
 ## Design Principles
 
 | Principle | Implementation |
@@ -444,6 +460,10 @@ $cache->setTtl(0);  // disable caching (always fresh)
 | **Progressive defaults** | Per-case attribute → class-level attribute → auto-generated label |
 | **Strict typing** | `declare(strict_types=1)` in every file; PHPStan level 9 clean |
 | **No magic strings** | Colors limited to `success`, `danger`, `warning`, `info`, `secondary` |
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 
 ## Testing
 
