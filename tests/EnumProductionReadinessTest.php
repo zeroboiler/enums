@@ -170,6 +170,39 @@ describe('Enum Production Readiness', function () {
             // No exception — TTL changed successfully
             expect(true)->toBeTrue();
         });
+
+        it('throws OutOfBoundsException when get is called without prior set', function () {
+            $cache = EnumCache::getInstance();
+
+            expect(fn (): mixed => $cache->get(UserStatus::class))
+                ->toThrow(OutOfBoundsException::class);
+        });
+
+        it('get returns metadata after set', function () {
+            $cache = EnumCache::getInstance();
+            $metadata = [
+                'labels' => ['active' => 'Active User'],
+                'descriptions' => [],
+                'colors' => [],
+                'icons' => [],
+            ];
+
+            $cache->set(UserStatus::class, $metadata);
+
+            expect($cache->get(UserStatus::class))->toBe($metadata);
+        });
+
+        it('flush clears all entries and timestamps', function () {
+            $cache = EnumCache::getInstance();
+            $cache->setTtl(300);
+            $cache->set(UserStatus::class, ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []]);
+            $cache->set(Priority::class, ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []]);
+
+            EnumCache::flush();
+
+            expect($cache->has(UserStatus::class))->toBeFalse();
+            expect($cache->has(Priority::class))->toBeFalse();
+        });
     });
 
     describe('InvalidEnumException', function () {
