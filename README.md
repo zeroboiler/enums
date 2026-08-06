@@ -1,5 +1,10 @@
 # ZeroBoiler Enums
 
+[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
+[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
+[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
+
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
 auto-casting, validation, serialization, and CLI tooling.
 
@@ -19,12 +24,21 @@ auto-casting, validation, serialization, and CLI tooling.
   - [Validation](#validation)
   - [CLI Commands](#cli-commands)
   - [Enum Facade / Manager](#enum-facade--manager)
+  - [String-Backed Enum Example](#string-backed-enum-example)
   - [Integer-Backed Enum Example](#integer-backed-enum-example)
   - [Pure Enum Example](#pure-enum-example)
 - [Advanced](#advanced)
   - [Class-Level Attributes](#class-level-attributes)
   - [Cache Management](#cache-management)
+- [Attributes Reference](#attributes-reference)
+  - [Per-Case Attributes](#per-case-attributes)
+  - [Class-Level Attributes](#class-level-attributes)
 - [API Quick Reference](#api-quick-reference)
+  - [HasEnumMetadata Trait](#hasenummetadata-trait)
+  - [EnumRule](#enumrule)
+  - [EnumCache (Singleton)](#enumcache-singleton)
+  - [EnumManager (via Facade)](#enummanager-via-facade)
+  - [Exception Hierarchy](#exception-hierarchy)
 - [Design Principles](#design-principles)
 - [Testing](#testing)
 - [Contributing](#contributing)
@@ -43,16 +57,16 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 ## Type System
 
-ZeroBoiler Enums works with **both** PHP enum types:
+ZeroBoiler Enums works with **all three** PHP enum types:
 
-| Type | Backing | Use Case |
-|------|---------|----------|
-| **Backed Enum (string)** | `enum Foo: string` | Database columns, API payloads — most common |
-| **Backed Enum (int)** | `enum Bar: int` | Status codes, priority levels, flags |
-| **Pure Enum** | `enum Baz` | State machines, feature flags without storage |
+| Type | Backing | Use Case | `values()` returns |
+|------|---------|----------|-------------------|
+| **Backed Enum (string)** | `enum Foo: string` | Database columns, API payloads — most common | `['a', 'b', 'c']` |
+| **Backed Enum (int)** | `enum Bar: int` | Status codes, priority levels, flags | `[1, 2, 3]` |
+| **Pure Enum** | `enum Baz` | State machines, feature flags without storage | `['CASE_A', 'CASE_B']` |
 
 All metadata features (`label()`, `color()`, `icon()`, `description()`) work identically
-across both backed and pure enums. For backed enums, `forSelect()` and `values()` return
+across all three enum types. For backed enums, `forSelect()` and `values()` return
 the **backed value** (not the case name). For pure enums, the **case name** is used instead.
 
 ### Resolution Priority
@@ -105,8 +119,11 @@ Colors default to `'secondary'` and icons/descriptions default to `null` when no
 - **Name lookup** — `hasCase('ACTIVE')`
 - **Comparison** — `is()`, `isNot()`, `in()` with instance and string support
 - **CLI tools** — `zeroboiler:enum-test`, `zeroboiler:enum-inspect`
+- **Singleton cache** — TTL-based metadata cache with flush/reset support
 
 ## Usage
+
+### String-Backed Enum Example
 
 ```php
 use ZeroBoiler\Enums\Attributes\EnumColor;
@@ -127,10 +144,14 @@ enum UserStatus: string
     case ACTIVE = 'active';
 
     case INACTIVE = 'inactive';
+
+    #[Label('Awaiting Verification')]
     case PENDING = 'pending';
+
     case SUSPENDED = 'suspended';
 
     #[Color('danger')]
+    #[Description('User is permanently banned')]
     case BANNED = 'banned';
 }
 ```
@@ -138,12 +159,14 @@ enum UserStatus: string
 ### Accessors
 
 ```php
-UserStatus::ACTIVE->label();       // "Active User"
-UserStatus::INACTIVE->label();     // "Inactive" (auto-generated)
-UserStatus::ACTIVE->color();       // "success"
-UserStatus::BANNED->color();       // "danger"
-UserStatus::ACTIVE->icon();        // "heroicon-o-check-circle"
+UserStatus::ACTIVE->label();       // "Active User" (per-case attribute)
+UserStatus::INACTIVE->label();     // "Inactive" (auto-generated from INACTIVE)
+UserStatus::ACTIVE->color();       // "success" (from class-level EnumColor)
+UserStatus::BANNED->color();       // "danger" (per-case override)
+UserStatus::ACTIVE->icon();        // "heroicon-o-check-circle" (per-case)
+UserStatus::INACTIVE->icon();      // null (not defined)
 UserStatus::ACTIVE->description(); // "User can fully access the system"
+UserStatus::INACTIVE->description(); // null (not defined)
 ```
 
 ### Bulk Methods
@@ -156,7 +179,7 @@ UserStatus::forApi();
 // [['value' => 'active', 'name' => 'ACTIVE', 'label' => 'Active User', 'color' => 'success', 'icon' => '...', 'description' => '...'], ...]
 
 UserStatus::values();    // ['active', 'inactive', 'pending', 'suspended', 'banned']
-UserStatus::labels();    // ['Active User', 'Inactive', ...]
+UserStatus::labels();    // ['Active User', 'Inactive', 'Awaiting Verification', 'Suspended', 'Banned']
 ```
 
 ### Comparison
@@ -173,12 +196,12 @@ $status->is(UserStatus::BANNED);     // false
 
 // String case name comparison (case-sensitive)
 $status->is('ACTIVE');               // true
-$status->is('active');               // false (case-sensitive)
+$status->is('active');               // false (case-sensitive, backed value ≠ case name)
 
 // Negation
 $status->isNot(UserStatus::BANNED);  // true
 
-// Group matching — check if in a list of cases
+// Group matching — check if in a list of cases (accepts mixed instances and strings)
 $status->in([UserStatus::ACTIVE, UserStatus::PENDING]);  // true
 $status->in(['ACTIVE', 'PENDING']);                       // true (mixed)
 $status->in([UserStatus::BANNED, UserStatus::SUSPENDED]); // false
@@ -189,10 +212,16 @@ $status->in([UserStatus::BANNED, UserStatus::SUSPENDED]); // false
 ```php
 // By label (case-insensitive)
 UserStatus::tryFromLabel('Active User'); // UserStatus::ACTIVE
+UserStatus::tryFromLabel('inactive');    // UserStatus::INACTIVE (auto-generated label)
+UserStatus::tryFromLabel('UNKNOWN');    // null
 
-// By case name
+// By case name (case-sensitive)
 UserStatus::tryFromName('ACTIVE');      // UserStatus::ACTIVE
+UserStatus::tryFromName('UNKNOWN');    // null
 UserStatus::fromName('ACTIVE');         // UserStatus::ACTIVE (throws InvalidEnumException)
+UserStatus::fromName('UNKNOWN');       // throws InvalidEnumException
+
+// Check existence
 UserStatus::hasCase('ACTIVE');          // true
 UserStatus::hasCase('UNKNOWN');         // false
 ```
@@ -201,20 +230,27 @@ UserStatus::hasCase('UNKNOWN');         // false
 
 ```php
 protected $casts = [
-    'status' => UserStatus::class,  // works automatically
+    'status' => UserStatus::class,  // works automatically via EnumCast
 ];
 ```
+
+The built-in `EnumCast` handles `get()`, `set()`, and `serialize()` transparently.
+It validates stored values and rejects type mismatches.
 
 ### Validation
 
 ```php
 use ZeroBoiler\Enums\Rules\EnumRule;
 
+// Required field
 'status' => ['required', EnumRule::for(UserStatus::class)],
 
-// Nullable field
+// Nullable field — null passes, other values are validated
 'status' => [EnumRule::for(UserStatus::class)->nullable()],
 ```
+
+EnumRule supports both backed enums (validates against backed values with type checking)
+and pure enums (validates against case names).
 
 ### CLI Commands
 
@@ -233,6 +269,8 @@ The test generator produces a Pest file with:
 - **forApi()** test — validates full metadata structure
 - **Unique values** test — ensures no duplicate backed values
 - **Per-case label/color** tests — one test per case
+- **Comparison tests** — `is()`, `isNot()`, `in()` with instances and strings
+- **Lookup tests** — `tryFromName()`, `hasCase()`, `tryFromLabel()`
 
 Generated output example:
 
@@ -280,9 +318,22 @@ $api = Enum::forApi(UserStatus::class);
 $case = Enum::tryFromLabel(UserStatus::class, 'Active User');
 ```
 
+The EnumManager can also be injected directly from the container:
+
+```php
+use ZeroBoiler\Enums\EnumManager;
+
+$manager = app(EnumManager::class);
+$options = $manager->forSelect(UserStatus::class);
+```
+
 ### Integer-Backed Enum Example
 
 ```php
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
 #[EnumColor(success: [3, 4], danger: [1], warning: [2])]
 enum Priority: int
 {
@@ -310,6 +361,10 @@ Priority::forSelect();           // [['value' => 1, 'label' => 'Critical'], ...]
 ### Pure Enum Example
 
 ```php
+use ZeroBoiler\Enums\Attributes\Icon;
+use ZeroBoiler\Enums\Attributes\Description;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
 enum FeatureFlag
 {
     use HasEnumMetadata;
@@ -323,7 +378,7 @@ enum FeatureFlag
 }
 
 FeatureFlag::TWO_FACTOR_AUTH->label();       // "Two Factor Auth"
-FeatureFlag::TWO_FACTOR_AUTH->value;        // NOT AVAILABLE (pure enum)
+// FeatureFlag::TWO_FACTOR_AUTH->value;     // NOT AVAILABLE (pure enum)
 FeatureFlag::values();                      // ['TWO_FACTOR_AUTH', 'DARK_MODE'] (case names)
 FeatureFlag::forSelect();                   // [['value' => 'TWO_FACTOR_AUTH', 'label' => 'Two Factor Auth'], ...]
 ```
@@ -353,17 +408,6 @@ enum UserStatus: string
 }
 ```
 
-| Attribute | Level | Description |
-|-----------|-------|-------------|
-| `#[EnumColor(...)]` | Class + Case | Map case values to UI colors (`success`, `danger`, `warning`, `info`, `secondary`) |
-| `#[EnumLabel(labels: [...])]` | Class + Case | Set labels for multiple cases at once (class-level) or a single case (case-level) |
-| `#[EnumDescription(descriptions: [...])]` | Class + Case | Set descriptions for multiple cases at once (class-level) or a single case (case-level) |
-| `#[EnumIcon(default: '...')]` | Class + Case | Set a default icon for all cases (class-level) or override per case |
-| `#[Label('...')]` | Case | Human-readable label for a single case (overrides class-level) |
-| `#[Color('...')]` | Case | UI color for a single case (overrides class-level) |
-| `#[Icon('...')]` | Case | Icon for a single case (overrides class-level) |
-| `#[Description('...')]` | Case | Description for a single case (overrides class-level) |
-
 ### Cache Management
 
 Enum metadata is cached per-class to avoid repeated reflection. In most cases
@@ -381,11 +425,34 @@ EnumCache::resetInstance();
 // Configure TTL for dev environments (handled automatically by service provider)
 $cache = EnumCache::getInstance();
 $cache->setTtl(0);  // disable caching (always fresh)
+$cache->setTtl(60); // cache for 1 minute
 ```
+
+## Attributes Reference
+
+### Per-Case Attributes
+
+| Attribute | Target | Parameters | Description |
+|-----------|--------|------------|-------------|
+| `#[Label('...')]` | Case | `string $value` | Human-readable label for a single case (overrides class-level) |
+| `#[Color('...')]` | Case | `string $value` | UI color for a single case (overrides class-level) |
+| `#[Icon('...')]` | Case | `string $value` | Icon identifier for a single case (overrides class-level) |
+| `#[Description('...')]` | Case | `string $value` | Description for a single case (overrides class-level) |
+
+### Class-Level Attributes
+
+| Attribute | Target | Parameters | Description |
+|-----------|--------|------------|-------------|
+| `#[EnumColor(...)]` | Class + Case | `success: list<string>`, `danger: list<string>`, `warning: list<string>`, `info: list<string>`, `secondary: list<string>` | Map case values to UI colors |
+| `#[EnumLabel(...)]` | Class + Case | `labels: array<string, string>`, `label: string` | Set labels for multiple cases at once (class-level) or a single case |
+| `#[EnumDescription(...)]` | Class + Case | `descriptions: array<string, string>`, `description: string` | Set descriptions for multiple cases at once |
+| `#[EnumIcon(...)]` | Class + Case | `default: string` | Set a default icon for all cases |
+
+Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
 
 ## API Quick Reference
 
-### Trait: `HasEnumMetadata`
+### HasEnumMetadata Trait
 
 | Method | Returns | Description |
 |--------|---------|-------------|
@@ -393,10 +460,10 @@ $cache->setTtl(0);  // disable caching (always fresh)
 | `->description()` | `?string` | Case description (per-case → class-level → null) |
 | `->color()` | `string` | UI color (`success`, `danger`, `warning`, `info`, `secondary`) |
 | `->icon()` | `?string` | Icon identifier (per-case → class-level → null) |
-| `::forSelect()` | `list<array{value, label}>` | Options for `<select>` elements |
-| `::forApi()` | `list<array{value, name, label, description, color, icon}>` | Full API metadata |
+| `::forSelect()` | `list<array{value: string\|int, label: string}>` | Options for `<select>` elements |
+| `::forApi()` | `list<array{value: string\|int, name: string, label: string, description: ?string, color: string, icon: ?string}>` | Full API metadata |
 | `::tryFromLabel(string)` | `?static` | Resolve by label (case-insensitive) |
-| `::tryFromName(string)` | `?static` | Resolve by case name |
+| `::tryFromName(string)` | `?static` | Resolve by case name (case-sensitive) |
 | `::fromName(string)` | `static` | Resolve by case name (throws on failure) |
 | `::hasCase(string)` | `bool` | Check if a case name exists |
 | `->is(self\|string)` | `bool` | Check if this case matches another (instance or name) |
@@ -419,10 +486,10 @@ $cache->setTtl(0);  // disable caching (always fresh)
 | `::getInstance()` | `self` | Get singleton instance |
 | `::flush()` | `void` | Clear all cached metadata |
 | `::resetInstance()` | `void` | Reset singleton (for testing) |
-| `->has(string)` | `bool` | Check if class has cached metadata |
+| `->has(string)` | `bool` | Check if class has cached metadata (respects TTL) |
 | `->get(string)` | `array` | Get cached metadata (throws if missing) |
 | `->set(string, array)` | `void` | Store cached metadata |
-| `->setTtl(int)` | `void` | Set cache TTL in seconds |
+| `->setTtl(int)` | `void` | Set cache TTL in seconds (0 = disabled) |
 | `->clear()` | `void` | Clear all cached entries (instance method) |
 | `->clearClass(string)` | `void` | Clear cached metadata for a specific class |
 
@@ -460,6 +527,7 @@ Thrown by:
 | **Progressive defaults** | Per-case attribute → class-level attribute → auto-generated label |
 | **Strict typing** | `declare(strict_types=1)` in every file; PHPStan level 9 clean |
 | **No magic strings** | Colors limited to `success`, `danger`, `warning`, `info`, `secondary` |
+| **Final classes** | All attributes, services, and resolvers are `final` |
 
 ## Changelog
 
