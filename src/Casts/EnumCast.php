@@ -24,7 +24,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
  *
  * @implements CastsAttributes<int|string, int|string|null>
  */
-class EnumCast implements CastsAttributes
+final class EnumCast implements CastsAttributes
 {
     /**
      * @param  class-string<T>  $enumClass
