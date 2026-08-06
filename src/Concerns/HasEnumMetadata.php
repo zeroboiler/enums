@@ -210,12 +210,12 @@ trait HasEnumMetadata
     {
         $name = $this->name;
 
-        if ($name === strtoupper((string) $name)) {
+        if ($name === strtoupper($name)) {
             return ucwords(trim(str_replace('_', ' ', strtolower($name))));
         }
 
-        $label = preg_replace('/(?<!^)([A-Z])/', ' $1', (string) $name) ?? $name;
+        $label = preg_replace('/(?<!^)([A-Z])/', ' $1', $name) ?? $name;
 
-        return ucwords(trim(strtolower((string) $label)));
+        return ucwords(trim(strtolower($label)));
     }
 }

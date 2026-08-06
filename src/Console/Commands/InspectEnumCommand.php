@@ -20,11 +20,9 @@ use ReflectionEnum;
  */
 final class InspectEnumCommand extends Command
 {
-    /** @var string */
-    protected $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
+    protected string $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
 
-    /** @var string */
-    protected $description = 'Inspect a ZeroBoiler smart enum — show all metadata in a table';
+    protected string $description = 'Inspect a ZeroBoiler smart enum — show all metadata in a table';
 
     #[\Override]
     public function handle(): int
