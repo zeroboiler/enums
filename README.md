@@ -423,6 +423,8 @@ $cache->setTtl(0);  // disable caching (always fresh)
 | `->get(string)` | `array` | Get cached metadata (throws if missing) |
 | `->set(string, array)` | `void` | Store cached metadata |
 | `->setTtl(int)` | `void` | Set cache TTL in seconds |
+| `->clear()` | `void` | Clear all cached entries (instance method) |
+| `->clearClass(string)` | `void` | Clear cached metadata for a specific class |
 
 ### EnumManager (via Facade)
 

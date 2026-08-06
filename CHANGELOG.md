@@ -4,6 +4,10 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 
 ## [1.0.0] - 2026-08-06
 
+### Changed
+- `EnumCache::setTtl()` now normalizes negative values to 0 (prevents undefined behavior)
+- Added `clear()` and `clearClass()` to EnumCache API Reference in README
+
 ### Added
 - Smart enum trait (`HasEnumMetadata`) with zero-boilerplate metadata resolution
 - Attribute-based metadata: `#[Label]`, `#[Color]`, `#[Icon]`, `#[Description]`

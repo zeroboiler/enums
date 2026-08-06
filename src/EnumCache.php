@@ -115,10 +115,13 @@ final class EnumCache
 
     /**
      * Set the cache TTL (seconds). Useful for testing or long-running processes.
+     *
+     * A TTL of 0 or less disables caching entirely — entries are always
+     * considered stale. Negative values are normalized to 0.
      */
     public function setTtl(int $ttl): void
     {
-        $this->ttl = $ttl;
+        $this->ttl = max($ttl, 0);
     }
 
     /**
