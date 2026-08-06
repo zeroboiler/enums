@@ -36,7 +36,8 @@ final class EnumsServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register artisan commands for enum inspection and test generation.
+     * Register artisan commands, configure cache TTL for dev environments,
+     * and register cache flush listeners for long-lived processes.
      */
     #[\Override]
     public function boot(): void
@@ -47,5 +48,31 @@ final class EnumsServiceProvider extends ServiceProvider
                 InspectEnumCommand::class,
             ]);
         }
+
+        $this->registerCacheFlush();
+    }
+
+    /**
+     * Flush the EnumCache singleton at the end of each request in
+     * long-lived processes (Octane, Swoole, RoadRunner).
+     *
+     * Enum metadata is cached in a process-wide singleton. In standard
+     * PHP-FPM the singleton dies with the process at end of every request,
+     * so no manual flush is needed. Long-lived runners keep it around,
+     * which can cause stale metadata between deployments and unbounded
+     * memory growth as more enum classes are resolved.
+     */
+    private function registerCacheFlush(): void
+    {
+        /** @var \Illuminate\Contracts\Events\Dispatcher $events */
+        $events = $this->app->make('events');
+
+        $events->listen('octane.terminate', function (): void {
+            EnumCache::flush();
+        });
+
+        $events->listen('laravel.flush', function (): void {
+            EnumCache::flush();
+        });
     }
 }

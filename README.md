@@ -55,6 +55,48 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 - PHP 8.5+
 - Laravel 13+
 
+## Quick Start
+
+Create your first smart enum in under a minute:
+
+```php
+// app/Enums/UserStatus.php
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
+#[EnumColor(success: ['active'], danger: ['banned'])]
+enum UserStatus: string
+{
+    use HasEnumMetadata;
+
+    #[Color('danger')]
+    case BANNED = 'banned';
+
+    case ACTIVE = 'active';
+
+    case PENDING = 'pending';
+}
+
+// Usage in controllers
+UserStatus::ACTIVE->label();    // "Active" (auto-generated)
+UserStatus::ACTIVE->color();    // "success" (class-level)
+UserStatus::BANNED->color();    // "danger" (per-case override)
+
+// Select dropdowns
+UserStatus::forSelect();
+// [['value' => 'banned', 'label' => 'Banned'], ['value' => 'active', 'label' => 'Active'], ...]
+
+// Validation in Form Requests
+'status' => ['required', EnumRule::for(UserStatus::class)],
+
+// CLI inspection
+php artisan zeroboiler:enum-inspect "App\Enums\UserStatus"
+
+// Auto-generate tests
+php artisan zeroboiler:enum-test "App\Enums\UserStatus"
+```
+
 ## Type System
 
 ZeroBoiler Enums works with **all three** PHP enum types:
