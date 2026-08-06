@@ -40,6 +40,7 @@ class EnumCast implements CastsAttributes
      * @param  array<string, mixed>  $attributes
      * @return T|null
      */
+    #[\Override]
     public function get(object $model, string $key, $value, array $attributes)
     {
         if ($value === null) {
@@ -58,6 +59,7 @@ class EnumCast implements CastsAttributes
      * @param  BackedEnum|int|string|null  $value
      * @param  array<string, mixed>  $attributes
      */
+    #[\Override]
     public function set(object $model, string $key, $value, array $attributes): int|string|null
     {
         if ($value === null) {
@@ -99,6 +101,7 @@ class EnumCast implements CastsAttributes
      * @param  BackedEnum|int|string|null  $value
      * @param  array<string, mixed>  $attributes
      */
+    #[\Override]
     public function serialize(object $model, string $key, $value, array $attributes): int|string|null
     {
         return $value instanceof BackedEnum ? $value->value : $value;

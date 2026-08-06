@@ -18,6 +18,8 @@ use UnitEnum;
  *   Enum::forSelect(UserStatus::class);
  *   Enum::forApi(UserStatus::class);
  *   Enum::tryFromLabel(UserStatus::class, 'Active User');
+ *
+ * @see \ZeroBoiler\Enums\Facades\Enum
  */
 final class EnumManager
 {

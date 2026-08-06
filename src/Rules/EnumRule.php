@@ -27,6 +27,9 @@ use UnitEnum;
  *   Rule::enum(UserStatus::class)  // Laravel built-in (also works)
  *
  * ZeroBoiler version provides better error messages and works with metadata.
+ *
+ * Implements Laravel's {@see \Illuminate\Contracts\Validation\ValidationRule} interface,
+ * making it usable anywhere Laravel rules are accepted (Form Requests, manual validation, etc.).
  */
 final readonly class EnumRule implements ValidationRule
 {
@@ -66,6 +69,7 @@ final readonly class EnumRule implements ValidationRule
      *
      * @param  Closure(string, string|null=): PotentiallyTranslatedString  $fail
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // Allow null for optional fields when nullable is enabled
