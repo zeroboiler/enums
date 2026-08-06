@@ -118,7 +118,7 @@ describe('Enum in() method', function () {
     it('works with int-backed enums', function () {
         $pending = OrderStatus::PENDING;
 
-        expect($pending->in([OrderStatus::PENDING, OrderStatus::PROCESSING]))->toBeTrue();
-        expect($pending->in([OrderStatus::SHIPPED, OrderStatus::DELIVERED]))->toBeFalse();
+        expect($pending->in([OrderStatus::PENDING, OrderStatus::SHIPPED]))->toBeTrue();
+        expect($pending->in([OrderStatus::DELIVERED, OrderStatus::CANCELLED]))->toBeFalse();
     });
 });
