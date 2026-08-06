@@ -12,6 +12,11 @@ use Exception;
 
 final class InvalidEnumException extends Exception
 {
+    /**
+     * Create an exception for an invalid value lookup.
+     *
+     * @param  class-string  $enumClass
+     */
     public static function value(string $enumClass, mixed $value): self
     {
         $type = get_debug_type($value);

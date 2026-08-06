@@ -21,10 +21,13 @@ use ZeroBoiler\Enums\Support\EnumTestGenerator;
  */
 final class MakeEnumTestCommand extends Command
 {
+    /** @var string */
     protected $signature = 'zeroboiler:enum-test {class : The enum class FQN} {--dir= : Output directory}';
 
+    /** @var string */
     protected $description = 'Generate Pest tests for a ZeroBoiler smart enum';
 
+    #[\Override]
     public function handle(): int
     {
         /** @var string $enumClass */

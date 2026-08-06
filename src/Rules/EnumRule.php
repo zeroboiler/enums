@@ -30,6 +30,9 @@ use UnitEnum;
  *
  * Implements Laravel's {@see \Illuminate\Contracts\Validation\ValidationRule} interface,
  * making it usable anywhere Laravel rules are accepted (Form Requests, manual validation, etc.).
+ *
+ * Supports both backed enums (validates against backed values) and pure enums (validates
+ * against case names).
  */
 final readonly class EnumRule implements ValidationRule
 {

@@ -48,6 +48,11 @@ final class EnumCache
         return self::$instance;
     }
 
+    /**
+     * Check if cached metadata exists for an enum class.
+     *
+     * Automatically expires stale entries based on TTL.
+     */
     public function has(string $enumClass): bool
     {
         // TTL <= 0 means no caching — entries are always stale
@@ -116,12 +121,18 @@ final class EnumCache
         $this->ttl = $ttl;
     }
 
+    /**
+     * Clear all cached metadata entries.
+     */
     public function clear(): void
     {
         $this->cache = [];
         $this->cacheTimestamps = [];
     }
 
+    /**
+     * Clear cached metadata for a specific enum class.
+     */
     public function clearClass(string $enumClass): void
     {
         unset($this->cache[$enumClass], $this->cacheTimestamps[$enumClass]);
@@ -129,6 +140,8 @@ final class EnumCache
 
     /**
      * Flush the entire cache (alias for clear, semantically explicit for resets).
+     *
+     * Convenience static accessor that delegates to the singleton's clear().
      */
     public static function flush(): void
     {

@@ -289,6 +289,52 @@ $cache = EnumCache::getInstance();
 $cache->setTtl(0);  // disable caching (always fresh)
 ```
 
+## API Quick Reference
+
+### Trait: `HasEnumMetadata`
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `->label()` | `string` | Human-readable label (per-case → class-level → auto-generated) |
+| `->description()` | `?string` | Case description (per-case → class-level → null) |
+| `->color()` | `string` | UI color (`success`, `danger`, `warning`, `info`, `secondary`) |
+| `->icon()` | `?string` | Icon identifier (per-case → class-level → null) |
+| `::forSelect()` | `list<array{value, label}>` | Options for `<select>` elements |
+| `::forApi()` | `list<array{value, name, label, description, color, icon}>` | Full API metadata |
+| `::tryFromLabel(string)` | `?static` | Resolve by label (case-insensitive) |
+| `::tryFromName(string)` | `?static` | Resolve by case name |
+| `::fromName(string)` | `static` | Resolve by case name (throws on failure) |
+| `::hasCase(string)` | `bool` | Check if a case name exists |
+| `::values()` | `list<string\|int>` | All backed values or case names |
+| `::labels()` | `list<string>` | All labels in declaration order |
+
+### EnumRule
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `::for(class-string)` | `EnumRule` | Create rule for an enum class |
+| `->nullable()` | `EnumRule` | Allow null values to pass |
+
+### EnumCache (Singleton)
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `::getInstance()` | `self` | Get singleton instance |
+| `::flush()` | `void` | Clear all cached metadata |
+| `::resetInstance()` | `void` | Reset singleton (for testing) |
+| `->has(string)` | `bool` | Check if class has cached metadata |
+| `->get(string)` | `array` | Get cached metadata (throws if missing) |
+| `->set(string, array)` | `void` | Store cached metadata |
+| `->setTtl(int)` | `void` | Set cache TTL in seconds |
+
+### EnumManager (via Facade)
+
+| Facade Method | Description |
+|---------------|-------------|
+| `Enum::forSelect(string)` | Generate select options for an enum class |
+| `Enum::forApi(string)` | Generate full API metadata |
+| `Enum::tryFromLabel(string, string)` | Resolve by label |
+
 ## Design Principles
 
 | Principle | Implementation |
