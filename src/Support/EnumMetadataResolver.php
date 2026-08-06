@@ -26,8 +26,14 @@ use ZeroBoiler\Enums\EnumCache;
  * from class-level and per-case attributes.
  *
  * Extracted from HasEnumMetadata trait to reduce complexity.
+ * Results are cached by {@see EnumCache} with TTL-based expiration.
  *
- * @phpstan-type EnumMetadata array{labels: array<string, string>, descriptions: array<string, string>, colors: array<string, string>, icons: array<string, string>}
+ * @phpstan-type EnumMetadataShape array{
+ *     labels: array<string, string>,
+ *     descriptions: array<string, string>,
+ *     colors: array<string, string>,
+ *     icons: array<string, string>
+ * }
  */
 final class EnumMetadataResolver
 {
@@ -35,13 +41,13 @@ final class EnumMetadataResolver
      * Resolve all metadata for an enum class.
      *
      * @param  class-string<UnitEnum>  $enumClass
-     * @return EnumMetadata
+     * @return EnumMetadataShape
      */
     public static function resolve(string $enumClass): array
     {
         $cache = EnumCache::getInstance();
         if ($cache->has($enumClass)) {
-            /** @var EnumMetadata */
+            /** @var EnumMetadataShape */
             return $cache->get($enumClass);
         }
 
@@ -56,7 +62,7 @@ final class EnumMetadataResolver
      * Build complete metadata by merging class-level and per-case attributes.
      *
      * @param  class-string<UnitEnum>  $enumClass
-     * @return EnumMetadata
+     * @return EnumMetadataShape
      */
     private static function buildMetadata(string $enumClass): array
     {

@@ -12,32 +12,28 @@ namespace ZeroBoiler\Enums;
  * Cache for enum metadata to avoid property restrictions in PHP enums.
  *
  * PHP enums cannot have properties, so we use an external cache class.
- * This is a singleton that caches metadata per enum class.
+ * This is a singleton that caches metadata per enum class with TTL-based
+ * expiration to handle long-running processes gracefully.
+ *
+ * Thread safety: Not thread-safe. In multi-threaded Swoole/Octane environments,
+ * each worker process has its own singleton instance.
  */
 final class EnumCache
 {
     private static ?self $instance = null;
 
     /**
-     * @var array<string, array{
-     *     labels: array<string, string>,
-     *     descriptions: array<string, string>,
-     *     colors: array<string, string>,
-     *     icons: array<string, string>
-     * }>
+     * @var array<string, array{labels: array<string, string>, descriptions: array<string, string>, colors: array<string, string>, icons: array<string, string>}>
      */
     private array $cache = [];
 
     /** @var array<string, float> Cache creation timestamps per enum class */
     private array $cacheTimestamps = [];
 
-    /** Cache TTL in seconds (default: 300 = 5 minutes) */
+    /** Cache TTL in seconds (default: 300 = 5 minutes). 0 disables caching. */
     private int $ttl = 300;
 
-    private function __construct()
-    {
-        // Singleton
-    }
+    private function __construct() {}
 
     public static function getInstance(): self
     {
