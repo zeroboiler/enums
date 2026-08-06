@@ -273,7 +273,7 @@ describe('Enum Production Readiness', function () {
         it('non-nullable rejects null values', function () {
             $rule = EnumRule::for(UserStatus::class);
             $failed = false;
-            $fail = function (string $message): void use (&$failed) {
+            $fail = function (string $message) use (&$failed): void {
                 $failed = true;
             };
 
@@ -285,7 +285,7 @@ describe('Enum Production Readiness', function () {
         it('validates pure enum by case name', function () {
             $rule = EnumRule::for(RequestState::class);
             $failed = false;
-            $fail = function (string $message): void use (&$failed) {
+            $fail = function (string $message) use (&$failed): void {
                 $failed = true;
             };
 
@@ -297,7 +297,7 @@ describe('Enum Production Readiness', function () {
         it('rejects invalid pure enum case name', function () {
             $rule = EnumRule::for(RequestState::class);
             $failed = false;
-            $fail = function (string $message): void use (&$failed) {
+            $fail = function (string $message) use (&$failed): void {
                 $failed = true;
             };
 
@@ -309,7 +309,7 @@ describe('Enum Production Readiness', function () {
         it('rejects non-string value for pure enum', function () {
             $rule = EnumRule::for(RequestState::class);
             $failed = false;
-            $fail = function (string $message): void use (&$failed) {
+            $fail = function (string $message) use (&$failed): void {
                 $failed = true;
             };
 
@@ -321,7 +321,7 @@ describe('Enum Production Readiness', function () {
         it('rejects non-string/non-int value for backed enum', function () {
             $rule = EnumRule::for(UserStatus::class);
             $failed = false;
-            $fail = function (string $message): void use (&$failed) {
+            $fail = function (string $message) use (&$failed): void {
                 $failed = true;
             };
 
