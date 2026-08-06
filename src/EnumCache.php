@@ -145,9 +145,7 @@ final class EnumCache
      */
     public static function flush(): void
     {
-        $instance = self::getInstance();
-        $instance->cache = [];
-        $instance->cacheTimestamps = [];
+        self::getInstance()->clear();
     }
 
     /**
