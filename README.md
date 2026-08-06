@@ -40,6 +40,9 @@ auto-casting, validation, serialization, and CLI tooling.
   - [EnumManager (via Facade)](#enummanager-via-facade)
   - [Exception Hierarchy](#exception-hierarchy)
 - [Design Principles](#design-principles)
+- [Extending](#extending)
+  - [Custom Metadata Methods](#custom-metadata-methods)
+  - [Registering Custom Attributes](#registering-custom-attributes)
 - [Testing](#testing)
 - [Contributing](#contributing)
 
@@ -570,6 +573,62 @@ Thrown by:
 | **Strict typing** | `declare(strict_types=1)` in every file; PHPStan level 9 clean |
 | **No magic strings** | Colors limited to `success`, `danger`, `warning`, `info`, `secondary` |
 | **Final classes** | All attributes, services, and resolvers are `final` |
+
+## Extending
+
+### Custom Metadata Methods
+
+You can add custom metadata methods to any enum using the trait. The metadata
+resolver provides access to the full metadata array for any key:
+
+```php
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Support\EnumMetadataResolver;
+
+enum UserStatus: string
+{
+    use HasEnumMetadata;
+
+    case ACTIVE = 'active';
+    case BANNED = 'banned';
+
+    /**
+     * Check if this case represents an active/allowed state.
+     */
+    public function isActive(): bool
+    {
+        return $this->in(['ACTIVE']);
+    }
+
+    /**
+     * Get the badge HTML for this status (custom rendering).
+     */
+    public function badgeHtml(): string
+    {
+        return sprintf(
+            '<span class="badge badge-%s">%s</span>',
+            $this->color(),
+            $this->label()
+        );
+    }
+}
+
+// Usage
+UserStatus::ACTIVE->isActive();   // true
+UserStatus::ACTIVE->badgeHtml(); // '<span class="badge badge-success">Active</span>'
+```
+
+### Registering Custom Attributes
+
+To add a new metadata type (e.g., `#[SortOrder]`):
+
+1. Create the attribute class in `App\Attributes\SortOrder`
+2. Extend `EnumMetadataResolver::buildMetadata()` or call it from a custom resolver
+3. Add a corresponding accessor method to your custom trait (or extend `HasEnumMetadata`)
+
+For most use cases, the built-in attributes (`Label`, `Color`, `Icon`, `Description`)
+cover common UI requirements. Custom attributes are typically only needed for
+domain-specific metadata that doesn't map to standard UI concerns.
 
 ## Changelog
 

@@ -17,6 +17,8 @@ namespace ZeroBoiler\Enums;
  *
  * Thread safety: Not thread-safe. In multi-threaded Swoole/Octane environments,
  * each worker process has its own singleton instance.
+ *
+ * @see \ZeroBoiler\Enums\Support\EnumMetadataResolver For the resolver that uses this cache
  */
 final class EnumCache
 {
@@ -35,6 +37,12 @@ final class EnumCache
 
     private function __construct() {}
 
+    /**
+     * Get the singleton cache instance.
+     *
+     * Thread safety: Each process (PHP-FPM worker, Octane worker) gets its own
+     * singleton. There is no cross-process sharing.
+     */
     public static function getInstance(): self
     {
         if (self::$instance === null) {
@@ -114,6 +122,8 @@ final class EnumCache
      *
      * A TTL of 0 or less disables caching entirely — entries are always
      * considered stale. Negative values are normalized to 0.
+     *
+     * @param  int  $ttl  Cache time-to-live in seconds (0 = disabled)
      */
     public function setTtl(int $ttl): void
     {
@@ -131,6 +141,8 @@ final class EnumCache
 
     /**
      * Clear cached metadata for a specific enum class.
+     *
+     * @param  string  $enumClass  The fully-qualified enum class name
      */
     public function clearClass(string $enumClass): void
     {
