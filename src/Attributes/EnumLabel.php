@@ -13,10 +13,16 @@ use Attribute;
 /**
  * Defines human-readable labels for enum cases.
  *
- * Usage:
- *   #[EnumLabel(labels: ['active' => 'Active User', 'banned' => 'Banned User'])]
+ * At class level, maps multiple case values to labels at once.
+ * At case level, sets a single case's label (override).
  *
- * Or per-case:
+ * Per-case overrides always win over class-level definitions.
+ *
+ * Usage (class-level):
+ *   #[EnumLabel(labels: ['active' => 'Active User', 'banned' => 'Banned User'])]
+ *   enum UserStatus: string { use HasEnumMetadata; ... }
+ *
+ * Per-case override:
  *   #[Label('Active User')]
  *   case ACTIVE = 'active';
  */
@@ -24,12 +30,11 @@ use Attribute;
 final class EnumLabel
 {
     /**
-     * @param  array<string, string>|null  $labels  Map of case value => label (class-level)
-     * @param  string|null  $label  Single label (case-level)
+     * @param  array<string, string>|null  $labels   Map of case value => label (class-level)
+     * @param  string|null                  $label   Single label (case-level)
      */
     public function __construct(
-        /** @var array<string, string>|null */
-        public ?array $labels = null,
-        public ?string $label = null,
+        public readonly ?array $labels = null,
+        public readonly ?string $label = null,
     ) {}
 }

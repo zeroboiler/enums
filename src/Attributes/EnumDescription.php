@@ -13,10 +13,15 @@ use Attribute;
 /**
  * Defines description metadata for enum cases.
  *
- * Usage:
+ * At class level, maps multiple case values to descriptions.
+ * At case level, sets a single case's description (override).
+ *
+ * Per-case overrides always win over class-level definitions.
+ *
+ * Usage (class-level):
  *   #[EnumDescription(descriptions: ['active' => 'User is active and can login'])]
  *
- * Or per-case:
+ * Per-case override:
  *   #[Description('User is active and can login')]
  *   case ACTIVE = 'active';
  */
@@ -24,12 +29,11 @@ use Attribute;
 final class EnumDescription
 {
     /**
-     * @param  array<string, string>|null  $descriptions  Map of case value => description (class-level)
-     * @param  string|null  $description  Single description (case-level)
+     * @param  array<string, string>|null  $descriptions Map of case value => description (class-level)
+     * @param  string|null                  $description  Single description (case-level)
      */
     public function __construct(
-        /** @var array<string, string>|null */
-        public ?array $descriptions = null,
-        public ?string $description = null,
+        public readonly ?array $descriptions = null,
+        public readonly ?string $description = null,
     ) {}
 }

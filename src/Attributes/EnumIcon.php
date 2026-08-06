@@ -13,7 +13,10 @@ use Attribute;
 /**
  * Defines icon metadata for enum cases.
  *
- * Usage:
+ * At class level, sets a default icon for all cases.
+ * At case level, overrides with a specific icon.
+ *
+ * Usage (class-level):
  *   #[EnumIcon(default: 'heroicon-o-question-mark-circle')]
  *   enum UserStatus: string { ... }
  *
@@ -24,7 +27,10 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_CLASS_CONSTANT)]
 final class EnumIcon
 {
+    /**
+     * @param  string|null  $default  Default icon for all cases (class-level)
+     */
     public function __construct(
-        public ?string $default = null,
+        public readonly ?string $default = null,
     ) {}
 }

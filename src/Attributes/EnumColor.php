@@ -11,10 +11,15 @@ namespace ZeroBoiler\Enums\Attributes;
 use Attribute;
 
 /**
- * Defines color metadata for enum cases.
+ * Defines color metadata for enum cases at the class level.
  *
- * Usage:
- *   #[EnumColor(success: ['active', 'paid'], danger: ['banned', 'failed'])]
+ * Maps case values (backed values or case names) to UI color names.
+ * Per-case overrides are supported via the {@see Color} attribute.
+ *
+ * Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
+ *
+ * Usage (class-level):
+ *   #[EnumColor(success: ['active', 'paid'], danger: ['banned'])]
  *   enum UserStatus: string { use HasEnumMetadata; ... }
  *
  * Per-case override:
@@ -25,45 +30,17 @@ use Attribute;
 final class EnumColor
 {
     /**
-     * @param  array<string>  $success  Case values that map to "success"
-     * @param  array<string>  $danger  Case values that map to "danger"
-     * @param  array<string>  $warning  Case values that map to "warning"
-     * @param  array<string>  $info  Case values that map to "info"
-     * @param  array<string>  $secondary  Case values that map to "secondary"
-     */
-    /** @var list<string> */
-    public readonly array $success;
-
-    /** @var list<string> */
-    public readonly array $danger;
-
-    /** @var list<string> */
-    public readonly array $warning;
-
-    /** @var list<string> */
-    public readonly array $info;
-
-    /** @var list<string> */
-    public readonly array $secondary;
-
-    /**
-     * @param  list<string>  $success  Case values that map to "success"
-     * @param  list<string>  $danger  Case values that map to "danger"
-     * @param  list<string>  $warning  Case values that map to "warning"
-     * @param  list<string>  $info  Case values that map to "info"
-     * @param  list<string>  $secondary  Case values that map to "secondary"
+     * @param  list<string>  $success   Case values mapped to "success"
+     * @param  list<string>  $danger    Case values mapped to "danger"
+     * @param  list<string>  $warning   Case values mapped to "warning"
+     * @param  list<string>  $info      Case values mapped to "info"
+     * @param  list<string>  $secondary Case values mapped to "secondary"
      */
     public function __construct(
-        array $success = [],
-        array $danger = [],
-        array $warning = [],
-        array $info = [],
-        array $secondary = [],
-    ) {
-        $this->success = $success;
-        $this->danger = $danger;
-        $this->warning = $warning;
-        $this->info = $info;
-        $this->secondary = $secondary;
-    }
+        public readonly array $success = [],
+        public readonly array $danger = [],
+        public readonly array $warning = [],
+        public readonly array $info = [],
+        public readonly array $secondary = [],
+    ) {}
 }
