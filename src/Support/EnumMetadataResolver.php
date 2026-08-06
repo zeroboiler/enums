@@ -40,8 +40,13 @@ final class EnumMetadataResolver
     /**
      * Resolve all metadata for an enum class.
      *
+     * Results are cached by {@see EnumCache} with TTL-based expiration.
+     * Subsequent calls for the same class return the cached result.
+     *
      * @param  class-string<UnitEnum>  $enumClass
      * @return EnumMetadataShape
+     *
+     * @throws \ReflectionException If the class does not exist or is not an enum
      */
     public static function resolve(string $enumClass): array
     {
@@ -63,6 +68,8 @@ final class EnumMetadataResolver
      *
      * @param  class-string<UnitEnum>  $enumClass
      * @return EnumMetadataShape
+     *
+     * @throws \ReflectionException If the class does not exist or is not an enum
      */
     private static function buildMetadata(string $enumClass): array
     {
