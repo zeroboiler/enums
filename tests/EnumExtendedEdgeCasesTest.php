@@ -146,7 +146,7 @@ describe('generateLabel edge cases', function () {
     });
 
     it('generates label for camelCase case name', function () {
-        expect(CamelCaseEnum::isActive->label())->toBe('Is Active');
+        expect(CamelCaseEnum::IS_ACTIVE->label())->toBe('Is Active');
     });
 
     it('generates label for case with numbers', function () {
@@ -400,21 +400,21 @@ describe('EnumMetadataResolver with empty enum', function () {
 
 // ─── Test Fixtures ───────────────────────────────────────────────
 
-enum SingleCharEnum
+enum SingleCharEnum: string
 {
     use HasEnumMetadata;
 
     case A = 'a';
 }
 
-enum CamelCaseEnum
+enum CamelCaseEnum: string
 {
     use HasEnumMetadata;
 
-    case isActive = 'active';
+    case IS_ACTIVE = 'active';
 }
 
-enum EdgeNameEnum
+enum EdgeNameEnum: string
 {
     use HasEnumMetadata;
 
@@ -422,7 +422,14 @@ enum EdgeNameEnum
     case STATUS_2B = 'status_2b';
 }
 
-enum MetadataTTLTestEnum
+enum MetadataTTLTestEnum: string
+{
+    use HasEnumMetadata;
+
+    case ONLY = 'only';
+}
+
+enum SingleCaseEnum: string
 {
     use HasEnumMetadata;
 
