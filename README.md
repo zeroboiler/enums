@@ -3,6 +3,31 @@
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
 auto-casting, validation, serialization, and CLI tooling.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Type System](#type-system)
+  - [Resolution Priority](#resolution-priority)
+  - [Architecture](#architecture)
+- [Features](#features)
+- [Usage](#usage)
+  - [Accessors](#accessors)
+  - [Bulk Methods](#bulk-methods)
+  - [Lookup](#lookup)
+  - [Eloquent Cast](#eloquent-cast)
+  - [Validation](#validation)
+  - [CLI Commands](#cli-commands)
+  - [Enum Facade / Manager](#enum-facade--manager)
+  - [Integer-Backed Enum Example](#integer-backed-enum-example)
+  - [Pure Enum Example](#pure-enum-example)
+- [Advanced](#advanced)
+  - [Class-Level Attributes](#class-level-attributes)
+  - [Cache Management](#cache-management)
+- [API Quick Reference](#api-quick-reference)
+- [Design Principles](#design-principles)
+- [Testing](#testing)
+- [Contributing](#contributing)
+
 ## Installation
 
 ```bash
