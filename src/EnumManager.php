@@ -30,6 +30,7 @@ final class EnumManager
      * @return list<array{value: string|int, label: string}>
      *
      * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \ReflectionException If the enum class does not exist
      */
     public function forSelect(string $enumClass): array
     {
@@ -50,6 +51,7 @@ final class EnumManager
      * @return list<array{value: string|int, name: string, label: string, description: ?string, color: string, icon: ?string}>
      *
      * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \ReflectionException If the enum class does not exist
      */
     public function forApi(string $enumClass): array
     {
@@ -70,6 +72,7 @@ final class EnumManager
      * @return \UnitEnum|null The matching case, or null if no label matches
      *
      * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \ReflectionException If the enum class does not exist
      */
     public function tryFromLabel(string $enumClass, string $label): ?\UnitEnum
     {

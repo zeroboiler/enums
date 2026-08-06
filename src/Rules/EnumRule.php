@@ -73,6 +73,8 @@ final readonly class EnumRule implements ValidationRule
      * Null values are rejected unless the nullable flag is set.
      *
      * @param  Closure(string, string|null=): PotentiallyTranslatedString  $fail
+     *
+     * @throws \ReflectionException If the enum class does not exist or is not an enum
      */
     #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void

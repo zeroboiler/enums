@@ -39,6 +39,8 @@ final class EnumCast implements CastsAttributes
      * @param  int|string|null  $value
      * @param  array<string, mixed>  $attributes
      * @return T|null
+     *
+     * @throws \InvalidArgumentException If the stored value does not match any enum case
      */
     #[\Override]
     public function get(object $model, string $key, $value, array $attributes)
@@ -58,6 +60,8 @@ final class EnumCast implements CastsAttributes
      *
      * @param  BackedEnum|int|string|null  $value
      * @param  array<string, mixed>  $attributes
+     *
+     * @throws \InvalidArgumentException If value is not a valid enum, string, or int
      */
     #[\Override]
     public function set(object $model, string $key, $value, array $attributes): int|string|null
