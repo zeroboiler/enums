@@ -33,6 +33,8 @@ use UnitEnum;
  *
  * Supports both backed enums (validates against backed values) and pure enums (validates
  * against case names).
+ * @see \ZeroBoiler\Enums\Concerns\HasEnumMetadata For the trait that provides metadata API
+ * @see \ZeroBoiler\Enums\Facades\Enum For the facade that delegates to EnumManager
  */
 final readonly class EnumRule implements ValidationRule
 {
