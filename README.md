@@ -219,8 +219,50 @@ use ZeroBoiler\Enums\Rules\EnumRule;
 ### CLI Commands
 
 ```bash
+# Generate Pest tests for an enum
 php artisan zeroboiler:enum-test "App\Enums\UserStatus"
+php artisan zeroboiler:enum-test "App\Enums\UserStatus" --dir=tests/Unit/Enums
+
+# Inspect enum metadata (displays table with Name, Value, Label, Color, Icon, Description)
 php artisan zeroboiler:enum-inspect "App\Enums\UserStatus"
+```
+
+The test generator produces a Pest file with:
+- **Case existence** test — verifies the enum has cases
+- **forSelect()** test — validates structure (`value` + `label` keys)
+- **forApi()** test — validates full metadata structure
+- **Unique values** test — ensures no duplicate backed values
+- **Per-case label/color** tests — one test per case
+
+Generated output example:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use App\Enums\UserStatus;
+
+describe('UserStatus enum', function () {
+    it('has cases', function () {
+        expect(UserStatus::cases())->not->toBeEmpty();
+    });
+
+    it('can generate select options', function () {
+        $options = UserStatus::forSelect();
+        expect($options)->toBeArray();
+        expect($options[0])->toHaveKeys(['value', 'label']);
+    });
+
+    it('has a label for case ACTIVE', function () {
+        expect(UserStatus::ACTIVE->label())->toBeString()->not->toBeEmpty();
+    });
+
+    it('has a color for case ACTIVE', function () {
+        expect(UserStatus::ACTIVE->color())->toBeString();
+    });
+    // ... more cases
+});
 ```
 
 ### Enum Facade / Manager

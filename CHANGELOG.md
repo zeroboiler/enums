@@ -18,7 +18,8 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 - Facade (`Enum`) and manager (`EnumManager`) for runtime access
 - CLI commands: `zeroboiler:enum-test`, `zeroboiler:enum-inspect`
 - Full PHPStan level 9 compliance (no baseline errors)
-- Comprehensive Pest test suite with 19+ test files
+- Comprehensive Pest test suite with 20+ test files
+- Enhanced CLI documentation with generated test output examples
 
 ### Requirements
 - PHP 8.5+

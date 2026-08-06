@@ -20,7 +20,12 @@ final class EnumTestGenerator
     /**
      * Generate test file content for an enum class.
      *
-     * @param  class-string<UnitEnum>  $enumClass
+     * Produces a complete Pest test file with tests for each case's label
+     * and color, plus bulk method tests (forSelect, forApi, uniqueness).
+     *
+     * @param  class-string<UnitEnum>  $enumClass  Fully-qualified enum class name
+     *
+     * @return string Complete PHP test file content ready to write to disk
      */
     public static function generate(string $enumClass): string
     {
