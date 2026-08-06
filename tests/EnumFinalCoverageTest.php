@@ -10,13 +10,14 @@ namespace ZeroBoiler\Enums\Tests;
 
 use ZeroBoiler\Enums\Casts\EnumCast;
 use ZeroBoiler\Enums\EnumCache;
-use ZeroBoiler\Enums\EnumsServiceProvider;
 use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Rules\EnumRule;
+use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 use ZeroBoiler\Enums\Tests\Fixtures\CamelCaseRole;
 use ZeroBoiler\Enums\Tests\Fixtures\OrderStatus;
 use ZeroBoiler\Enums\Tests\Fixtures\Priority;
 use ZeroBoiler\Enums\Tests\Fixtures\RequestState;
+use ZeroBoiler\Enums\Tests\Fixtures\TicketStatus;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
 
 describe('Enum Edge Cases — Label Generation', function () {
@@ -45,7 +46,7 @@ describe('Enum Edge Cases — Label Generation', function () {
     it('per-case label overrides class-level EnumLabel', function () {
         // TicketStatus uses EnumLabel at class level — all cases auto-resolved
         // OPEN has class-level label 'Open'
-        $open = \ZeroBoiler\Enums\Tests\Fixtures\TicketStatus::OPEN;
+        $open = TicketStatus::OPEN;
         expect($open->label())->toBe('Open');
     });
 });
@@ -376,7 +377,7 @@ describe('Enum Edge Cases — Metadata Resolution', function () {
     });
 
     it('resolves metadata for camelCase enum correctly', function () {
-        $meta = \ZeroBoiler\Enums\Support\EnumMetadataResolver::resolve(CamelCaseRole::class);
+        $meta = EnumMetadataResolver::resolve(CamelCaseRole::class);
 
         // camelCase names should auto-generate labels
         expect($meta['labels']['is_active'])->toBe('Is Active');
