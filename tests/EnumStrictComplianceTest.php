@@ -6,16 +6,11 @@
 
 declare(strict_types=1);
 
-use ZeroBoiler\Enums\Attributes\EnumColor;
-use ZeroBoiler\Enums\Attributes\EnumDescription;
-use ZeroBoiler\Enums\Attributes\EnumIcon;
-use ZeroBoiler\Enums\Attributes\EnumLabel;
 use ZeroBoiler\Enums\Casts\EnumCast;
 use ZeroBoiler\Enums\EnumCache;
 use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Rules\EnumRule;
 use ZeroBoiler\Enums\Support\EnumMetadataResolver;
-use ZeroBoiler\Enums\Tests\Fixtures\OrderStatus;
 use ZeroBoiler\Enums\Tests\Fixtures\Priority;
 use ZeroBoiler\Enums\Tests\Fixtures\RequestState;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
@@ -147,7 +142,7 @@ describe('Enum Strict Type Compliance & Edge Cases', function () {
 
         it('set returns int value for enum instance', function () {
             $cast = new EnumCast(Priority::class);
-            $result = $cast->set(new stdClass, 'priority', Priority::CRITICAL, []);
+            $result = $cast->set(new stdClass, 'priority', Priority::LOW, []);
 
             expect($result)->toBe(1);
         });
@@ -263,7 +258,7 @@ describe('Enum Strict Type Compliance & Edge Cases', function () {
         });
 
         it('generates label for int-backed enum with uppercase case name', function () {
-            expect(Priority::CRITICAL->label())->toBe('Critical');
+            expect(Priority::LOW->label())->toBe('Low');
             expect(Priority::URGENT->label())->toBe('Urgent');
         });
 
