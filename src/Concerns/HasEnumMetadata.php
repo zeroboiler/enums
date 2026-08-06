@@ -177,6 +177,62 @@ trait HasEnumMetadata
     }
 
     /**
+     * Check if this enum case matches the given case.
+     *
+     * Uses strict identity comparison. Accepts both enum instances
+     * and case names (strings) for flexible comparison.
+     *
+     *   if ($status->is(UserStatus::ACTIVE)) { ... }
+     *   if ($status->is('ACTIVE')) { ... }
+     *
+     * @param  static|string  $case  The case instance or name to compare against
+     */
+    public function is(self|string $case): bool
+    {
+        if ($case instanceof self) {
+            return $this === $case;
+        }
+
+        return $this->name === $case;
+    }
+
+    /**
+     * Check if this enum case does NOT match the given case.
+     *
+     * Negation of {@see is()}.
+     *
+     *   if ($status->isNot(UserStatus::BANNED)) { ... }
+     *   if ($status->isNot('BANNED')) { ... }
+     *
+     * @param  static|string  $case  The case instance or name to compare against
+     */
+    public function isNot(self|string $case): bool
+    {
+        return ! $this->is($case);
+    }
+
+    /**
+     * Check if this enum case is one of the given cases.
+     *
+     * Useful for grouping related states:
+     *
+     *   if ($status->in([UserStatus::ACTIVE, UserStatus::PENDING])) { ... }
+     *   if ($status->in(['ACTIVE', 'PENDING'])) { ... }
+     *
+     * @param  array<static|string>  $cases  List of case instances or names
+     */
+    public function in(array $cases): bool
+    {
+        foreach ($cases as $case) {
+            if ($this->is($case)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get all backed values or case names for this enum.
      *
      * For backed enums returns the backed values (int|string).

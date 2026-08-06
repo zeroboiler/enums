@@ -10,6 +10,7 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 - Class-level default attributes: `#[EnumLabel]`, `#[EnumColor]`, `#[EnumIcon]`, `#[EnumDescription]`
 - Auto-generated labels from `SCREAMING_SNAKE_CASE` → `Title Case`
 - Bulk helpers: `forSelect()`, `forApi()`, `values()`, `labels()`
+- Comparison methods: `is()`, `isNot()`, `in()` — instance and string support
 - Reverse lookup: `tryFromLabel()`, `tryFromName()`, `fromName()`, `hasCase()`
 - TTL-based metadata cache via `EnumCache` singleton (default: 300s)
 - Eloquent auto-cast via `EnumCast`
@@ -17,7 +18,7 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 - Facade (`Enum`) and manager (`EnumManager`) for runtime access
 - CLI commands: `zeroboiler:enum-test`, `zeroboiler:enum-inspect`
 - Full PHPStan level 9 compliance (no baseline errors)
-- Comprehensive Pest test suite with 18+ test files
+- Comprehensive Pest test suite with 19+ test files
 
 ### Requirements
 - PHP 8.5+

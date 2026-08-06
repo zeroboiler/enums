@@ -13,6 +13,7 @@ auto-casting, validation, serialization, and CLI tooling.
 - [Usage](#usage)
   - [Accessors](#accessors)
   - [Bulk Methods](#bulk-methods)
+  - [Comparison](#comparison)
   - [Lookup](#lookup)
   - [Eloquent Cast](#eloquent-cast)
   - [Validation](#validation)
@@ -102,6 +103,7 @@ Colors default to `'secondary'` and icons/descriptions default to `null` when no
 - **Bulk helpers** — `forSelect()`, `forApi()`, `values()`, `labels()`
 - **Reverse lookup** — `tryFromLabel('Active User')`, `tryFromName('ACTIVE')`, `fromName('ACTIVE')`
 - **Name lookup** — `hasCase('ACTIVE')`
+- **Comparison** — `is()`, `isNot()`, `in()` with instance and string support
 - **CLI tools** — `zeroboiler:enum-test`, `zeroboiler:enum-inspect`
 
 ## Usage
@@ -155,6 +157,31 @@ UserStatus::forApi();
 
 UserStatus::values();    // ['active', 'inactive', 'pending', 'suspended', 'banned']
 UserStatus::labels();    // ['Active User', 'Inactive', ...]
+```
+
+### Comparison
+
+Compare enum cases using `is()`, `isNot()`, and `in()`. Works with both
+enum instances and case name strings:
+
+```php
+$status = UserStatus::ACTIVE;
+
+// Instance comparison (strict identity)
+$status->is(UserStatus::ACTIVE);     // true
+$status->is(UserStatus::BANNED);     // false
+
+// String case name comparison (case-sensitive)
+$status->is('ACTIVE');               // true
+$status->is('active');               // false (case-sensitive)
+
+// Negation
+$status->isNot(UserStatus::BANNED);  // true
+
+// Group matching — check if in a list of cases
+$status->in([UserStatus::ACTIVE, UserStatus::PENDING]);  // true
+$status->in(['ACTIVE', 'PENDING']);                       // true (mixed)
+$status->in([UserStatus::BANNED, UserStatus::SUSPENDED]); // false
 ```
 
 ### Lookup
@@ -330,6 +357,9 @@ $cache->setTtl(0);  // disable caching (always fresh)
 | `::tryFromName(string)` | `?static` | Resolve by case name |
 | `::fromName(string)` | `static` | Resolve by case name (throws on failure) |
 | `::hasCase(string)` | `bool` | Check if a case name exists |
+| `->is(self\|string)` | `bool` | Check if this case matches another (instance or name) |
+| `->isNot(self\|string)` | `bool` | Check if this case does NOT match another |
+| `->in(array<self\|string>)` | `bool` | Check if this case is in a list of cases |
 | `::values()` | `list<string\|int>` | All backed values or case names |
 | `::labels()` | `list<string>` | All labels in declaration order |
 
