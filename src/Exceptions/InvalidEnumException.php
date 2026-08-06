@@ -15,14 +15,17 @@ final class InvalidEnumException extends Exception
     /**
      * Create an exception for an invalid value lookup.
      *
+     * Includes the actual value in the message for easier debugging,
+     * rather than only the PHP type name.
+     *
      * @param  class-string  $enumClass
      * @param  int|string|null  $value  The invalid backed value or case name
      */
     public static function value(string $enumClass, int|string|null $value): self
     {
-        $type = get_debug_type($value);
+        $display = $value === null ? 'null' : (string) $value;
 
-        return new self("Value [{$type}] is not a valid case of [{$enumClass}].");
+        return new self("Value [{$display}] is not a valid case of [{$enumClass}].");
     }
 
     /**

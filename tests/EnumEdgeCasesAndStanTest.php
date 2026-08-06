@@ -268,10 +268,23 @@ describe('Enum Edge Cases & PHPStan L9 Compliance', function () {
     });
 
     describe('InvalidEnumException', function () {
-        it('value() formats with debug type and class name', function () {
+        it('value() includes actual value in message', function () {
             $e = InvalidEnumException::value(UserStatus::class, 'invalid');
+            expect($e->getMessage())->toContain('invalid');
             expect($e->getMessage())->toContain(UserStatus::class);
             expect($e->getMessage())->toContain('not a valid case');
+        });
+
+        it('value() handles null input', function () {
+            $e = InvalidEnumException::value(Priority::class, null);
+            expect($e->getMessage())->toContain('null');
+            expect($e->getMessage())->toContain(Priority::class);
+        });
+
+        it('value() handles int input', function () {
+            $e = InvalidEnumException::value(Priority::class, 99);
+            expect($e->getMessage())->toContain('99');
+            expect($e->getMessage())->toContain(Priority::class);
         });
 
         it('forName() formats with class and name', function () {
