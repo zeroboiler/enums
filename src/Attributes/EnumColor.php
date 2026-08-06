@@ -31,11 +31,39 @@ final class EnumColor
      * @param  array<string>  $info  Case values that map to "info"
      * @param  array<string>  $secondary  Case values that map to "secondary"
      */
+    /** @var list<string> */
+    public readonly array $success;
+
+    /** @var list<string> */
+    public readonly array $danger;
+
+    /** @var list<string> */
+    public readonly array $warning;
+
+    /** @var list<string> */
+    public readonly array $info;
+
+    /** @var list<string> */
+    public readonly array $secondary;
+
+    /**
+     * @param  list<string>  $success  Case values that map to "success"
+     * @param  list<string>  $danger  Case values that map to "danger"
+     * @param  list<string>  $warning  Case values that map to "warning"
+     * @param  list<string>  $info  Case values that map to "info"
+     * @param  list<string>  $secondary  Case values that map to "secondary"
+     */
     public function __construct(
-        public array $success = [],
-        public array $danger = [],
-        public array $warning = [],
-        public array $info = [],
-        public array $secondary = [],
-    ) {}
+        array $success = [],
+        array $danger = [],
+        array $warning = [],
+        array $info = [],
+        array $secondary = [],
+    ) {
+        $this->success = $success;
+        $this->danger = $danger;
+        $this->warning = $warning;
+        $this->info = $info;
+        $this->secondary = $secondary;
+    }
 }

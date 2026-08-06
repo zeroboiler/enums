@@ -289,6 +289,17 @@ $cache = EnumCache::getInstance();
 $cache->setTtl(0);  // disable caching (always fresh)
 ```
 
+## Design Principles
+
+| Principle | Implementation |
+|-----------|---------------|
+| **Zero config** | No service provider config, no publishable files — works out of the box |
+| **Immutable by default** | PHP enums are inherently immutable; metadata is cached in a singleton |
+| **Attribute-first** | All metadata declared via PHP 8 attributes, not arrays or config files |
+| **Progressive defaults** | Per-case attribute → class-level attribute → auto-generated label |
+| **Strict typing** | `declare(strict_types=1)` in every file; PHPStan level 9 clean |
+| **No magic strings** | Colors limited to `success`, `danger`, `warning`, `info`, `secondary` |
+
 ## Testing
 
 ```bash
@@ -306,6 +317,23 @@ composer ci
 ```
 
 All checks must pass before merging. The package targets PHPStan level 9 with a clean baseline (zero suppressed errors).
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/my-feature`)
+3. Ensure all CI checks pass (`composer ci`)
+4. Commit with conventional commits (`feat:`, `fix:`, `refactor:`)
+5. Push and open a Pull Request
+
+### Code Standards
+
+- **PHP 8.5 syntax** — use the latest language features
+- **Strict types** — every file must have `declare(strict_types=1)`
+- **PHPStan level 9** — zero errors, no baseline suppressions
+- **Docblocks** — all public methods and properties documented
+- **Typed properties** — no `mixed` types in source code
+- **Final classes** — all attributes and services are `final`
 
 ## License
 
