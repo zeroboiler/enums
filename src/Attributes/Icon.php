@@ -20,6 +20,6 @@ use Attribute;
 final class Icon
 {
     public function __construct(
-        public string $value,
+        public readonly string $value,
     ) {}
 }

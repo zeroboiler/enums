@@ -20,6 +20,6 @@ use Attribute;
 final class Color
 {
     public function __construct(
-        public string $value,
+        public readonly string $value,
     ) {}
 }

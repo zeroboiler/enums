@@ -20,6 +20,6 @@ use Attribute;
 final class Label
 {
     public function __construct(
-        public string $value,
+        public readonly string $value,
     ) {}
 }

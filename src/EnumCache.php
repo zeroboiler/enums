@@ -71,15 +71,26 @@ final class EnumCache
     }
 
     /**
+     * Get cached metadata for an enum class.
+     *
+     * Call {@see has()} first to check if the entry exists, or use
+     * {@see EnumMetadataResolver::resolve()} which handles caching transparently.
+     *
      * @return array{
      *     labels: array<string, string>,
      *     descriptions: array<string, string>,
      *     colors: array<string, string>,
      *     icons: array<string, string>
      * }
+     *
+     * @throws \OutOfBoundsException If no cached entry exists for the given enum class
      */
     public function get(string $enumClass): array
     {
+        if (! isset($this->cache[$enumClass])) {
+            throw new \OutOfBoundsException("No cached metadata for [{$enumClass}]. Call has() first.");
+        }
+
         return $this->cache[$enumClass];
     }
 

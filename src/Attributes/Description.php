@@ -20,6 +20,6 @@ use Attribute;
 final class Description
 {
     public function __construct(
-        public string $value,
+        public readonly string $value,
     ) {}
 }
