@@ -41,7 +41,7 @@ final class EnumCache
 
     public static function getInstance(): self
     {
-        if (! self::$instance instanceof EnumCache) {
+        if (self::$instance === null) {
             self::$instance = new self;
         }
 

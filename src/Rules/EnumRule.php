@@ -98,22 +98,22 @@ final readonly class EnumRule implements ValidationRule
             $acceptsString = $backingType?->getName() === 'string';
             $acceptsInt = $backingType?->getName() === 'int';
 
-            if (! $acceptsString && ! $acceptsInt) {
+            if ($acceptsString === false && $acceptsInt === false) {
                 $fail($this->message($attribute));
 
                 return;
             }
 
-            if (($acceptsInt && ! is_int($value)) || ($acceptsString && ! is_string($value))) {
+            if (($acceptsInt === true && ! is_int($value)) || ($acceptsString === true && ! is_string($value))) {
                 $fail($this->message($attribute));
 
                 return;
             }
 
-            if (! $enumClass::tryFrom($value) instanceof BackedEnum) {
+            if ($enumClass::tryFrom($value) === null) {
                 $fail($this->message($attribute));
             }
-        } elseif (is_a($enumClass, UnitEnum::class, true)) {
+        } elseif (enum_exists($enumClass)) {
             // For pure enums, match by case name
             if (! is_string($value)) {
                 $fail($this->message($attribute));
@@ -122,7 +122,7 @@ final readonly class EnumRule implements ValidationRule
             }
 
             /** @var list<string> $validNames */
-            $validNames = array_map(fn (UnitEnum $case): string => $case->name, $enumClass::cases());
+            $validNames = array_map(static fn (UnitEnum $case): string => $case->name, $enumClass::cases());
             if (! in_array($value, $validNames, true)) {
                 $fail($this->message($attribute));
             }
