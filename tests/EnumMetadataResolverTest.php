@@ -13,6 +13,9 @@ use ZeroBoiler\Enums\Tests\Fixtures\Priority;
 use ZeroBoiler\Enums\Tests\Fixtures\RequestState;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
 
+use ReflectionClass;
+use ReflectionMethod;
+
 beforeEach(function (): void {
     EnumCache::flush();
 });

@@ -630,6 +630,38 @@ For most use cases, the built-in attributes (`Label`, `Color`, `Icon`, `Descript
 cover common UI requirements. Custom attributes are typically only needed for
 domain-specific metadata that doesn't map to standard UI concerns.
 
+## Troubleshooting
+
+### Common Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| `Class "X" not found` when using `HasEnumMetadata` | Enum not loaded / missing `use` statement | Ensure the trait is imported: `use ZeroBoiler\Enums\Concerns\HasEnumMetadata;` |
+| `->color()` always returns `'secondary'` | No color attributes defined | Add `#[EnumColor(...)]` at class level or `#[Color('...')]` per case |
+| `->label()` returns weird casing | Auto-generation from case name | Use `#[Label('Custom Label')]` to override |
+| `forSelect()` returns case names instead of values | Using a pure enum | Pure enums use case names as values — this is expected behavior |
+| `EnumRule` passes invalid values | Int-backed enum receiving string input | Ensure the input type matches the backing type (e.g., send `1` not `'1'` for int-backed) |
+| Stale metadata in Octane | Cache not flushed between requests | The package auto-listens for `octane.terminate` — if using a custom server, call `EnumCache::flush()` manually |
+| `fromName('ACTIVE')` returns null | Case-sensitive comparison | Use exact case name (uppercase) |
+| `tryFromLabel()` is slow on first call | Reflection overhead on first resolution | Metadata is cached after first call — subsequent calls are fast |
+
+### FAQ
+
+**Q: Can I use this with non-Laravel projects?**
+A: The core trait (`HasEnumMetadata`), resolver, and cache work standalone without Laravel. The service provider, facade, EnumRule, and artisan commands require Laravel.
+
+**Q: What happens if two cases have the same label?**
+A: `tryFromLabel()` returns the first match in declaration order. Use unique labels to avoid ambiguity.
+
+**Q: Can I add custom metadata types (e.g., `#[SortOrder]`)?**
+A: Yes. Create a custom attribute, extend `EnumMetadataResolver::buildMetadata()`, and add an accessor method to your trait. See the [Extending](#extending) section.
+
+**Q: Does this work with PHP enum `match()` expressions?**
+A: Yes — the trait methods return scalar values compatible with `match()`. Example: `match($status->color()) { 'success' => '...', ... }`.
+
+**Q: Are backed enums required?**
+A: No. Pure enums (without backing types) are fully supported. The `values()` method returns case names, and `forSelect()` uses case names as values.
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
