@@ -19,6 +19,9 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
 final class Icon
 {
+    /**
+     * @param  string  $value  Icon identifier (e.g., 'heroicon-o-check-circle', 'fa-user')
+     */
     public function __construct(
         public readonly string $value,
     ) {}

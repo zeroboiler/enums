@@ -19,6 +19,9 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
 final class Color
 {
+    /**
+     * @param  string  $value  UI color name (e.g., 'success', 'danger', 'warning', 'info', 'secondary')
+     */
     public function __construct(
         public readonly string $value,
     ) {}

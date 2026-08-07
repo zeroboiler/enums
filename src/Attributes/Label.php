@@ -19,6 +19,9 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
 final class Label
 {
+    /**
+     * @param  string  $value  Human-readable label text
+     */
     public function __construct(
         public readonly string $value,
     ) {}
