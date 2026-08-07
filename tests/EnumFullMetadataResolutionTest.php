@@ -15,16 +15,31 @@ use ZeroBoiler\Enums\Tests\Fixtures\ZeroPriority;
 
 describe('Enum full metadata resolution edge cases', function () {
     describe('class-level defaults with per-case overrides', function () {
-        it('returns class-level color when no per-case override exists', function () {
-            $status = AllClassLevelEnum::ACTIVE;
+        it('returns class-level label when no per-case override exists', function () {
+            $status = AllClassLevelEnum::OPEN;
 
-            expect($status->color())->toBe('success');
+            // EnumLabel labels: ['open' => 'Open Status', ...]
+            expect($status->label())->toBe('Open Status');
         });
 
-        it('prefers per-case color over class-level color', function () {
-            $status = AllClassLevelEnum::BANNED;
+        it('returns class-level icon default for all cases', function () {
+            // EnumIcon default: 'heroicon-o-circle'
+            expect(AllClassLevelEnum::OPEN->icon())->toBe('heroicon-o-circle');
+            expect(AllClassLevelEnum::DONE->icon())->toBe('heroicon-o-circle');
+        });
 
-            expect($status->color())->toBe('danger');
+        it('returns class-level description when defined', function () {
+            $status = AllClassLevelEnum::IN_PROGRESS;
+
+            // EnumDescription descriptions: ['in_progress' => 'Task is being worked on']
+            expect($status->description())->toBe('Task is being worked on');
+        });
+
+        it('returns null description when not defined for a case', function () {
+            $status = AllClassLevelEnum::DONE;
+
+            // EnumDescription does not have 'done' → description
+            expect($status->description())->toBeNull();
         });
     });
 
@@ -36,9 +51,10 @@ describe('Enum full metadata resolution edge cases', function () {
         });
 
         it('generates Title Case from camelCase', function () {
-            $role = CamelCaseRole::SuperAdmin;
+            $role = CamelCaseRole::isActive;
 
-            expect($role->label())->toBe('Super Admin');
+            // isActive → "Is Active" (not SCREAMING_SNAKE, so camelCase branch)
+            expect($role->label())->toBe('Is Active');
         });
     });
 
@@ -119,7 +135,7 @@ describe('Enum full metadata resolution edge cases', function () {
 
     describe('zero-value edge cases', function () {
         it('handles int value 0 correctly', function () {
-            $zero = ZeroPriority::ZERO;
+            $zero = ZeroPriority::NONE;
 
             expect($zero->value)->toBe(0);
             expect($zero->label())->toBeString()->not->toBeEmpty();

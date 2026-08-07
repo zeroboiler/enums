@@ -11,8 +11,8 @@ use Illuminate\Validation\Validator;
 use ZeroBoiler\Enums\Rules\EnumRule;
 use ZeroBoiler\Enums\Tests\Fixtures\OrderStatus;
 use ZeroBoiler\Enums\Tests\Fixtures\Priority;
+use ZeroBoiler\Enums\Tests\Fixtures\RequestState;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
-use ZeroBoiler\Enums\Tests\Fixtures\TicketStatus;
 
 describe('EnumRule edge cases and PHPStan compliance', function () {
     describe('backed enum type safety', function () {
@@ -63,33 +63,33 @@ describe('EnumRule edge cases and PHPStan compliance', function () {
 
     describe('pure enum handling', function () {
         it('accepts valid case name for pure enum', function () {
-            $rule = EnumRule::for(TicketStatus::class);
+            $rule = EnumRule::for(RequestState::class);
             $validator = new Validator(
                 new Translator('en'),
-                ['status' => 'OPEN'],
-                ['status' => $rule],
+                ['state' => 'DRAFT'],
+                ['state' => $rule],
             );
 
             expect($validator->passes())->toBeTrue();
         });
 
         it('rejects invalid case name for pure enum', function () {
-            $rule = EnumRule::for(TicketStatus::class);
+            $rule = EnumRule::for(RequestState::class);
             $validator = new Validator(
                 new Translator('en'),
-                ['status' => 'NONEXISTENT'],
-                ['status' => $rule],
+                ['state' => 'NONEXISTENT'],
+                ['state' => $rule],
             );
 
             expect($validator->passes())->toBeFalse();
         });
 
         it('rejects non-string value for pure enum', function () {
-            $rule = EnumRule::for(TicketStatus::class);
+            $rule = EnumRule::for(RequestState::class);
             $validator = new Validator(
                 new Translator('en'),
-                ['status' => 123],
-                ['status' => $rule],
+                ['state' => 123],
+                ['state' => $rule],
             );
 
             expect($validator->passes())->toBeFalse();
