@@ -771,7 +771,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **50+ test files** covering:
+The test suite includes **55+ test files** covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|
@@ -779,7 +779,8 @@ The test suite includes **50+ test files** covering:
 | **Comparison** | `EnumComparisonMethodsTest`, `EnumComparisonAndClassLevelTest` | `is()`, `isNot()`, `in()` with instances and strings |
 | **Lookup** | Various | `tryFromLabel()`, `tryFromName()`, `fromName()`, `hasCase()` |
 | **Bulk** | Various | `forSelect()`, `forApi()`, `values()`, `labels()` |
-| **Cache** | `EnumCacheTest`, `EnumCacheBehaviourTest`, `EnumCacheFlushRebuildTest` | TTL expiration, flush, reset, Octane compatibility |
+| **Manager** | `EnumManagerTest`, `EnumManagerFacadeTest`, `EnumManagerDetailedTest` | Facade delegation, forSelect/forApi/tryFromLabel via manager, error handling |
+| **Cache** | `EnumCacheTest`, `EnumCacheBehaviourTest`, `EnumCacheFlushRebuildTest`, `EnumCacheTtlEdgeCasesTest` | TTL expiration, flush, reset, Octane compatibility, zero/negative TTL, singleton lifecycle |
 | **Attributes** | `ClassLevelAttributesTest`, `EnumAttributeConsistencyTest` | Class-level defaults, per-case overrides |
 | **Validation** | `EnumRuleTest`, `EnumRuleTypeSafetyTest`, `EnumRuleStanComplianceTest` | Backed enums, pure enums, nullable, type checking |
 | **Eloquent** | `EnumCastTest`, `EnumCastEdgeCasesTest` | get/set/serialize with type validation |
