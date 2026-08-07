@@ -145,7 +145,9 @@ final readonly class EnumRule implements ValidationRule
 
         // Check if enum uses HasEnumMetadata
         if (method_exists($enumClass, 'values')) {
-            $allowed = implode(', ', $enumClass::values());
+            /** @var list<string|int> $values */
+            $values = $enumClass::values();
+            $allowed = implode(', ', array_map(static fn (int|string $v): string => (string) $v, $values));
 
             return "The selected {$attribute} is invalid. Allowed values: {$allowed}.";
         }
