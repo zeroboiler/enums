@@ -5,6 +5,7 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 ## [Unreleased]
 
 ### Changed
+- Improved `EnumCast::get()` docblock — removed misleading `@throws` tag, documented silent null behavior
 - Enriched README with Internal Components section (EnumMetadataResolver, EnumTestGenerator, Class Structure)
 - Added Test Coverage table to README documenting 50+ test files across all categories
 

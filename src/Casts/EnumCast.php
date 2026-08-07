@@ -36,11 +36,14 @@ final class EnumCast implements CastsAttributes
     /**
      * Cast raw value to enum instance.
      *
+     * Returns `null` silently for values that don't match any enum case
+     * (via `tryFrom()`). This matches Eloquent's convention for cast
+     * attributes. If you need strict validation on stored values, use
+     * model-level rules or accessors.
+     *
      * @param  int|string|null  $value
      * @param  array<string, mixed>  $attributes
-     * @return T|null
-     *
-     * @throws \InvalidArgumentException If the stored value does not match any enum case
+     * @return T|null Returns null when $value is null or doesn't match any case
      */
     #[\Override]
     public function get(object $model, string $key, $value, array $attributes)
