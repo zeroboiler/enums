@@ -679,6 +679,78 @@ A: No. Pure enums (without backing types) are fully supported. The `values()` me
 
 See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 
+## Internal Components
+
+### EnumMetadataResolver
+
+The `EnumMetadataResolver` is the engine behind all metadata access. It reads
+reflection attributes from both the enum class and its cases, merges them
+according to the resolution priority, and caches the result.
+
+```php
+use ZeroBoiler\Enums\Support\EnumMetadataResolver;
+
+// Resolve all metadata for an enum (cached)
+$meta = EnumMetadataResolver::resolve(UserStatus::class);
+// Returns:
+// [
+//     'labels'       => ['active' => 'Active User', 'banned' => 'Banned User'],
+//     'descriptions' => ['active' => 'Fully active user'],
+//     'colors'       => ['active' => 'success', 'banned' => 'danger'],
+//     'icons'        => ['active' => 'heroicon-o-check-circle'],
+// ]
+```
+
+The resolver is called automatically by all `HasEnumMetadata` trait methods.
+Direct usage is typically only needed for custom tooling or extensions.
+
+### EnumTestGenerator
+
+Generates Pest test files for any enum using `HasEnumMetadata`:
+
+```php
+use ZeroBoiler\Enums\Support\EnumTestGenerator;
+
+$content = EnumTestGenerator::generate(UserStatus::class);
+// Returns a complete Pest test file string
+```
+
+Used internally by the `zeroboiler:enum-test` artisan command.
+
+### Class Structure
+
+```
+src/
+├── Attributes/
+│   ├── Label.php          #[Label('Custom')]        — Per-case label override
+│   ├── Color.php          #[Color('success')]        — Per-case color override
+│   ├── Icon.php           #[Icon('heroicon-o-...')]   — Per-case icon override
+│   ├── Description.php    #[Description('...')]      — Per-case description override
+│   ├── EnumLabel.php      #[EnumLabel(...)]          — Class-level label map
+│   ├── EnumColor.php      #[EnumColor(...)]          — Class-level color map
+│   ├── EnumIcon.php       #[EnumIcon(...)]           — Class-level default icon
+│   └── EnumDescription.php #[EnumDescription(...)]  — Class-level description map
+├── Concerns/
+│   └── HasEnumMetadata.php — Trait providing all public API methods
+├── Casts/
+│   └── EnumCast.php       — Eloquent cast for backed enums
+├── Console/Commands/
+│   ├── InspectEnumCommand.php  — Metadata inspection CLI
+│   └── MakeEnumTestCommand.php — Test generation CLI
+├── Exceptions/
+│   └── InvalidEnumException.php — Named constructors for enum errors
+├── Facades/
+│   └── Enum.php           — Laravel facade for EnumManager
+├── Rules/
+│   └── EnumRule.php       — Validation rule for Form Requests
+├── Support/
+│   ├── EnumMetadataResolver.php  — Reflection-based metadata resolution
+│   └── EnumTestGenerator.php     — Pest test file generation
+├── EnumCache.php          — TTL-based singleton metadata cache
+├── EnumManager.php        — Runtime enum helper (facade-backed)
+└── EnumsServiceProvider.php — Auto-discovery service provider
+```
+
 ## Testing
 
 ```bash
@@ -696,6 +768,25 @@ composer ci
 ```
 
 All checks must pass before merging. The package targets PHPStan level 9 with a clean baseline (zero suppressed errors).
+
+### Test Coverage
+
+The test suite includes **50+ test files** covering:
+
+| Category | Tests | What's Covered |
+|----------|-------|----------------|
+| **Core** | `EnumTest`, `FromNameTest` | Label, color, icon, description resolution; auto-generation |
+| **Comparison** | `EnumComparisonMethodsTest`, `EnumComparisonAndClassLevelTest` | `is()`, `isNot()`, `in()` with instances and strings |
+| **Lookup** | Various | `tryFromLabel()`, `tryFromName()`, `fromName()`, `hasCase()` |
+| **Bulk** | Various | `forSelect()`, `forApi()`, `values()`, `labels()` |
+| **Cache** | `EnumCacheTest`, `EnumCacheBehaviourTest`, `EnumCacheFlushRebuildTest` | TTL expiration, flush, reset, Octane compatibility |
+| **Attributes** | `ClassLevelAttributesTest`, `EnumAttributeConsistencyTest` | Class-level defaults, per-case overrides |
+| **Validation** | `EnumRuleTest`, `EnumRuleTypeSafetyTest`, `EnumRuleStanComplianceTest` | Backed enums, pure enums, nullable, type checking |
+| **Eloquent** | `EnumCastTest`, `EnumCastEdgeCasesTest` | get/set/serialize with type validation |
+| **CLI** | `ConsoleCommandsTest` | `enum-test` and `enum-inspect` commands |
+| **Edge Cases** | `EnumEdgeCasesAndStanTest`, `EnumComprehensiveEdgeCaseTest` | Empty enums, single-case, camelCase labels |
+| **PHPStan** | `EnumPhpStanComplianceTest`, `EnumStrictComplianceTest` | No mixed types, strict comparisons |
+| **Fixtures** | `OrderStatus`, `Priority`, `UserStatus`, `TicketStatus`, etc. | Backed (string/int), pure, camelCase enums |
 
 ## Contributing
 
