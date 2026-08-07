@@ -806,6 +806,34 @@ The test suite includes **55+ test files** covering:
 - **Typed properties** — no `mixed` types in source code
 - **Final classes** — all attributes and services are `final`
 
+## Compatibility
+
+| Dependency | Minimum Version | Maximum Version | Notes |
+|------------|----------------|-----------------|-------|
+| PHP | 8.5 | — | Uses `readonly` promoted properties, attributes, backed enums, match expressions |
+| Laravel | 13.0 | — | Requires `illuminate/contracts`, `illuminate/support`, `illuminate/validation` |
+| Pest (dev) | 3.0 | — | Test framework — not required for production |
+| PHPStan (dev) | 2.0 | — | Static analysis — targets level 9 |
+
+**PHP 8.5 Feature Usage:**
+
+| Feature | Where Used | Purpose |
+|---------|-----------|---------|
+| `readonly` promoted properties | All attribute classes | Immutable attribute parameters |
+| `enum` (backed + pure) | `EnumRule`, `EnumMetadataResolver` | Core enum support |
+| `Attribute` | All attribute classes | PHP 8 attribute system |
+| `match` expressions | `EnumMetadataResolver`, `EnumRule` | Type-safe pattern matching |
+| `named arguments` | `EnumRule::for()` | Named constructor pattern |
+| `first-class callable syntax` | `HasEnumMetadata::values()`, `labels()` | `array_map(static fn ...)` |
+| `#[Override]` | Service providers, facade, `EnumCast` | Explicit interface implementation |
+| `str_contains`, `str_starts_with` | Test generator | Built-in string helpers |
+
+**Laravel Compatibility:**
+
+The package uses only stable Laravel contracts (`CastsAttributes`, `ValidationRule`,
+`ServiceProvider`, `Facade`). No bleeding-edge or internal APIs are used, ensuring
+forward compatibility with future Laravel releases.
+
 ## License
 
 Proprietary — © ZeroBoiler

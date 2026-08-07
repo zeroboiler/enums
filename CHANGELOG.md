@@ -4,6 +4,10 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 
 ## [Unreleased]
 
+### Added
+- `SECURITY.md` — Security policy with supported versions, reporting process, and security considerations
+- Compatibility Matrix section in README (PHP/Laravel versions, feature usage table)
+
 ### Changed
 - Improved `EnumCast::get()` docblock — removed misleading `@throws` tag, documented silent null behavior
 - Enriched README with Internal Components section (EnumMetadataResolver, EnumTestGenerator, Class Structure)
