@@ -44,6 +44,8 @@ auto-casting, validation, serialization, and CLI tooling.
 - [Extending](#extending)
   - [Custom Metadata Methods](#custom-metadata-methods)
   - [Registering Custom Attributes](#registering-custom-attributes)
+- [Full-Stack Integration](#full-stack-integration)
+- [Performance Considerations](#performance-considerations)
 - [Testing](#testing)
 - [Contributing](#contributing)
 
@@ -644,6 +646,72 @@ For most use cases, the built-in attributes (`Label`, `Color`, `Icon`, `Descript
 cover common UI requirements. Custom attributes are typically only needed for
 domain-specific metadata that doesn't map to standard UI concerns.
 
+## Full-Stack Integration
+
+ZeroBoiler Enums works seamlessly with ZeroBoiler DTOs for end-to-end type safety
+from database to API response. Here's a complete controller example:
+
+```php
+use App\DTOs\UpdateUserDTO;
+use App\Enums\UserStatus;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+
+class UserController
+{
+    public function update(Request $request, int $id): JsonResponse
+    {
+        // 1. Hydrate DTO with validation
+        $dto = UpdateUserDTO::fromRequest($request);
+
+        // 2. Enum type safety — no magic strings
+        if ($dto->status->is(UserStatus::BANNED)) {
+            return response()->json(['error' => 'Cannot update banned users'], 403);
+        }
+
+        // 3. Update user...
+        $user->status = $dto->status->value;
+
+        // 4. Return API-ready metadata
+        return response()->json([
+            'user' => $dto->toArray(),
+            'available_statuses' => UserStatus::forApi(),
+        ]);
+    }
+}
+```
+
+Enum + Form Request validation:
+
+```php
+use ZeroBoiler\Enums\Rules\EnumRule;
+use App\Enums\UserStatus;
+
+class StoreUserRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return [
+            'status' => ['required', EnumRule::for(UserStatus::class)],
+            'role'   => ['required', EnumRule::for(Role::class)],
+        ];
+    }
+}
+```
+
+Enum + Blade select helper:
+
+```blade
+<select name="status">
+    @foreach(UserStatus::forSelect() as $option)
+        <option value="{{ $option['value'] }}"
+                @if(old('status') === $option['value']) selected @endif>
+            {{ $option['label'] }}
+        </option>
+    @endforeach
+</select>
+```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -675,6 +743,23 @@ A: Yes — the trait methods return scalar values compatible with `match()`. Exa
 
 **Q: Are backed enums required?**
 A: No. Pure enums (without backing types) are fully supported. The `values()` method returns case names, and `forSelect()` uses case names as values.
+
+## Performance Considerations
+
+| Operation | First Call | Subsequent Calls | Notes |
+|-----------|-----------|-----------------|-------|
+| `label()`, `color()`, `icon()`, `description()` | Reflection + cache build | O(1) hash lookup | Metadata cached per-class in singleton |
+| `forSelect()`, `forApi()` | N case lookups | N × O(1) | Delegates to `label()` per case |
+| `tryFromLabel()` | N × O(1) string comparison | Same (no cache) | Iterates all cases each call |
+| `tryFromName()`, `fromName()`, `hasCase()` | N × O(1) identity check | Same (no cache) | Iterates all cases each call |
+| `EnumCache::flush()` | N unset calls | N/A | Reset between Octane requests |
+
+**Tips for high-performance applications:**
+- Metadata is cached after the first call per class — no reflection overhead on subsequent calls
+- For Octane/Swoole: the package auto-flushes on `octane.terminate`
+- For CLI workers: call `EnumCache::flush()` between jobs if enum classes change
+- `values()` and `labels()` create new arrays each call — store the result if used in loops
+- The cache TTL defaults to 300s (5 min); in `local`/`testing` it's disabled (always fresh)
 
 ## Changelog
 
