@@ -8,6 +8,7 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 - `CONTRIBUTING.md` — Contribution guide with code standards, development setup, quality checks, architecture overview, and PR process
 - `SECURITY.md` — Security policy with supported versions, reporting process, and security considerations
 - Compatibility Matrix section in README (PHP/Laravel versions, feature usage table)
+- `EnumProductionDeepAuditTest` — Comprehensive deep audit test covering metadata resolution priority, cache lifecycle (TTL expiry, reset, flush, clear), comparison edge cases (is/isNot/in with instances and strings), lookup methods (tryFromName, fromName, tryFromLabel), bulk methods (forSelect, forApi, values, labels), exception factory methods, and cache set/get roundtrip
 
 ### Changed
 - Improved `EnumCast::get()` docblock — removed misleading `@throws` tag, documented silent null behavior
