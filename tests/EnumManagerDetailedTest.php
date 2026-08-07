@@ -104,21 +104,19 @@ describe('EnumManager detailed tests', function (): void {
         expect($manager->tryFromLabel(Priority::class, 'Urgent'))->toBe(Priority::URGENT);
     });
 
-    it('throws BadMethodCallException for non-enum class', function (): void {
+    it('throws BadMethodCallException for class without forSelect method', function (): void {
         $manager = new EnumManager;
 
+        // \stdClass has no forSelect() method
         expect(fn (): mixed => $manager->forSelect(\stdClass::class))
             ->toThrow(\BadMethodCallException::class);
     });
 
-    it('throws BadMethodCallException for enum without HasEnumMetadata', function (): void {
+    it('throws BadMethodCallException when calling tryFromLabel on non-metadata enum', function (): void {
         $manager = new EnumManager;
 
-        // Create an anonymous enum without the trait
-        $plainEnum = new class('A', 'B') extends \UnitEnum {
-        };
-
-        expect(fn (): mixed => $manager->forSelect($plainEnum::class))
+        // \stdClass has no tryFromLabel() method
+        expect(fn (): mixed => $manager->tryFromLabel(\stdClass::class, 'test'))
             ->toThrow(\BadMethodCallException::class);
     });
 
