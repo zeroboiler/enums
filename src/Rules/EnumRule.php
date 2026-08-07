@@ -39,12 +39,12 @@ use UnitEnum;
 final readonly class EnumRule implements ValidationRule
 {
     /**
-     * @param  class-string<UnitEnum>  $enumClass
-     * @param  bool  $nullable  When true, null values pass validation.
+     * @param  class-string<UnitEnum>  $enumClass  The enum class to validate against (backed or pure)
+     * @param  bool  $nullable  When true, null values pass validation without error
      */
     public function __construct(
-        private string $enumClass,
-        private bool $nullable = false,
+        private readonly string $enumClass,
+        private readonly bool $nullable = false,
     ) {}
 
     /**
