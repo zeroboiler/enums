@@ -350,17 +350,25 @@ describe('UserStatus enum', function () {
 
 ### Enum Facade / Manager
 
+The `Enum` facade provides a runtime interface for enum operations without
+requiring the `HasEnumMetadata` trait to be used in the calling context.
+Internally it delegates to the `EnumManager` singleton (registered via the
+service provider as `zeroboiler.enum`).
+
 ```php
 use ZeroBoiler\Enums\Facades\Enum;
 
-// Generate select options
+// Generate select options for dropdown rendering
 $options = Enum::forSelect(UserStatus::class);
+// [['value' => 'active', 'label' => 'Active User'], ...]
 
-// Full API metadata
+// Full API metadata for frontend consumption
 $api = Enum::forApi(UserStatus::class);
+// [['value' => 'active', 'name' => 'ACTIVE', 'label' => 'Active User', ...], ...]
 
-// Reverse lookup by label
+// Reverse lookup by label (case-insensitive)
 $case = Enum::tryFromLabel(UserStatus::class, 'Active User');
+// UserStatus::ACTIVE instance (or null)
 ```
 
 The EnumManager can also be injected directly from the container:
@@ -370,6 +378,11 @@ use ZeroBoiler\Enums\EnumManager;
 
 $manager = app(EnumManager::class);
 $options = $manager->forSelect(UserStatus::class);
+$api = $manager->forApi(UserStatus::class);
+$case = $manager->tryFromLabel(UserStatus::class, 'Active User');
+
+// EnumManager throws BadMethodCallException when the target class
+// does not use the HasEnumMetadata trait
 ```
 
 ### Integer-Backed Enum Example
