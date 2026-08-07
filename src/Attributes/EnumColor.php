@@ -52,10 +52,15 @@ final class EnumColor
      * @param  list<string>  $secondary Case values mapped to "secondary"
      */
     public function __construct(
+        /** @var list<string> */
         array $success = [],
+        /** @var list<string> */
         array $danger = [],
+        /** @var list<string> */
         array $warning = [],
+        /** @var list<string> */
         array $info = [],
+        /** @var list<string> */
         array $secondary = [],
     ) {
         $this->success = $success;
