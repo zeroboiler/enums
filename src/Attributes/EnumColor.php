@@ -29,21 +29,6 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_CLASS_CONSTANT)]
 final class EnumColor
 {
-    /** @var list<string> */
-    public readonly array $success = [];
-
-    /** @var list<string> */
-    public readonly array $danger = [];
-
-    /** @var list<string> */
-    public readonly array $warning = [];
-
-    /** @var list<string> */
-    public readonly array $info = [];
-
-    /** @var list<string> */
-    public readonly array $secondary = [];
-
     /**
      * @param  list<string>  $success   Case values mapped to "success"
      * @param  list<string>  $danger    Case values mapped to "danger"
@@ -52,21 +37,10 @@ final class EnumColor
      * @param  list<string>  $secondary Case values mapped to "secondary"
      */
     public function __construct(
-        /** @var list<string> */
-        array $success = [],
-        /** @var list<string> */
-        array $danger = [],
-        /** @var list<string> */
-        array $warning = [],
-        /** @var list<string> */
-        array $info = [],
-        /** @var list<string> */
-        array $secondary = [],
-    ) {
-        $this->success = $success;
-        $this->danger = $danger;
-        $this->warning = $warning;
-        $this->info = $info;
-        $this->secondary = $secondary;
-    }
+        public readonly array $success = [],
+        public readonly array $danger = [],
+        public readonly array $warning = [],
+        public readonly array $info = [],
+        public readonly array $secondary = [],
+    ) {}
 }
