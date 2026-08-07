@@ -11,9 +11,16 @@ namespace ZeroBoiler\Enums\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static list<array{value: string|int, label: string}> forSelect(string $enumClass)
- * @method static list<array{value: string|int, name: string, label: string, description: ?string, color: string, icon: ?string}> forApi(string $enumClass)
- * @method static ?\UnitEnum tryFromLabel(string $enumClass, string $label)
+ * Enum facade — runtime access to enum metadata via the EnumManager singleton.
+ *
+ * Provides a clean interface for enum operations without requiring
+ * the calling code to use the HasEnumMetadata trait directly.
+ *
+ *   Enum::forSelect(UserStatus::class);
+ *   Enum::forApi(UserStatus::class);
+ *   Enum::tryFromLabel(UserStatus::class, 'Active User');
+ *
+ * @see \ZeroBoiler\Enums\EnumManager For the underlying singleton implementation
  */
 final class Enum extends Facade
 {
