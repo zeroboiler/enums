@@ -38,6 +38,26 @@ final class EnumCache
     private function __construct() {}
 
     /**
+     * Prevent cloning of the singleton instance.
+     *
+     * @throws \RuntimeException Always
+     */
+    private function __clone(): void
+    {
+        throw new \RuntimeException('EnumCache is a singleton and cannot be cloned.');
+    }
+
+    /**
+     * Prevent unserialization of the singleton instance.
+     *
+     * @throws \RuntimeException Always
+     */
+    public function __wakeup(): void
+    {
+        throw new \RuntimeException('EnumCache is a singleton and cannot be unserialized.');
+    }
+
+    /**
      * Get the singleton cache instance.
      *
      * Thread safety: Each process (PHP-FPM worker, Octane worker) gets its own
