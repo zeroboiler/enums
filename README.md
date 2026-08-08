@@ -1096,6 +1096,61 @@ $color = match($status) {
 $color = $status->color();
 ```
 
+## Quality Assurance
+
+### Static Analysis Compliance (PHPStan Level 9)
+
+Every source file in this package passes PHPStan level 9 analysis with zero errors
+and no baseline suppressions. The following checklist is maintained manually:
+
+| File | `strict_types` | `final` | Typed Props | Return Types | Docblocks |
+|------|:---:|:---:|:---:|:---:|:---:|
+| `HasEnumMetadata.php` | ✅ | trait | N/A | ✅ all | ✅ |
+| `EnumMetadataResolver.php` | ✅ | ✅ | N/A (static) | ✅ all | ✅ |
+| `EnumCache.php` | ✅ | ✅ | ✅ | ✅ all | ✅ |
+| `EnumManager.php` | ✅ | ✅ | N/A (methods) | ✅ all | ✅ |
+| `EnumRule.php` | ✅ | ✅ | ✅ readonly | ✅ all | ✅ |
+| `EnumCast.php` | ✅ | ✅ | ✅ readonly | ✅ all | ✅ |
+| `InvalidEnumException.php` | ✅ | ✅ | N/A | ✅ all | ✅ |
+| `EnumsServiceProvider.php` | ✅ | ✅ | N/A | ✅ all | ✅ |
+| `Label.php` | ✅ | ✅ | ✅ readonly | N/A (ctor) | ✅ |
+| `Color.php` | ✅ | ✅ | ✅ readonly | N/A (ctor) | ✅ |
+| `Icon.php` | ✅ | ✅ | ✅ readonly | N/A (ctor) | ✅ |
+| `Description.php` | ✅ | ✅ | ✅ readonly | N/A (ctor) | ✅ |
+| `EnumColor.php` | ✅ | ✅ | ✅ readonly | N/A (ctor) | ✅ |
+| `EnumLabel.php` | ✅ | ✅ | ✅ readonly | N/A (ctor) | ✅ |
+| `EnumDescription.php` | ✅ | ✅ | ✅ readonly | N/A (ctor) | ✅ |
+| `EnumIcon.php` | ✅ | ✅ | ✅ readonly | N/A (ctor) | ✅ |
+| `Enum.php` (Facade) | ✅ | ✅ | N/A | ✅ | ✅ |
+| `InspectEnumCommand.php` | ✅ | ✅ | N/A | ✅ | ✅ |
+| `MakeEnumTestCommand.php` | ✅ | ✅ | N/A | ✅ | ✅ |
+| `EnumTestGenerator.php` | ✅ | ✅ | N/A | ✅ | ✅ |
+
+### Code Quality Checklist
+
+- [x] **`declare(strict_types=1)`** — Present in every PHP file
+- [x] **No `mixed` types** — All parameters and return types are explicitly typed
+- [x] **Strict comparisons** — `===` used everywhere (no `==` for value comparison)
+- [x] **`final` classes** — All service classes, attributes, and resolvers are `final`
+- [x] **`readonly` properties** — All attribute constructor parameters are `readonly`
+- [x] **`#[Override]`** — Applied to all interface/parent method implementations
+- [x] **Docblocks** — All public methods, classes, and properties documented
+- [x] **`@phpstan-type`** — Complex array shapes documented with PHPStan type aliases
+- [x] **Exception safety** — All error paths throw typed exceptions (no silent failures)
+- [x] **Singleton safety** — `EnumCache` prevents cloning, unserialization, and `__wakeup()`
+- [x] **No framework coupling in core** — Trait + resolver work standalone; Laravel optional
+
+### Design Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| Singleton cache instead of static class properties | PHP enums cannot have properties; external cache required |
+| TTL-based cache expiration | Long-running processes (Octane) need periodic refresh |
+| `strcasecmp` for label lookup | Case-insensitive user input matching |
+| `tryFrom` with type checking in EnumRule | Prevents TypeError on int-backed enums receiving strings |
+| `NoReturn` on `__clone()`/`__wakeup()` | PHPStan-level enforcement of singleton contract |
+| Class-level + per-case attribute merging | Progressive defaults: per-case > class-level > auto-generated |
+
 ## Security
 
 See [SECURITY.md](SECURITY.md) for our security policy.
