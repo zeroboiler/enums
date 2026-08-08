@@ -169,7 +169,7 @@ describe('EnumRule — pure enum validation', function () {
             $called = true;
         };
 
-        $rule->validate('flag', PureFeatureFlag::SearchEnabled->name, $fail);
+        $rule->validate('flag', PureFeatureFlag::DARK_MODE->name, $fail);
 
         expect($called)->toBeFalse();
     });
