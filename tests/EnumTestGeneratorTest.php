@@ -119,4 +119,15 @@ describe('EnumTestGenerator output validity', function (): void {
 
         expect($output)->toContain('No syntax errors');
     });
+
+    it('produces valid PHP for pure (non-backed) enum', function (): void {
+        $content = EnumTestGenerator::generate(RequestState::class);
+        $tmpFile = sys_get_temp_dir().'/enum_test_gen_pure_'.uniqid().'.php';
+        file_put_contents($tmpFile, $content);
+
+        $output = shell_exec('php -l '.escapeshellarg($tmpFile).' 2>&1');
+        unlink($tmpFile);
+
+        expect($output)->toContain('No syntax errors');
+    });
 });

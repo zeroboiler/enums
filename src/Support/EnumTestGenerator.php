@@ -159,7 +159,7 @@ PHP;
 
 it('values() returns case names for pure enum', function () {
     \\\$values = {$shortName}::values();
-    expect(\\\$values)->toBe(array_map(fn (\\\$/UnitEnum \\\$c): string => \\\$c->name, {$shortName}::cases()));
+    expect(\\\$values)->toBe(array_map(fn (\\UnitEnum \\\$c): string => \\\$c->name, {$shortName}::cases()));
 });
 
 PHP;
