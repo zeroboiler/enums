@@ -111,6 +111,15 @@ final class EnumCast implements CastsAttributes
     #[\Override]
     public function serialize(object $model, string $key, $value, array $attributes): int|string|null
     {
-        return $value instanceof BackedEnum ? $value->value : $value;
+        if ($value instanceof BackedEnum) {
+            return $value->value;
+        }
+
+        // Pass through int/string values directly (e.g. already-stored raw values)
+        if (is_int($value) || is_string($value)) {
+            return $value;
+        }
+
+        return null;
     }
 }
