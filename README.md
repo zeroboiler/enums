@@ -846,6 +846,13 @@ A: No. Pure enums (without backing types) are fully supported. The `values()` me
 
 See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 
+## Version History
+
+| Version | Date | Highlights |
+|---------|------|------------|
+| 1.0.0 | 2025-08 | Initial release — HasEnumMetadata trait, EnumCache, EnumRule, EnumCast, CLI commands |
+| 1.0.1 | 2025-08 | Extended test suite, fixture-driven tests, PHPStan level 9 compliance |
+
 ## Internal Components
 
 ### EnumMetadataResolver
@@ -944,7 +951,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **56+ test files** covering:
+The test suite includes **100+ test files** covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|
