@@ -49,6 +49,9 @@ auto-casting, validation, serialization, and CLI tooling.
 - [Performance Considerations](#performance-considerations)
 - [Testing](#testing)
 - [Contributing](#contributing)
+- [Migration Guide](#migration-guide)
+  - [From Raw Enums](#from-raw-enums)
+  - [From Match Expressions](#from-match-expressions)
 
 ## Quick Reference Card
 
@@ -1015,6 +1018,76 @@ used, ensuring forward compatibility with future Laravel releases.
 ## License
 
 Proprietary — © ZeroBoiler
+
+## Migration Guide
+
+### From Raw Enums
+
+If you're migrating from plain PHP enums with manual metadata:
+
+**Before (manual approach):**
+
+```php
+enum UserStatus: string
+{
+    case ACTIVE = 'active';
+    case BANNED = 'banned';
+
+    public function label(): string
+    {
+        return match($this) {
+            self::ACTIVE => 'Active User',
+            self::BANNED => 'Banned',
+        };
+    }
+
+    public function color(): string
+    {
+        return match($this) {
+            self::ACTIVE => 'success',
+            self::BANNED => 'danger',
+        };
+    }
+
+    public function isActive(): bool
+    {
+        return $this === self::ACTIVE;
+    }
+}
+```
+
+**After (ZeroBoiler):**
+
+```php
+#[EnumColor(success: ['active'], danger: ['banned'])]
+enum UserStatus: string
+{
+    use HasEnumMetadata;
+
+    #[Label('Active User')]
+    case ACTIVE = 'active';
+
+    case BANNED = 'banned';  // auto-label: "Banned", color from EnumColor
+}
+```
+
+Everything — labels, colors, `forSelect()`, `forApi()`, validation rules,
+comparison methods (`is()`, `isNot()`, `in()`), reverse lookup (`tryFromName()`,
+`tryFromLabel()`) — is available with zero boilerplate.
+
+### From Match Expressions
+
+```php
+// Before
+$color = match($status) {
+    UserStatus::ACTIVE => 'success',
+    UserStatus::BANNED => 'danger',
+    default => 'secondary',
+};
+
+// After — single method call, reads from attributes
+$color = $status->color();
+```
 
 ## Security
 
