@@ -6,15 +6,15 @@
 
 declare(strict_types=1);
 
+use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Attributes\Description;
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Attributes\EnumDescription;
+use ZeroBoiler\Enums\Attributes\EnumIcon;
+use ZeroBoiler\Enums\Attributes\EnumLabel;
+use ZeroBoiler\Enums\Attributes\Icon;
+use ZeroBoiler\Enums\Attributes\Label;
 use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
-use ZeroBoiler\Enums\Enums\EnumColor;
-use ZeroBoiler\Enums\Enums\EnumDescription;
-use ZeroBoiler\Enums\Enums\EnumIcon;
-use ZeroBoiler\Enums\Enums\EnumLabel;
-use ZeroBoiler\Enums\Enums\Color;
-use ZeroBoiler\Enums\Enums\Description;
-use ZeroBoiler\Enums\Enums\Icon;
-use ZeroBoiler\Enums\Enums\Label;
 use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 
