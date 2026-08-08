@@ -2,42 +2,28 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
-## [Unreleased]
+## [1.0.0] - 2025-08-08
 
 ### Added
-- `CONTRIBUTING.md` — Contribution guide with code standards, development setup, quality checks, architecture overview, and PR process
-- `SECURITY.md` — Security policy with supported versions, reporting process, and security considerations
-- Compatibility Matrix section in README (PHP/Laravel versions, feature usage table)
-- `EnumProductionDeepAuditTest` — Comprehensive deep audit test covering metadata resolution priority, cache lifecycle (TTL expiry, reset, flush, clear), comparison edge cases (is/isNot/in with instances and strings), lookup methods (tryFromName, fromName, tryFromLabel), bulk methods (forSelect, forApi, values, labels), exception factory methods, and cache set/get roundtrip
-
-### Changed
-- Improved `EnumCast::get()` docblock — removed misleading `@throws` tag, documented silent null behavior
-- Enriched README with Internal Components section (EnumMetadataResolver, EnumTestGenerator, Class Structure)
-- Added Test Coverage table to README documenting 50+ test files across all categories
-
-## [1.0.0] - 2026-08-06
-
-### Changed
-- `EnumCache::setTtl()` now normalizes negative values to 0 (prevents undefined behavior)
-- Added `clear()` and `clearClass()` to EnumCache API Reference in README
-
-### Added
-- Smart enum trait (`HasEnumMetadata`) with zero-boilerplate metadata resolution
-- Attribute-based metadata: `#[Label]`, `#[Color]`, `#[Icon]`, `#[Description]`
-- Class-level default attributes: `#[EnumLabel]`, `#[EnumColor]`, `#[EnumIcon]`, `#[EnumDescription]`
-- Auto-generated labels from `SCREAMING_SNAKE_CASE` → `Title Case`
-- Bulk helpers: `forSelect()`, `forApi()`, `values()`, `labels()`
-- Comparison methods: `is()`, `isNot()`, `in()` — instance and string support
+- Smart enum trait (`HasEnumMetadata`) with attribute-based metadata resolution
+- Per-case attributes: `#[Label]`, `#[Color]`, `#[Icon]`, `#[Description]`
+- Class-level attributes: `#[EnumColor]`, `#[EnumLabel]`, `#[EnumIcon]`, `#[EnumDescription]`
+- Auto-generated labels from SCREAMING_SNAKE_CASE and camelCase
+- Bulk methods: `forSelect()`, `forApi()`, `values()`, `labels()`
+- Comparison methods: `is()`, `isNot()`, `in()`
 - Reverse lookup: `tryFromLabel()`, `tryFromName()`, `fromName()`, `hasCase()`
-- TTL-based metadata cache via `EnumCache` singleton (default: 300s)
-- Eloquent auto-cast via `EnumCast`
-- Validation rule via `EnumRule` (backed + pure enum support)
-- Facade (`Enum`) and manager (`EnumManager`) for runtime access
-- CLI commands: `zeroboiler:enum-test`, `zeroboiler:enum-inspect`
-- Full PHPStan level 9 compliance (no baseline errors)
-- Comprehensive Pest test suite with 20+ test files
-- Enhanced CLI documentation with generated test output examples
+- `EnumRule` validation rule for Form Requests (backed + pure enums)
+- `EnumCast` Eloquent cast attribute
+- `EnumCache` singleton with TTL-based expiration
+- `EnumManager` for runtime access via facade
+- `Enum` facade for convenient enum operations
+- CLI commands: `zeroboiler:enum-inspect`, `zeroboiler:enum-test`
+- PHPStan level 9 compliance across all source files
 
-### Requirements
-- PHP 8.5+
-- Laravel 13+
+### Design
+- Zero-boilerplate: add `use HasEnumMetadata` and attributes, done
+- Progressive defaults: per-case > class-level > auto-generated
+- Type-safe: strict types, typed properties, return type declarations
+- Immutable attributes: all `final` with `readonly` promoted properties
+
+[1.0.0]: https://github.com/zeroboiler/enums/releases/tag/v1.0.0

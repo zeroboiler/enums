@@ -11,6 +11,7 @@ namespace ZeroBoiler\Enums\Console\Commands;
 use BackedEnum;
 use Illuminate\Console\Command;
 use ReflectionEnum;
+use UnitEnum;
 
 /**
  * Inspect and display enum metadata.
@@ -61,7 +62,16 @@ final class InspectEnumCommand extends Command
         return self::SUCCESS;
     }
 
-    private function safeCall(object $case, string $method): ?string
+    /**
+     * Safely call a metadata method on an enum case.
+     *
+     * Returns null if the method doesn't exist or throws.
+     * Used for CLI display where graceful degradation is preferred.
+     *
+     * @param  UnitEnum  $case  The enum case to inspect
+     * @param  string  $method  The metadata method name (e.g., 'label', 'color')
+     */
+    private function safeCall(UnitEnum $case, string $method): ?string
     {
         if (! method_exists($case, $method)) {
             return null;
