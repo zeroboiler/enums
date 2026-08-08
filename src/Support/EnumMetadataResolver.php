@@ -64,6 +64,30 @@ final class EnumMetadataResolver
     }
 
     /**
+     * Invalidate cached metadata for a specific enum class.
+     *
+     * Forces the next call to {@see resolve()} to rebuild metadata
+     * from scratch via reflection. Useful after runtime attribute
+     * modification or in testing scenarios.
+     *
+     * @param  class-string<UnitEnum>  $enumClass
+     */
+    public static function invalidate(string $enumClass): void
+    {
+        EnumCache::getInstance()->clearClass($enumClass);
+    }
+
+    /**
+     * Invalidate all cached metadata for every enum class.
+     *
+     * Alias for {@see EnumCache::flush()}.
+     */
+    public static function invalidateAll(): void
+    {
+        EnumCache::flush();
+    }
+
+    /**
      * Build complete metadata by merging class-level and per-case attributes.
      *
      * @param  class-string<UnitEnum>  $enumClass

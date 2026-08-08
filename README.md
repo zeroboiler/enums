@@ -554,10 +554,16 @@ EnumCache::flush();
 // Reset the singleton instance (for testing)
 EnumCache::resetInstance();
 
+// Or use the resolver's convenience methods
+use ZeroBoiler\Enums\Support\EnumMetadataResolver;
+EnumMetadataResolver::invalidate(UserStatus::class);  // single class
+EnumMetadataResolver::invalidateAll();                // all classes
+
 // Configure TTL for dev environments (handled automatically by service provider)
 $cache = EnumCache::getInstance();
 $cache->setTtl(0);  // disable caching (always fresh)
 $cache->setTtl(60); // cache for 1 minute
+$cache->getTtl();   // returns 0 or 60
 ```
 
 ## Attributes Reference
@@ -622,6 +628,7 @@ Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
 | `->get(string)` | `array` | Get cached metadata (throws if missing) |
 | `->set(string, array)` | `void` | Store cached metadata |
 | `->setTtl(int)` | `void` | Set cache TTL in seconds (0 = disabled) |
+| `->getTtl()` | `int` | Get current cache TTL in seconds |
 | `->clear()` | `void` | Clear all cached entries (instance method) |
 | `->clearClass(string)` | `void` | Clear cached metadata for a specific class |
 
@@ -856,6 +863,12 @@ $meta = EnumMetadataResolver::resolve(UserStatus::class);
 //     'colors'       => ['active' => 'success', 'banned' => 'danger'],
 //     'icons'        => ['active' => 'heroicon-o-check-circle'],
 // ]
+
+// Invalidate cached metadata for a specific enum class
+EnumMetadataResolver::invalidate(UserStatus::class);
+
+// Invalidate all cached metadata
+EnumMetadataResolver::invalidateAll();
 ```
 
 The resolver is called automatically by all `HasEnumMetadata` trait methods.

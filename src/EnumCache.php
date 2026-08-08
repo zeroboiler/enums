@@ -131,6 +131,16 @@ final class EnumCache
     }
 
     /**
+     * Get the current cache TTL in seconds.
+     *
+     * Returns 0 when caching is disabled.
+     */
+    public function getTtl(): int
+    {
+        return $this->ttl;
+    }
+
+    /**
      * Clear all cached metadata entries.
      */
     public function clear(): void
