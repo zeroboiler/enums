@@ -998,11 +998,19 @@ The test suite includes **56+ test files** covering:
 | `#[Override]` | Service providers, facade, `EnumCast` | Explicit interface implementation |
 | `str_contains`, `str_starts_with` | Test generator | Built-in string helpers |
 
-**Laravel Compatibility:**
+## Laravel Compatibility
 
 The package uses only stable Laravel contracts (`CastsAttributes`, `ValidationRule`,
-`ServiceProvider`, `Facade`). No bleeding-edge or internal APIs are used, ensuring
-forward compatibility with future Laravel releases.
+`ServiceProvider`, `Facade`, `Validator`). No bleeding-edge or internal APIs are
+used, ensuring forward compatibility with future Laravel releases.
+
+| Laravel API | Usage | Contract |
+|-------------|-------|----------|
+| `CastsAttributes` | `EnumCast` — Eloquent get/set/serialize | `illuminate/contracts` |
+| `ValidationRule` | `EnumRule` — Form Request validation | `illuminate/contracts` |
+| `ServiceProvider` | `EnumsServiceProvider` — auto-discovery | `illuminate/support` |
+| `Facade` | `Enum` facade — runtime access | `illuminate/support` |
+| `Validator` | Not used directly (EnumRule uses `$fail` callback) | `illuminate/validation` |
 
 ## License
 
