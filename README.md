@@ -12,6 +12,7 @@ auto-casting, validation, serialization, and CLI tooling.
 ## Table of Contents
 
 - [Installation](#installation)
+- [Quick Reference Card](#quick-reference-card)
 - [Type System](#type-system)
   - [Resolution Priority](#resolution-priority)
   - [Architecture](#architecture)
@@ -48,6 +49,76 @@ auto-casting, validation, serialization, and CLI tooling.
 - [Performance Considerations](#performance-considerations)
 - [Testing](#testing)
 - [Contributing](#contributing)
+
+## Quick Reference Card
+
+A cheat sheet for the most common operations:
+
+```php
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Attributes\{Color, Description, EnumColor, Icon, Label};
+use ZeroBoiler\Enums\Rules\EnumRule;
+
+// ── Define ──────────────────────────────────────────────────
+#[EnumColor(success: ['active'], danger: ['banned'])]
+enum UserStatus: string
+{
+    use HasEnumMetadata;
+
+    #[Label('Active User'), Icon('heroicon-o-check'), Description('Can login')]
+    case ACTIVE = 'active';
+
+    case INACTIVE = 'inactive';  // auto-label: "Inactive"
+
+    #[Color('danger')]           // per-case color override
+    case BANNED = 'banned';
+}
+
+// ── Access Metadata ──────────────────────────────────────────
+UserStatus::ACTIVE->label();        // "Active User"
+UserStatus::ACTIVE->color();        // "success"
+UserStatus::ACTIVE->icon();         // "heroicon-o-check"
+UserStatus::ACTIVE->description();  // "Can login"
+UserStatus::INACTIVE->label();      // "Inactive" (auto-generated)
+UserStatus::INACTIVE->color();      // "secondary" (default)
+
+// ── Bulk Methods ───────────────────────────────────────────
+UserStatus::forSelect();   // [['value' => 'active', 'label' => 'Active User'], ...]
+UserStatus::forApi();       // full metadata with value, name, label, color, icon, description
+UserStatus::values();       // ['active', 'inactive', 'banned']
+UserStatus::labels();       // ['Active User', 'Inactive', 'Banned']
+
+// ── Comparison ────────────────────────────────────────────
+$status = UserStatus::ACTIVE;
+$status->is(UserStatus::ACTIVE);    // true
+$status->is('ACTIVE');              // true (string name)
+$status->isNot(UserStatus::BANNED); // true
+$status->in(['ACTIVE', 'INACTIVE']); // true
+
+// ── Lookup ────────────────────────────────────────────────
+UserStatus::tryFromLabel('Active User');  // UserStatus::ACTIVE
+UserStatus::tryFromName('ACTIVE');       // UserStatus::ACTIVE
+UserStatus::fromName('ACTIVE');          // UserStatus::ACTIVE (throws if not found)
+UserStatus::hasCase('ACTIVE');           // true
+UserStatus::hasCase('UNKNOWN');          // false
+
+// ── Validation ─────────────────────────────────────────────
+'status' => ['required', EnumRule::for(UserStatus::class)];
+'status' => [EnumRule::for(UserStatus::class)->nullable()];
+
+// ── Eloquent Cast ───────────────────────────────────────────
+protected $casts = ['status' => UserStatus::class];  // auto works
+
+// ── Facade ────────────────────────────────────────────────
+use ZeroBoiler\Enums\Facades\Enum;
+Enum::forSelect(UserStatus::class);
+Enum::forApi(UserStatus::class);
+Enum::tryFromLabel(UserStatus::class, 'Active User');
+
+// ── CLI ─────────────────────────────────────────────────────
+php artisan zeroboiler:enum-inspect "App\Enums\UserStatus"
+php artisan zeroboiler:enum-test "App\Enums\UserStatus"
+```
 
 ## Installation
 
