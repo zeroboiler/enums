@@ -105,10 +105,11 @@ final readonly class EnumRule implements ValidationRule
             }
 
             $backingTypeName = $backingType->getName();
-            $acceptsString = $backingTypeName === 'string';
-            $acceptsInt = $backingTypeName === 'int';
 
-            if (($acceptsInt === true && ! is_int($value)) || ($acceptsString === true && ! is_string($value))) {
+            // Reject value if its PHP type doesn't match the enum's backing type
+            if (($backingTypeName === 'int' && ! is_int($value))
+                || ($backingTypeName === 'string' && ! is_string($value))
+            ) {
                 $fail($this->message($attribute));
 
                 return;

@@ -42,6 +42,7 @@ final class EnumCache
      *
      * @throws \RuntimeException Always
      */
+    #[\NoReturn]
     private function __clone(): void
     {
         throw new \RuntimeException('EnumCache is a singleton and cannot be cloned.');
@@ -52,6 +53,7 @@ final class EnumCache
      *
      * @throws \RuntimeException Always
      */
+    #[\NoReturn]
     public function __wakeup(): void
     {
         throw new \RuntimeException('EnumCache is a singleton and cannot be unserialized.');
