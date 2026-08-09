@@ -21,7 +21,7 @@ use UnitEnum;
  *
  * @see \ZeroBoiler\Enums\Facades\Enum
  */
-final class EnumManager
+final readonly class EnumManager
 {
     /**
      * Generate select options for an enum class.
