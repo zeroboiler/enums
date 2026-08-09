@@ -41,8 +41,10 @@ final class EnumCast implements CastsAttributes
      * attributes. If you need strict validation on stored values, use
      * model-level rules or accessors.
      *
-     * @param  int|string|null  $value
-     * @param  array<string, mixed>  $attributes
+     * @param  object  $model  The Eloquent model instance
+     * @param  string  $key  The attribute name being cast
+     * @param  int|string|null  $value  The raw value from the database
+     * @param  array<string, mixed>  $attributes  All model attributes
      * @return T|null Returns null when $value is null or doesn't match any case
      */
     #[\Override]
@@ -67,8 +69,13 @@ final class EnumCast implements CastsAttributes
     /**
      * Transform enum to storable value.
      *
-     * @param  BackedEnum|int|string|null  $value
-     * @param  array<string, mixed>  $attributes
+     * Validates that the value is a valid instance or raw backed value
+     * of the target enum class before storing.
+     *
+     * @param  object  $model  The Eloquent model instance
+     * @param  string  $key  The attribute name being cast
+     * @param  BackedEnum|int|string|null  $value  The enum instance or raw value to store
+     * @param  array<string, mixed>  $attributes  All model attributes
      *
      * @throws \InvalidArgumentException If value is not a valid enum, string, or int
      */
@@ -111,8 +118,10 @@ final class EnumCast implements CastsAttributes
     /**
      * Serialize enum for JSON (API resources, etc).
      *
-     * @param  BackedEnum|int|string|null  $value
-     * @param  array<string, mixed>  $attributes
+     * @param  object  $model  The Eloquent model instance
+     * @param  string  $key  The attribute name being serialized
+     * @param  BackedEnum|int|string|null  $value  The enum instance or raw value
+     * @param  array<string, mixed>  $attributes  All model attributes
      */
     public function serialize(object $model, string $key, $value, array $attributes): int|string|null
     {
