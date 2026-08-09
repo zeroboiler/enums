@@ -47,6 +47,7 @@ auto-casting, validation, serialization, and CLI tooling.
   - [Registering Custom Attributes](#registering-custom-attributes)
 - [Full-Stack Integration](#full-stack-integration)
 - [Performance Considerations](#performance-considerations)
+- [Test Fixtures](#test-fixtures)
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [Migration Guide](#migration-guide)
@@ -929,6 +930,37 @@ src/
 ├── EnumCache.php          — TTL-based singleton metadata cache
 ├── EnumManager.php        — Runtime enum helper (facade-backed)
 └── EnumsServiceProvider.php — Auto-discovery service provider
+```
+
+## Test Fixtures
+
+The test suite uses a set of representative enum fixtures covering all supported
+enum types and attribute combinations:
+
+| Fixture | Backing | Attributes | Tests |
+|---------|---------|------------|-------|
+| `UserStatus` | `string` | `EnumColor`, `Label`, `Color`, `Icon`, `Description` | Full per-case + class-level attribute resolution |
+| `TicketStatus` | `string` | `EnumLabel`, `EnumDescription`, `EnumIcon` | Class-level bulk metadata (all three) |
+| `Priority` | `int` | None | Int-backed enum with auto-generated labels |
+| `IntStatusWithColor` | `int` | `EnumColor`, `Color` | Int-backed with color mapping and per-case overrides |
+| `PureFeatureFlag` | none (pure) | `Icon` (per-case) | Pure enum — values/forSelect return case names |
+| `CamelCaseRole` | `string` | None | camelCase → "Title Case" auto-label generation |
+| `AllClassLevelEnum` | `string` | All class-level attributes | Every class-level attribute applied at once |
+| `SingleCaseEnum` | `string` | None | Edge case: single-case enum |
+| `ZeroPriority` | `int` | None | Edge case: zero as a valid backed value |
+| `MixedAttributeStatus` | `string` | Mixed per-case attributes | Mixed attribute combinations on a single enum |
+| `RequestState` | `string` | Various | Request lifecycle state machine pattern |
+
+```php
+// Each fixture is used in multiple test files. Example:
+use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
+
+// In tests:
+UserStatus::ACTIVE->label();       // 'Active User'
+UserStatus::ACTIVE->color();       // 'success' (from class-level EnumColor)
+UserStatus::BANNED->color();       // 'danger' (per-case Color override)
+UserStatus::forSelect();          // [['value' => 'active', 'label' => 'Active User'], ...]
+UserStatus::tryFromLabel('Active User'); // UserStatus::ACTIVE
 ```
 
 ## Testing
