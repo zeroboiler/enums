@@ -33,6 +33,7 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 ### Added
 - `EnumLabel` and `EnumDescription` now support case-level single-value parameters (`label`, `description`) for per-case overrides via class-level attributes
 - Case-level `EnumLabel` and `EnumDescription` resolve after per-case `#[Label]`/`#[Description]` but before auto-generated labels
+- `EnumMetadataTypeShapeAndLifecycleTest` — validates metadata resolver output structure (PHPStan `@phpstan-type EnumMetadataShape` contract), cache lifecycle, and strict type safety for all enum types (string-backed, int-backed, pure)
 
 ### Changed
 - `EnumMetadataResolver::buildMetadata()` now checks for `EnumLabel.label` and `EnumDescription.description` single-value properties on per-case attributes
