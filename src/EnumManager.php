@@ -69,6 +69,7 @@ final class EnumManager
      * Resolve an enum case by its human-readable label (case-insensitive).
      *
      * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  string  $label  The label to search for (case-insensitive)
      * @return \UnitEnum|null The matching case, or null if no label matches
      *
      * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
