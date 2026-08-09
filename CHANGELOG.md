@@ -2,6 +2,11 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- `EnumFinalProductionAuditV2Test` — 30+ production readiness tests covering: strict_types audit, EnumCache TTL=0 edge case, generateLabel (SCREAMING_SNAKE_CASE, camelCase, pure enum), single-case enum, zero-value int-backed enum, type consistency across enum flavors, forSelect/forApi structure contracts, class-level EnumIcon/EnumDescription/EnumLabel propagation, mixed attribute priority, tryFromLabel case-insensitivity, InvalidEnumException factory methods, cache invalidation flow, values/labels type contracts
+
 ## [1.0.0] - 2025-08-08
 
 ### Added
