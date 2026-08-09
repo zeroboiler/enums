@@ -1183,6 +1183,86 @@ and no baseline suppressions. The following checklist is maintained manually:
 | `NoReturn` on `__clone()`/`__wakeup()` | PHPStan-level enforcement of singleton contract |
 | Class-level + per-case attribute merging | Progressive defaults: per-case > class-level > auto-generated |
 
+## Type Safety & PHPStan Level 9
+
+This package is designed for **PHPStan level 9** compliance out of the box.
+
+### What This Means
+
+| Guarantee | Implementation |
+|-----------|---------------|
+| **No `mixed` in public API** | All public methods have explicit parameter and return types |
+| **No dynamic property access** | `pluck()`/`pluckKey()` use `ReflectionProperty` to read `readonly` properties |
+| **Strict identity comparisons** | `===` used everywhere — no loose `==` for enum or value comparison |
+| **Typed array shapes** | `@phpstan-type` aliases for all complex return types (`EnumMetadataShape`) |
+| **`#[Override]` on all overrides** | Interface implementations and parent method overrides annotated |
+| **Final classes throughout** | All attributes, resolvers, managers, and cache are `final` |
+| **`readonly` promoted properties** | All attribute constructors use `readonly` |
+| **Singleton safety** | `__clone()` and `__wakeup()` throw `#[NoReturn]` |
+
+### Running PHPStan
+
+```bash
+vendor/bin/phpstan analyse        # uses phpstan.neon (level 9)
+vendor/bin/phpstan analyse src/  # explicit path
+```
+
+The `phpstan.neon` configuration:
+- Level 9 (maximum strictness)
+- PHP 8.5 target version
+- Larastan bootstrap enabled
+- Tests excluded from analysis
+
+## Quick Start Integration
+
+Add ZeroBoiler Enums to an existing Laravel project in three steps:
+
+### Step 1: Install
+
+```bash
+composer require zeroboiler/enums
+```
+
+### Step 2: Create an Enum
+
+```php
+// app/Enums/OrderStatus.php
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
+#[EnumColor(success: ['completed'], danger: ['cancelled'], warning: ['pending'])]
+enum OrderStatus: string
+{
+    use HasEnumMetadata;
+
+    case PENDING = 'pending';
+    case COMPLETED = 'completed';
+    case CANCELLED = 'cancelled';
+}
+```
+
+### Step 3: Use Everywhere
+
+```php
+// In Eloquent models
+protected $casts = ['status' => OrderStatus::class];
+
+// In Form Requests
+'status' => ['required', \ZeroBoiler\Enums\Rules\EnumRule::for(OrderStatus::class)];
+
+// In Blade views (select dropdown)
+<select name="status">
+    @foreach(OrderStatus::forSelect() as $option)
+        <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+    @endforeach
+</select>
+
+// In API resources
+OrderStatus::forApi(); // full metadata for frontend consumption
+```
+
+No service provider registration, no configuration files — it just works.
+
 ## Security
 
 See [SECURITY.md](SECURITY.md) for our security policy.
