@@ -114,7 +114,6 @@ final class EnumCast implements CastsAttributes
      * @param  BackedEnum|int|string|null  $value
      * @param  array<string, mixed>  $attributes
      */
-    #[\Override]
     public function serialize(object $model, string $key, $value, array $attributes): int|string|null
     {
         if ($value instanceof BackedEnum) {

@@ -46,6 +46,7 @@ final class EnumTestGenerator
         $reflection = new ReflectionEnum($enumClass);
         $shortName = $reflection->getShortName();
         $cases = $enumClass::cases();
+        $caseCount = count($cases);
         $isBacked = $reflection->isBacked();
         $backingType = $isBacked ? $reflection->getBackingType()?->getName() : null;
 
@@ -77,7 +78,7 @@ PHP;
 
         // Generate comparison tests for the first two cases
         $comparisonTests = '';
-        if (count($cases) >= 2) {
+        if ($caseCount >= 2) {
             $firstCase = $cases[0]->name;
             $secondCase = $cases[1]->name;
             $comparisonTests = <<<PHP
@@ -165,6 +166,9 @@ it('values() returns case names for pure enum', function () {
 PHP;
         }
 
+        /** @var string $firstCaseName */
+        $firstCaseName = $cases[0]->name;
+
         return <<<PHP
 <?php
 
@@ -179,13 +183,13 @@ describe('{$shortName} enum', function () {
     });
 
     it('has the expected number of cases', function () {
-        expect({$shortName}::cases())->toHaveCount({count($cases)});
+        expect({$shortName}::cases())->toHaveCount({$caseCount});
     });
 
     it('can generate select options', function () {
         \\\$options = {$shortName}::forSelect();
         expect(\\\$options)->toBeArray();
-        expect(\\\$options)->toHaveCount({count($cases)});
+        expect(\\\$options)->toHaveCount({$caseCount});
         expect(\\\$options[0])->toHaveKeys(['value', 'label']);
     });
 
@@ -204,7 +208,7 @@ describe('{$shortName} enum', function () {
     it('can generate API response array', function () {
         \\\$api = {$shortName}::forApi();
         expect(\\\$api)->toBeArray();
-        expect(\\\$api)->toHaveCount({count($cases)});
+        expect(\\\$api)->toHaveCount({$caseCount});
         expect(\\\$api[0])->toHaveKeys(['value', 'name', 'label', 'description', 'color', 'icon']);
     });
 
@@ -216,22 +220,22 @@ describe('{$shortName} enum', function () {
     });
 
     it('values() returns correct count and types', function () {
-        expect({$shortName}::values())->toHaveCount({count($cases)});
+        expect({$shortName}::values())->toHaveCount({$caseCount});
     });
 
     it('labels() returns correct count and non-empty strings', function () {
         \\\$labels = {$shortName}::labels();
-        expect(\\\$labels)->toHaveCount({count($cases)});
+        expect(\\\$labels)->toHaveCount({$caseCount});
         expect(\\\$labels)->each->toBeString()->not->toBeEmpty();
     });
 
     it('supports tryFromName lookup', function () {
-        expect({$shortName}::tryFromName('{$cases[0]->name}'))->toBeInstanceOf({$shortName}::class);
+        expect({$shortName}::tryFromName('{$firstCaseName}'))->toBeInstanceOf({$shortName}::class);
         expect({$shortName}::tryFromName('NON_EXISTENT'))->toBeNull();
     });
 
     it('fromName() returns the correct case', function () {
-        expect({$shortName}::fromName('{$cases[0]->name}')->name)->toBe('{$cases[0]->name}');
+        expect({$shortName}::fromName('{$firstCaseName}')->name)->toBe('{$firstCaseName}');
     });
 
     it('fromName() throws InvalidEnumException for non-existent name', function () {
@@ -239,7 +243,7 @@ describe('{$shortName} enum', function () {
     });
 
     it('supports hasCase check', function () {
-        expect({$shortName}::hasCase('{$cases[0]->name}'))->toBeTrue();
+        expect({$shortName}::hasCase('{$firstCaseName}'))->toBeTrue();
         expect({$shortName}::hasCase('NON_EXISTENT'))->toBeFalse();
     });
 

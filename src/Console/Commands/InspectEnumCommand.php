@@ -21,11 +21,10 @@ use UnitEnum;
  */
 final class InspectEnumCommand extends Command
 {
-    protected string $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
+    protected $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
 
-    protected string $description = 'Inspect a ZeroBoiler smart enum — show all metadata in a table';
+    protected $description = 'Inspect a ZeroBoiler smart enum — show all metadata in a table';
 
-    #[\Override]
     public function handle(): int
     {
         /** @var string $enumClass */

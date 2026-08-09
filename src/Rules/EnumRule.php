@@ -115,6 +115,7 @@ final readonly class EnumRule implements ValidationRule
                 return;
             }
 
+            /** @var int|string $value */
             if ($enumClass::tryFrom($value) === null) {
                 $fail($this->message($attribute));
             }
