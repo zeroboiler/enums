@@ -160,8 +160,16 @@ final class EnumMetadataResolver
                     $labels[$value] = $instance->value;
                 }
 
+                if ($instance instanceof EnumLabel && $instance->label !== null && $instance->label !== '') {
+                    $labels[$value] = $instance->label;
+                }
+
                 if ($instance instanceof Description) {
                     $descriptions[$value] = $instance->value;
+                }
+
+                if ($instance instanceof EnumDescription && $instance->description !== null && $instance->description !== '') {
+                    $descriptions[$value] = $instance->description;
                 }
 
                 if ($instance instanceof Color) {
