@@ -52,6 +52,12 @@ final class EnumCast implements CastsAttributes
             return null;
         }
 
+        // Cast to int/string to satisfy BackedEnum::tryFrom() strict type at PHPStan level 9.
+        // Database values may come as numeric strings; this normalizes them.
+        if (! is_int($value) && ! is_string($value)) {
+            return null;
+        }
+
         /** @var class-string<T> $enumClass */
         $enumClass = $this->enumClass;
 
