@@ -53,6 +53,11 @@ auto-casting, validation, serialization, and CLI tooling.
 - [Migration Guide](#migration-guide)
   - [From Raw Enums](#from-raw-enums)
   - [From Match Expressions](#from-match-expressions)
+- [Cross-Package Integration](#cross-package-integration)
+  - [Enum Properties in DTOs](#enum-properties-in-dtos)
+  - [Enum Validation in DTOs](#enum-validation-in-dtos)
+  - [Full Controller Example](#full-controller-example-1)
+  - [Eloquent Model with Enum + DTO Casts](#eloquent-model-with-enum--dto-casts)
 
 ## Quick Reference Card
 
@@ -1262,6 +1267,116 @@ OrderStatus::forApi(); // full metadata for frontend consumption
 ```
 
 No service provider registration, no configuration files — it just works.
+
+## Cross-Package Integration
+
+ZeroBoiler Enums integrates seamlessly with [ZeroBoiler DTO](https://github.com/zeroboiler/dto) for
+end-to-end type safety from HTTP request to database to API response.
+
+### Enum Properties in DTOs
+
+When a DTO property is typed as a BackedEnum, ZeroBoiler DTO auto-hydrates strings/ints
+into enum instances and serializes them back to their backed value:
+
+```php
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\DTO\Attributes\Required;
+use ZeroBoiler\DTO\DataTransferObject;
+
+#[EnumColor(success: ['active'], danger: ['banned'])]
+enum UserStatus: string
+{
+    use HasEnumMetadata;
+    case ACTIVE = 'active';
+    case BANNED = 'banned';
+}
+
+class UpdateUserDTO extends DataTransferObject
+{
+    public function __construct(
+        #[Required]
+        public readonly string $name,
+
+        #[Required]
+        public readonly UserStatus $status,
+    ) {}
+}
+
+// String → BackedEnum (auto-hydrated)
+$dto = UpdateUserDTO::fromArray(['name' => 'Alice', 'status' => 'active']);
+$dto->status;            // UserStatus::ACTIVE
+$dto->status->label();   // 'Active'
+$dto->status->color();   // 'success'
+
+// BackedEnum → string (auto-serialized)
+$dto->toArray();
+// ['name' => 'Alice', 'status' => 'active']
+```
+
+### Enum Validation in DTOs
+
+The `#[Enum]` attribute generates Laravel's Enum validation rule automatically:
+
+```php
+use ZeroBoiler\DTO\Attributes\Enum;
+
+class FilterDTO extends DataTransferObject
+{
+    public function __construct(
+        #[Enum(UserStatus::class)]
+        public readonly ?UserStatus $status = null,
+    ) {}
+}
+
+// Invalid value → ValidationException
+FilterDTO::fromArray(['status' => 'unknown']); // throws
+```
+
+### Full Controller Example
+
+```php
+class UserController extends Controller
+{
+    public function index(): JsonResponse
+    {
+        return response()->json([
+            'statuses' => UserStatus::forApi(),
+        ]);
+    }
+
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $dto = UpdateUserDTO::fromRequest($request);
+
+        if ($dto->status->is(UserStatus::BANNED)) {
+            return response()->json(['error' => 'Cannot update'], 403);
+        }
+
+        $user->update($dto->toArray());
+
+        return response()->json([
+            'user' => $dto->toArray(),
+            'available' => UserStatus::forSelect(),
+        ]);
+    }
+}
+```
+
+### Eloquent Model with Enum + DTO Casts
+
+```php
+class User extends Model
+{
+    protected function casts(): array
+    {
+        return [
+            'status'  => UserStatus::class,     // ZeroBoiler Enum cast
+            'profile' => UpdateUserDTO::class,   // ZeroBoiler DTO cast
+        ];
+    }
+}
+```
 
 ## Security
 
