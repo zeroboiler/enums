@@ -1,71 +1,68 @@
 # Contributing to ZeroBoiler Enums
 
-Thank you for your interest in contributing! This document outlines the process.
-
-## Code Standards
-
-- **PHP 8.5 syntax** — use the latest language features
-- **Strict types** — every file must have `declare(strict_types=1)`
-- **PHPStan level 9** — zero errors, no baseline suppressions
-- **Docblocks** — all public methods and properties documented
-- **Typed properties** — no `mixed` types in source code
-- **Final classes** — all attributes and services are `final`
-- **Immutable** — enum metadata is cached in a singleton; no mutable state in traits
+Thank you for your interest in contributing! This document provides guidelines for contributing to this package.
 
 ## Development Setup
 
 ```bash
+# Clone the repository
+git clone git@github.com:zeroboiler/enums.git
+cd enums
+
+# Install dependencies
 composer install
-```
 
-## Quality Checks
-
-All checks must pass before merging:
-
-```bash
-# Run the full test suite
+# Run tests
 composer test
 
-# Run PHPStan analysis (level 9, no baseline)
+# Run static analysis (PHPStan level 9)
 composer analyse
 
-# Run code style checker
+# Run code style fixer
 composer lint
 
-# Run all quality checks at once
+# Run all CI checks
 composer ci
 ```
 
+## Code Standards
+
+- **PHP 8.5+** — All code must target PHP 8.5 or later
+- **Strict types** — Every PHP file must have `declare(strict_types=1)`
+- **PHPStan Level 9** — All code must pass PHPStan level 9 analysis with zero errors
+- **Final classes** — All service classes, attributes, and resolvers must be `final`
+- **Readonly properties** — All attribute constructor parameters must be `readonly`
+- **`#[Override]`** — Applied to all interface/parent method implementations
+- **Docblocks** — All public methods, classes, and properties must have docblocks
+- **No `mixed` types** — All parameters and return types must be explicitly typed
+
 ## Pull Request Process
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feat/my-feature`)
+1. Create a feature branch from `main` (`feat/your-feature`)
+2. Write/update tests for your changes
 3. Ensure all CI checks pass (`composer ci`)
-4. Commit with [conventional commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `refactor:`, `docs:`, `test:`)
-5. Push and open a Pull Request
+4. Submit a PR with a clear description of the change
+5. PRs require at least one approval before merge
 
-## Architecture Overview
+## Commit Messages
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-src/
-├── Attributes/     — PHP 8 attribute classes (Label, Color, Icon, Description, etc.)
-├── Concerns/       — HasEnumMetadata trait (all public API)
-├── Casts/          — Eloquent cast for backed enums
-├── Console/        — Artisan commands (inspect, test generation)
-├── Exceptions/     — InvalidEnumException
-├── Facades/         — Enum facade
-├── Rules/           — EnumRule validation rule
-├── Support/         — EnumMetadataResolver, EnumTestGenerator
-├── EnumCache.php   — TTL-based singleton metadata cache
-├── EnumManager.php — Runtime enum helper (facade-backed)
-└── EnumsServiceProvider.php — Auto-discovery service provider
+feat: add tryFromLabel reverse lookup
+fix: resolve cache invalidation in Octane
+refactor: simplify EnumColor resolution
+docs: update README with pure enum example
+test: add edge case tests for int-backed enums
 ```
 
 ## Testing
 
-Tests use [Pest](https://pestphp.com/). Fixtures live in `tests/Fixtures/`.
+- Use [Pest](https://pestphp.com/) for all tests
+- Place fixtures in `tests/Fixtures/`
+- Tests must cover: happy path, edge cases, error paths, type safety
+- Generated test command output should be valid Pest syntax
 
-When adding new enum features:
-- Add a fixture enum in `tests/Fixtures/`
-- Add tests covering the new behavior
-- Ensure PHPStan level 9 compliance
+## License
+
+By contributing, you agree that your contributions will be licensed under the proprietary license of this package.

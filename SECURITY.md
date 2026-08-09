@@ -1,68 +1,30 @@
 # Security Policy
 
-## Supported Versions
-
-| Version | Status | PHP Version | Laravel Version |
-|---------|--------|-------------|-----------------|
-| 1.0.x   | ✅ Supported | >= 8.5 | >= 13.0 |
-| < 1.0   | ❌ End of Life | — | — |
-
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in ZeroBoiler Enums, please report it
-responsibly by contacting the maintainers directly.
+If you discover a security vulnerability within ZeroBoiler Enums, please send an email to security@zeroboiler.com.
 
-**Do NOT** open a public GitHub issue for security vulnerabilities.
+All security vulnerabilities will be promptly addressed. We request that you do not publicly disclose the vulnerability until we have issued a fix.
 
-### How to Report
+## Supported Versions
 
-1. Send an email to the ZeroBoiler security team with the subject line
-   `[SECURITY] ZeroBoiler Enums Vulnerability Report`.
-2. Include a detailed description of the vulnerability, affected versions,
-   and steps to reproduce.
-3. A maintainer will acknowledge receipt within 48 hours (business days).
+Only the latest version of `zeroboiler/enums` receives security patches.
 
-### What to Expect
+| Version | Supported |
+| ------- | ---------- |
+| 1.x     | ✅        |
 
-- We will investigate the report and confirm the vulnerability.
-- A patch will be developed and released as a new version.
-- Credit will be given to the reporter (unless anonymity is requested).
-- Public disclosure will occur after the patch is available.
+## Scope
 
-## Security Considerations
+This package provides attribute-based metadata resolution for PHP enums and validation rules. It does not:
 
-### Enum Metadata
+- Handle user authentication or authorization
+- Process or store user input directly (validation is delegated to Laravel's validator)
+- Make network requests or interact with databases
+- Execute shell commands or eval'd code
 
-The `HasEnumMetadata` trait reads PHP attributes via reflection. Attributes are
-part of the codebase, not user input, so there is no injection risk. Metadata is
-cached in-memory (per-process) and never persisted to disk or external storage.
+The primary security surfaces are:
 
-### Eloquent Cast
-
-`EnumCast` uses `tryFrom()` for deserialization — unknown values are silently
-converted to `null`. This is by design (matches Eloquent conventions). If you
-need strict validation on stored values, use model-level rules or accessors.
-
-### Validation Rule
-
-`EnumRule` validates input against valid enum cases. It does not expose internal
-enum metadata or implementation details in error messages — only allowed values
-are listed.
-
-### CLI Commands
-
-The `zeroboiler:enum-inspect` and `zeroboiler:enum-test` commands read enum
-metadata via reflection. They only introspect classes that exist in the
-application codebase and do not accept external input as class names in
-production contexts.
-
-## Dependencies
-
-This package depends on:
-
-- `illuminate/contracts` ^13.0
-- `illuminate/support` ^13.0
-- `illuminate/validation` ^13.0
-
-Review the [Laravel Security Policy](https://github.com/laravel/framework/security)
-for dependency vulnerability disclosures.
+1. **Enum validation** — The `EnumRule` validation rule delegates to Laravel's validator. It uses strict type checking (`is_int()`, `is_string()`) before passing values to `tryFrom()`, preventing TypeError exceptions.
+2. **Eloquent casting** — The `EnumCast` validates enum type mismatches on `set()` and silently returns `null` for invalid values on `get()` (matching Eloquent conventions).
+3. **Metadata resolution** — The `EnumMetadataResolver` uses PHP Reflection API to read attribute metadata. It does not execute any code from attribute constructor arguments.
