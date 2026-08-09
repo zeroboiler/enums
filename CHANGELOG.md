@@ -27,3 +27,12 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 - Immutable attributes: all `final` with `readonly` promoted properties
 
 [1.0.0]: https://github.com/zeroboiler/enums/releases/tag/v1.0.0
+
+## [Unreleased]
+
+### Added
+- `EnumLabel` and `EnumDescription` now support case-level single-value parameters (`label`, `description`) for per-case overrides via class-level attributes
+- Case-level `EnumLabel` and `EnumDescription` resolve after per-case `#[Label]`/`#[Description]` but before auto-generated labels
+
+### Changed
+- `EnumMetadataResolver::buildMetadata()` now checks for `EnumLabel.label` and `EnumDescription.description` single-value properties on per-case attributes
