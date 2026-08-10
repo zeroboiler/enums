@@ -137,11 +137,21 @@ final class EnumMetadataResolver
                 }
             }
 
-            if ($instance instanceof EnumIcon && $instance->default !== null && $instance->default !== '') {
-                foreach ($enumClass::cases() as $case) {
-                    /** @var int|string $caseValue */
-                    $caseValue = $case instanceof BackedEnum ? $case->value : $case->name;
-                    $icons[$caseValue] = $instance->default;
+            if ($instance instanceof EnumIcon) {
+                // Apply per-case icon map first (specific icons for specific values)
+                foreach ($instance->icons as $caseValue => $icon) {
+                    $icons[$caseValue] = $icon;
+                }
+
+                // Apply default icon for cases without a specific icon
+                if ($instance->default !== null && $instance->default !== '') {
+                    foreach ($enumClass::cases() as $case) {
+                        /** @var int|string $caseValue */
+                        $caseValue = $case instanceof BackedEnum ? $case->value : $case->name;
+                        if (! isset($icons[$caseValue])) {
+                            $icons[$caseValue] = $instance->default;
+                        }
+                    }
                 }
             }
         }
@@ -178,6 +188,11 @@ final class EnumMetadataResolver
 
                 if ($instance instanceof Icon) {
                     $icons[$value] = $instance->value;
+                }
+
+                // Per-case EnumIcon overrides (single case icon via EnumIcon attribute)
+                if ($instance instanceof EnumIcon && $instance->default !== null && $instance->default !== '') {
+                    $icons[$value] = $instance->default;
                 }
             }
         }
