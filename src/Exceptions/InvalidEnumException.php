@@ -10,6 +10,15 @@ namespace ZeroBoiler\Enums\Exceptions;
 
 use Exception;
 
+/**
+ * Exception thrown when an invalid enum value or case name is used.
+ *
+ * Used by {@see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::fromName()}
+ * when a case name does not exist on the target enum.
+ *
+ * @see \ZeroBoiler\Enums\Concerns\HasEnumMetadata For the trait that throws this exception
+ * @see \ZeroBoiler\Enums\Rules\EnumRule For the validation rule that uses value-based enums
+ */
 final class InvalidEnumException extends Exception
 {
     /**

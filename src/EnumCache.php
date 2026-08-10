@@ -40,7 +40,6 @@ final class EnumCache
     /**
      * Prevent cloning of the singleton instance.
      *
-     * @return never
      * @throws \RuntimeException Always
      */
     #[\NoReturn]
@@ -52,7 +51,6 @@ final class EnumCache
     /**
      * Prevent unserialization of the singleton instance.
      *
-     * @return never
      * @throws \RuntimeException Always
      */
     #[\NoReturn]
