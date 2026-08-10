@@ -6,6 +6,10 @@
     "version": "1.0.0",
     "keywords": ["laravel", "enum", "php-enum", "metadata", "attributes", "validation", "eloquent", "zeroboiler"],
     "homepage": "https://github.com/zeroboiler/enums",
+    "support": {
+        "issues": "https://github.com/zeroboiler/enums/issues",
+        "source": "https://github.com/zeroboiler/enums"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
