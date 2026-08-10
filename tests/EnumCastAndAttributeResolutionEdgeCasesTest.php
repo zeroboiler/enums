@@ -215,13 +215,15 @@ describe('EnumCast edge cases', function (): void {
 describe('Attribute resolution edge cases', function (): void {
 
     it('class-level EnumColor resolves for int-backed enum by int value', function (): void {
-        // IntStatusWithColor uses EnumColor with int values: success=[1,2], danger=[3]
+        // IntStatusWithColor uses EnumColor with int values: success=[1,4], warning=[2], danger=[3]
         expect(IntStatusWithColor::ACTIVE->color())->toBe('success');
         expect(IntStatusWithColor::ACTIVE->value)->toBe(1);
-        expect(IntStatusWithColor::PENDING->color())->toBe('success');
+        expect(IntStatusWithColor::PENDING->color())->toBe('warning');
         expect(IntStatusWithColor::PENDING->value)->toBe(2);
         expect(IntStatusWithColor::BANNED->color())->toBe('danger');
         expect(IntStatusWithColor::BANNED->value)->toBe(3);
+        expect(IntStatusWithColor::DRAFT->color())->toBe('success');
+        expect(IntStatusWithColor::DRAFT->value)->toBe(4);
     });
 
     it('per-case Color overrides class-level EnumColor for int-backed', function (): void {
