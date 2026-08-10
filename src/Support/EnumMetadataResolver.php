@@ -97,13 +97,13 @@ final class EnumMetadataResolver
      */
     private static function buildMetadata(string $enumClass): array
     {
-        /** @var array<string, string> $labels */
+        /** @var array<int|string, string> $labels */
         $labels = [];
-        /** @var array<string, string> $descriptions */
+        /** @var array<int|string, string> $descriptions */
         $descriptions = [];
-        /** @var array<string, string> $colors */
+        /** @var array<int|string, string> $colors */
         $colors = [];
-        /** @var array<string, string> $icons */
+        /** @var array<int|string, string> $icons */
         $icons = [];
 
         // --- Class-level attributes ---
