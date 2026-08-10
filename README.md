@@ -575,6 +575,35 @@ $cache->setTtl(60); // cache for 1 minute
 $cache->getTtl();   // returns 0 or 60
 ```
 
+### EnumIcon Per-Case Icon Map
+
+When different enum cases need different icons, use the `icons` parameter:
+
+```php
+use ZeroBoiler\Enums\Attributes\EnumIcon;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
+#[EnumIcon(
+    default: 'heroicon-o-question-mark-circle',
+    icons: [
+        1 => 'heroicon-o-check',
+        0 => 'heroicon-o-x-mark',
+    ],
+)]
+enum SystemStatus: int
+{
+    use HasEnumMetadata;
+
+    case ONLINE = 1;
+    case OFFLINE = 0;
+    case MAINTENANCE = 2;
+}
+
+SystemStatus::ONLINE->icon();       // 'heroicon-o-check' (per-case from icons map)
+SystemStatus::OFFLINE->icon();      // 'heroicon-o-x-mark' (per-case from icons map)
+SystemStatus::MAINTENANCE->icon(); // 'heroicon-o-question-mark-circle' (default fallback)
+```
+
 ## Attributes Reference
 
 ### Per-Case Attributes
@@ -593,7 +622,7 @@ $cache->getTtl();   // returns 0 or 60
 | `#[EnumColor(...)]` | Class + Case | `success: list<string>`, `danger: list<string>`, `warning: list<string>`, `info: list<string>`, `secondary: list<string>` | Map case values to UI colors |
 | `#[EnumLabel(...)]` | Class + Case | `labels: array<string, string>`, `label: string` | Set labels for multiple cases at once (class-level) or a single case |
 | `#[EnumDescription(...)]` | Class + Case | `descriptions: array<string, string>`, `description: string` | Set descriptions for multiple cases at once |
-| `#[EnumIcon(...)]` | Class + Case | `default: string` | Set a default icon for all cases |
+| `#[EnumIcon(...)]` | Class + Case | `default: string`, `icons: array<string, string>` | Set a default icon for all cases and/or per-value icon map |
 
 Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
 
