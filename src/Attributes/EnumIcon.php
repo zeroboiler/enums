@@ -37,6 +37,7 @@ final class EnumIcon
      */
     public function __construct(
         public readonly ?string $default = null,
+        /** @var array<int|string, string> */
         public readonly array $icons = [],
     ) {}
 }

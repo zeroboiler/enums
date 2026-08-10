@@ -37,10 +37,15 @@ final class EnumColor
      * @param  list<int|string>  $secondary Case values mapped to "secondary"
      */
     public function __construct(
+        /** @var list<int|string> */
         public readonly array $success = [],
+        /** @var list<int|string> */
         public readonly array $danger = [],
+        /** @var list<int|string> */
         public readonly array $warning = [],
+        /** @var list<int|string> */
         public readonly array $info = [],
+        /** @var list<int|string> */
         public readonly array $secondary = [],
     ) {}
 }

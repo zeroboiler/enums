@@ -1,68 +1,97 @@
 # Contributing to ZeroBoiler Enums
 
-Thank you for your interest in contributing! This document provides guidelines for contributing to this package.
+Thank you for your interest in contributing! This guide covers the development workflow.
+
+## Requirements
+
+- **PHP 8.5+**
+- **Composer** for dependency management
+- **Laravel 13+** (for integration testing)
 
 ## Development Setup
 
 ```bash
-# Clone the repository
 git clone git@github.com:zeroboiler/enums.git
 cd enums
-
-# Install dependencies
 composer install
-
-# Run tests
-composer test
-
-# Run static analysis (PHPStan level 9)
-composer analyse
-
-# Run code style fixer
-composer lint
-
-# Run all CI checks
-composer ci
 ```
 
-## Code Standards
+## Code Quality
 
-- **PHP 8.5+** — All code must target PHP 8.5 or later
-- **Strict types** — Every PHP file must have `declare(strict_types=1)`
-- **PHPStan Level 9** — All code must pass PHPStan level 9 analysis with zero errors
-- **Final classes** — All service classes, attributes, and resolvers must be `final`
-- **Readonly properties** — All attribute constructor parameters must be `readonly`
-- **`#[Override]`** — Applied to all interface/parent method implementations
-- **Docblocks** — All public methods, classes, and properties must have docblocks
-- **No `mixed` types** — All parameters and return types must be explicitly typed
+All contributions must pass the full CI pipeline:
 
-## Pull Request Process
+```bash
+# Run all quality checks at once
+composer ci
 
-1. Create a feature branch from `main` (`feat/your-feature`)
-2. Write/update tests for your changes
-3. Ensure all CI checks pass (`composer ci`)
-4. Submit a PR with a clear description of the change
-5. PRs require at least one approval before merge
+# Or individually:
+composer test       # Pest test suite
+composer analyse     # PHPStan level 9 (zero errors, no baseline)
+composer lint        # Laravel Pint (PSR-12)
+composer rector      # Rector (automated refactoring)
+```
+
+### PHPStan Level 9
+
+This package targets **PHPStan level 9 with zero ignored errors**. All code must:
+- Use `declare(strict_types=1)` in every file
+- Declare return types on all methods
+- Use typed properties (no `mixed` without explicit annotation)
+- Use strict comparisons (`===`, `!==`)
+
+### Code Style
+
+We follow **PSR-12** via Laravel Pint. Run `composer lint` before committing.
+
+## Architecture
+
+```
+src/
+├── Attributes/       — PHP 8 attribute classes (final, readonly)
+├── Concerns/         — HasEnumMetadata trait (public API)
+├── Casts/            — Eloquent cast (EnumCast)
+├── Console/Commands/ — Artisan commands
+├── Exceptions/       — InvalidEnumException
+├── Facades/          — Laravel facade (Enum)
+├── Rules/            — Validation rule (EnumRule)
+├── Support/          — EnumMetadataResolver, EnumTestGenerator
+├── EnumCache.php     — TTL singleton cache
+├── EnumManager.php   — Runtime helper (facade-backed)
+└── EnumsServiceProvider.php — Auto-discovery
+```
 
 ## Commit Messages
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+We use [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-feat: add tryFromLabel reverse lookup
-fix: resolve cache invalidation in Octane
-refactor: simplify EnumColor resolution
-docs: update README with pure enum example
-test: add edge case tests for int-backed enums
+feat: add custom attribute support
+fix: resolve metadata cache TTL edge case
+refactor: improve EnumMetadataResolver type safety
+test: add comparison method edge case tests
+docs: update README with pure enum examples
 ```
+
+## Pull Request Process
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/my-feature`)
+3. Make changes with tests
+4. Ensure `composer ci` passes
+5. Open a pull request with a clear description
 
 ## Testing
 
-- Use [Pest](https://pestphp.com/) for all tests
-- Place fixtures in `tests/Fixtures/`
-- Tests must cover: happy path, edge cases, error paths, type safety
-- Generated test command output should be valid Pest syntax
+Tests use [Pest](https://pestphp.com/). Test fixtures are in `tests/Fixtures/`.
+
+```bash
+# Run all tests
+composer test
+
+# Run a specific test file
+vendor/bin/pest tests/EnumComparisonEdgeCasesTest.php
+```
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the proprietary license of this package.
+Proprietary — see LICENSE file.
