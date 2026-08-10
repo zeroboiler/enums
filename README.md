@@ -58,6 +58,10 @@ auto-casting, validation, serialization, and CLI tooling.
   - [Enum Validation in DTOs](#enum-validation-in-dtos)
   - [Full Controller Example](#full-controller-example-1)
   - [Eloquent Model with Enum + DTO Casts](#eloquent-model-with-enum--dto-casts)
+- [Source Code Audit — Attribute Contract Compliance](#source-code-audit--attribute-contract-compliance)
+  - [Per-Case Attributes](#per-case-attributes)
+  - [Class-Level Attributes](#class-level-attributes)
+  - [Service & Infrastructure Classes](#service--infrastructure-classes)
 
 ## Quick Reference Card
 
@@ -1216,6 +1220,49 @@ and no baseline suppressions. The following checklist is maintained manually:
 | `tryFrom` with type checking in EnumRule | Prevents TypeError on int-backed enums receiving strings |
 | `NoReturn` on `__clone()`/`__wakeup()` | PHPStan-level enforcement of singleton contract |
 | Class-level + per-case attribute merging | Progressive defaults: per-case > class-level > auto-generated |
+
+## Source Code Audit — Attribute Contract Compliance
+
+### Per-Case Attributes
+
+All per-case attributes are `final` with `readonly` promoted constructors and
+`#[Attribute(Attribute::TARGET_CLASS_CONSTANT)]` targeting:
+
+| Attribute | `final` | `readonly` | Constructor Params | Target |
+|-----------|:-------:|:----------:|-------------------|--------|
+| `Label` | ✅ | ✅ | `string $value` | `TARGET_CLASS_CONSTANT` |
+| `Color` | ✅ | ✅ | `string $value` | `TARGET_CLASS_CONSTANT` |
+| `Icon` | ✅ | ✅ | `string $value` | `TARGET_CLASS_CONSTANT` |
+| `Description` | ✅ | ✅ | `string $value` | `TARGET_CLASS_CONSTANT` |
+
+### Class-Level Attributes
+
+Class-level attributes target both `TARGET_CLASS` and `TARGET_CLASS_CONSTANT`
+and provide both bulk (class-level) and single (case-level) constructor parameters:
+
+| Attribute | `final` | `readonly` | Constructor Params | Dual Target |
+|-----------|:-------:|:----------:|-------------------|:------------:|
+| `EnumColor` | ✅ | ✅ | `5 × list<int\|string>` (success, danger, warning, info, secondary) | ✅ |
+| `EnumLabel` | ✅ | ✅ | `?array $labels`, `?string $label` | ✅ |
+| `EnumDescription` | ✅ | ✅ | `?array $descriptions`, `?string $description` | ✅ |
+| `EnumIcon` | ✅ | ✅ | `?string $default`, `array $icons` | ✅ |
+
+### Service & Infrastructure Classes
+
+| Class | Type | `final` | `readonly` | Key Methods |
+|-------|------|:-------:|:----------:|-------------|
+| `HasEnumMetadata` | Trait | — | — | `label()`, `color()`, `icon()`, `description()`, `forSelect()`, `forApi()`, `is()`, `isNot()`, `in()`, `tryFromLabel()`, `tryFromName()`, `fromName()`, `hasCase()`, `values()`, `labels()` |
+| `EnumMetadataResolver` | `final class` | ✅ | — (static) | `resolve()`, `invalidate()`, `invalidateAll()` |
+| `EnumCache` | `final class` (singleton) | ✅ | — | `getInstance()`, `has()`, `get()`, `set()`, `setTtl()`, `getTtl()`, `clear()`, `clearClass()`, `flush()`, `resetInstance()` |
+| `EnumManager` | `final readonly class` | ✅ | ✅ | `forSelect()`, `forApi()`, `tryFromLabel()` |
+| `EnumRule` | `final readonly class` | ✅ | ✅ | `for()`, `nullable()`, `validate()` |
+| `EnumCast` | `final class` | ✅ | ✅ | `get()`, `set()`, `serialize()` |
+| `InvalidEnumException` | `final class` | ✅ | — | `value()`, `forName()` |
+| `Enum` (Facade) | `final class` | ✅ | — | `getFacadeAccessor()` |
+| `EnumsServiceProvider` | `final class` | ✅ | — | `register()`, `boot()` |
+| `InspectEnumCommand` | `final class` | ✅ | — | `handle()`, `safeCall()` |
+| `MakeEnumTestCommand` | `final class` | ✅ | — | `handle()` |
+| `EnumTestGenerator` | `final class` | ✅ | — | `generate()` |
 
 ## Type Safety & PHPStan Level 9
 
