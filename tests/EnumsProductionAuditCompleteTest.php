@@ -213,11 +213,9 @@ describe('Enums Production Readiness — Full Audit', function () {
     describe('EnumRule edge cases', function () {
         it('accepts valid backed enum value', function () {
             $rule = EnumRule::for(UserStatus::class);
-            $fail = fn () => null;
 
-            // Should not call fail for valid value
             $called = false;
-            $rule->validate('status', 'active', function () use (&$called): void {
+            $rule->validate('status', 'active', function (string $message) use (&$called): void {
                 $called = true;
             });
 
@@ -228,7 +226,7 @@ describe('Enums Production Readiness — Full Audit', function () {
             $rule = EnumRule::for(UserStatus::class);
 
             $called = false;
-            $rule->validate('status', 'nonexistent', function () use (&$called): void {
+            $rule->validate('status', 'nonexistent', function (string $message) use (&$called): void {
                 $called = true;
             });
 
@@ -239,7 +237,7 @@ describe('Enums Production Readiness — Full Audit', function () {
             $rule = EnumRule::for(UserStatus::class);
 
             $called = false;
-            $rule->validate('status', null, function () use (&$called): void {
+            $rule->validate('status', null, function (string $message) use (&$called): void {
                 $called = true;
             });
 
@@ -250,7 +248,7 @@ describe('Enums Production Readiness — Full Audit', function () {
             $rule = EnumRule::for(UserStatus::class)->nullable();
 
             $called = false;
-            $rule->validate('status', null, function () use (&$called): void {
+            $rule->validate('status', null, function (string $message) use (&$called): void {
                 $called = true;
             });
 
@@ -261,7 +259,7 @@ describe('Enums Production Readiness — Full Audit', function () {
             $rule = EnumRule::for(IntBackedPriority::class);
 
             $called = false;
-            $rule->validate('priority', 'high', function () use (&$called): void {
+            $rule->validate('priority', 'high', function (string $message) use (&$called): void {
                 $called = true;
             });
 
@@ -272,7 +270,7 @@ describe('Enums Production Readiness — Full Audit', function () {
             $rule = EnumRule::for(IntBackedPriority::class);
 
             $called = false;
-            $rule->validate('priority', 1, function () use (&$called): void {
+            $rule->validate('priority', 1, function (string $message) use (&$called): void {
                 $called = true;
             });
 
