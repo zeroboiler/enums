@@ -27,7 +27,7 @@ final readonly class EnumManager
      * Generate select options for an enum class.
      *
      * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
-     * @return list<array{value: string|int, label: string}>
+     * @return list<array{value: int|string, label: string}>
      *
      * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
      * @throws \ReflectionException If the enum class does not exist
@@ -40,7 +40,7 @@ final readonly class EnumManager
             );
         }
 
-        /** @var list<array{value: string|int, label: string}> */
+        /** @var list<array{value: int|string, label: string}> */
         return $enumClass::forSelect();
     }
 
@@ -48,7 +48,7 @@ final readonly class EnumManager
      * Generate full API metadata for an enum class.
      *
      * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
-     * @return list<array{value: string|int, name: string, label: string, description: ?string, color: string, icon: ?string}>
+     * @return list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}>
      *
      * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
      * @throws \ReflectionException If the enum class does not exist
@@ -61,7 +61,7 @@ final readonly class EnumManager
             );
         }
 
-        /** @var list<array{value: string|int, name: string, label: string, description: ?string, color: string, icon: ?string}> */
+        /** @var list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}> */
         return $enumClass::forApi();
     }
 

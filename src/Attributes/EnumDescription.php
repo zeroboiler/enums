@@ -29,8 +29,8 @@ use Attribute;
 final class EnumDescription
 {
     /**
-     * @param  array<string, string>|null  $descriptions Map of case value => description (class-level)
-     * @param  string|null                  $description  Single description (case-level)
+     * @param  array<int|string, string>|null  $descriptions Map of case value => description (class-level)
+     * @param  string|null                       $description  Single description (case-level)
      */
     public function __construct(
         public readonly ?array $descriptions = null,

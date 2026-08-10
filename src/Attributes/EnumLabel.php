@@ -30,8 +30,8 @@ use Attribute;
 final class EnumLabel
 {
     /**
-     * @param  array<string, string>|null  $labels   Map of case value => label (class-level)
-     * @param  string|null                  $label   Single label (case-level)
+     * @param  array<int|string, string>|null  $labels   Map of case value => label (class-level)
+     * @param  string|null                     $label   Single label (case-level)
      */
     public function __construct(
         public readonly ?array $labels = null,

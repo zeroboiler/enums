@@ -29,10 +29,10 @@ use ZeroBoiler\Enums\EnumCache;
  * Results are cached by {@see EnumCache} with TTL-based expiration.
  *
  * @phpstan-type EnumMetadataShape array{
- *     labels: array<string, string>,
- *     descriptions: array<string, string>,
- *     colors: array<string, string>,
- *     icons: array<string, string>
+ *     labels: array<int|string, string>,
+ *     descriptions: array<int|string, string>,
+ *     colors: array<int|string, string>,
+ *     icons: array<int|string, string>
  * }
  */
 final class EnumMetadataResolver
@@ -122,7 +122,7 @@ final class EnumMetadataResolver
             }
 
             if ($instance instanceof EnumColor) {
-                /** @var array<string, list<string>> $colorMap */
+                /** @var array<string, list<int|string>> $colorMap */
                 $colorMap = [
                     'success' => $instance->success,
                     'danger' => $instance->danger,
@@ -139,8 +139,8 @@ final class EnumMetadataResolver
 
             if ($instance instanceof EnumIcon && $instance->default !== null && $instance->default !== '') {
                 foreach ($enumClass::cases() as $case) {
-                    /** @var string $caseValue */
-                    $caseValue = (string) ($case instanceof BackedEnum ? $case->value : $case->name);
+                    /** @var int|string $caseValue */
+                    $caseValue = $case instanceof BackedEnum ? $case->value : $case->name;
                     $icons[$caseValue] = $instance->default;
                 }
             }
@@ -149,8 +149,8 @@ final class EnumMetadataResolver
         // --- Per-case attributes (override class-level) ---
         foreach ($enumClass::cases() as $case) {
             $caseReflection = $reflection->getCase($case->name);
-            /** @var string $value */
-            $value = (string) ($case instanceof BackedEnum ? $case->value : $case->name);
+            /** @var int|string $value */
+            $value = $case instanceof BackedEnum ? $case->value : $case->name;
 
             foreach ($caseReflection->getAttributes() as $attr) {
                 /** @var object $instance */

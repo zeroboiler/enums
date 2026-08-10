@@ -25,7 +25,7 @@ final class EnumCache
     private static ?self $instance = null;
 
     /**
-     * @var array<string, array{labels: array<string, string>, descriptions: array<string, string>, colors: array<string, string>, icons: array<string, string>}>
+     * @var array<string, array{labels: array<int|string, string>, descriptions: array<int|string, string>, colors: array<int|string, string>, icons: array<int|string, string>}>
      */
     private array $cache = [];
 
@@ -108,10 +108,10 @@ final class EnumCache
      * {@see EnumMetadataResolver::resolve()} which handles caching transparently.
      *
      * @return array{
-     *     labels: array<string, string>,
-     *     descriptions: array<string, string>,
-     *     colors: array<string, string>,
-     *     icons: array<string, string>
+     *     labels: array<int|string, string>,
+     *     descriptions: array<int|string, string>,
+     *     colors: array<int|string, string>,
+     *     icons: array<int|string, string>
      * }
      *
      * @throws \OutOfBoundsException If no cached entry exists for the given enum class
@@ -127,10 +127,10 @@ final class EnumCache
 
     /**
      * @param array{
-     *     labels: array<string, string>,
-     *     descriptions: array<string, string>,
-     *     colors: array<string, string>,
-     *     icons: array<string, string>
+     *     labels: array<int|string, string>,
+     *     descriptions: array<int|string, string>,
+     *     colors: array<int|string, string>,
+     *     icons: array<int|string, string>
      * } $metadata
      */
     public function set(string $enumClass, array $metadata): void

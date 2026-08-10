@@ -92,7 +92,7 @@ trait HasEnumMetadata
      * Returns an array of `{value, label}` pairs suitable for HTML `<select>` elements.
      * For backed enums, value is the backed value. For pure enums, value is the case name.
      *
-     * @return list<array{value: string|int, label: string}>
+     * @return list<array{value: int|string, label: string}>
      */
     public static function forSelect(): array
     {
@@ -108,7 +108,7 @@ trait HasEnumMetadata
      * Returns an array of associative arrays containing value, name, label,
      * description, color, and icon for each case — suitable for API responses.
      *
-     * @return list<array{value: string|int, name: string, label: string, description: ?string, color: string, icon: ?string}>
+     * @return list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}>
      */
     public static function forApi(): array
     {

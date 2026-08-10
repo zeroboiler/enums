@@ -24,8 +24,8 @@ use Illuminate\Support\Facades\Facade;
  *
  * @mixin \ZeroBoiler\Enums\EnumManager
  *
- * @method static list<array{value: string|int, label: string}> forSelect(string $enumClass) Generate select options for an enum class.
- * @method static list<array{value: string|int, name: string, label: string, description: ?string, color: string, icon: ?string}> forApi(string $enumClass) Generate full API metadata for an enum class.
+ * @method static list<array{value: int|string, label: string}> forSelect(string $enumClass) Generate select options for an enum class.
+ * @method static list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}> forApi(string $enumClass) Generate full API metadata for an enum class.
  * @method static \UnitEnum|null tryFromLabel(string $enumClass, string $label) Resolve an enum case by its label (case-insensitive).
  */
 final class Enum extends Facade
