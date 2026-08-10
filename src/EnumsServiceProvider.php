@@ -78,11 +78,18 @@ final class EnumsServiceProvider extends ServiceProvider
      * so no manual flush is needed. Long-lived runners keep it around,
      * which can cause stale metadata between deployments and unbounded
      * memory growth as more enum classes are resolved.
+     *
+     * Silently catches BindingResolutionException if the events dispatcher
+     * is not available (e.g., in testing environments without full Laravel).
      */
     private function registerCacheFlush(): void
     {
-        /** @var \Illuminate\Contracts\Events\Dispatcher $events */
-        $events = $this->app->make('events');
+        try {
+            /** @var \Illuminate\Contracts\Events\Dispatcher $events */
+            $events = $this->app->make('events');
+        } catch (\Illuminate\Contracts\Container\BindingResolutionException) {
+            return;
+        }
 
         $events->listen('octane.terminate', function (): void {
             EnumCache::flush();
