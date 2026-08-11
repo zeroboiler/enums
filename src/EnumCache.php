@@ -35,6 +35,11 @@ final class EnumCache
     /** Cache TTL in seconds (default: 300 = 5 minutes). 0 disables caching. */
     private int $ttl = 300;
 
+    /**
+     * Private constructor — use {@see getInstance()} to obtain the singleton.
+     *
+     * @internal Singleton accessor. Do not instantiate directly.
+     */
     private function __construct() {}
 
     /**
