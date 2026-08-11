@@ -1467,6 +1467,47 @@ class User extends Model
 }
 ```
 
+## Source Code Structure
+
+```
+src/
+├── Attributes/              # PHP 8 attribute classes for metadata
+│   ├── Label.php            # Per-case label override
+│   ├── Color.php            # Per-case color override
+│   ├── Icon.php             # Per-case icon override
+│   ├── Description.php      # Per-case description override
+│   ├── EnumLabel.php        # Class-level label map (also works per-case)
+│   ├── EnumColor.php        # Class-level color map (success/danger/warning/info/secondary)
+│   ├── EnumIcon.php         # Class-level icon map + default
+│   └── EnumDescription.php  # Class-level description map (also works per-case)
+├── Casts/
+│   └── EnumCast.php         # Eloquent cast: BackedEnum ↔ database value
+├── Concerns/
+│   └── HasEnumMetadata.php  # Core trait — all public API (label, color, icon, etc.)
+├── Console/Commands/
+│   ├── InspectEnumCommand.php    # artisan zeroboiler:enum-inspect
+│   └── MakeEnumTestCommand.php   # artisan zeroboiler:enum-test
+├── Exceptions/
+│   └── InvalidEnumException.php  # Thrown by fromName() on invalid case
+├── Facades/
+│   └── Enum.php              # Enum facade (delegates to EnumManager)
+├── Rules/
+│   └── EnumRule.php          # Validation rule (backed + pure enum support)
+├── Support/
+│   ├── EnumMetadataResolver.php  # Reads attributes via ReflectionEnum, builds metadata map
+│   └── EnumTestGenerator.php     # Generates Pest test files from enum classes
+├── EnumCache.php             # Singleton TTL-based metadata cache
+├── EnumManager.php           # Runtime helper (forSelect, forApi, tryFromLabel)
+└── EnumsServiceProvider.php   # Registers singleton, commands, cache listeners
+```
+
+**Key design decisions:**
+- `EnumCache` is a singleton because PHP enums cannot have properties
+- `EnumMetadataResolver` is a static-only class — no instance state, purely functional
+- All attribute classes are `final` — no extension, composition only
+- `HasEnumMetadata` is the only public surface users interact with
+- `EnumRule` uses `ReflectionEnum` to validate backing type safety (prevents TypeError)
+
 ## Security
 
 See [SECURITY.md](SECURITY.md) for our security policy.

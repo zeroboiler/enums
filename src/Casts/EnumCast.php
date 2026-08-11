@@ -118,6 +118,9 @@ final class EnumCast implements CastsAttributes
     /**
      * Serialize enum for JSON (API resources, etc).
      *
+     * Laravel calls this method when serializing model attributes to JSON.
+     * Not part of the CastsAttributes interface — Laravel detects it via method_exists().
+     *
      * @param  object  $model  The Eloquent model instance
      * @param  string  $key  The attribute name being serialized
      * @param  BackedEnum|int|string|null  $value  The enum instance or raw value
