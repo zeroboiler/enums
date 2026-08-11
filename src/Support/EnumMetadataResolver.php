@@ -43,10 +43,20 @@ final class EnumMetadataResolver
      * Results are cached by {@see EnumCache} with TTL-based expiration.
      * Subsequent calls for the same class return the cached result.
      *
-     * @param  class-string<UnitEnum>  $enumClass
-     * @return EnumMetadataShape
+     * Metadata is structured as a map with four keys, each mapping
+     * case values (backed values for backed enums, case names for pure enums)
+     * to their respective metadata:
      *
-     * @throws \ReflectionException If the class does not exist or is not an enum
+     * - `labels`: map of value → human-readable label string
+     * - `descriptions`: map of value → description string (may be sparse)
+     * - `colors`: map of value → color name string (defaults to 'secondary')
+     * - `icons`: map of value → icon identifier string (may be sparse)
+     *
+     * @param  class-string<UnitEnum>  $enumClass  The enum class to resolve metadata for
+     * @return EnumMetadataShape Resolved metadata keyed by category
+     *
+     * @throws \LogicException If the class exists but is not an enum
+     * @throws \ReflectionException If the class does not exist
      */
     public static function resolve(string $enumClass): array
     {
@@ -90,10 +100,19 @@ final class EnumMetadataResolver
     /**
      * Build complete metadata by merging class-level and per-case attributes.
      *
-     * @param  class-string<UnitEnum>  $enumClass
-     * @return EnumMetadataShape
+     * Resolution order (later overrides earlier):
      *
-     * @throws \ReflectionException If the class does not exist or is not an enum
+     * 1. Class-level attributes (#[EnumLabel], #[EnumColor], #[EnumIcon], #[EnumDescription])
+     * 2. Per-case attributes (#[Label], #[Color], #[Icon], #[Description])
+     *
+     * For labels: auto-generated from case name if no attribute is present
+     * (SCREAMING_SNAKE_CASE → "Title Case", camelCase → "Title Case").
+     *
+     * @param  class-string<UnitEnum>  $enumClass  The enum class to build metadata for
+     * @return EnumMetadataShape Complete metadata for all cases
+     *
+     * @throws \LogicException If the class exists but is not an enum
+     * @throws \ReflectionException If the class does not exist
      */
     private static function buildMetadata(string $enumClass): array
     {
