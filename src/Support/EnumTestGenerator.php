@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace ZeroBoiler\Enums\Support;
 
-use BackedEnum;
 use ReflectionEnum;
 use UnitEnum;
 
