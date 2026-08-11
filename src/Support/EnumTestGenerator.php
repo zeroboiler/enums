@@ -14,6 +14,10 @@ use UnitEnum;
 
 /**
  * Utility for generating Pest tests for enums.
+ *
+ * @internal Used only by the `zeroboiler:enum-test` artisan command.
+ *           Not part of the public API — do not use directly.
+ *
  * Used by the `zeroboiler:enum-test` artisan command.
  *
  * Produces a comprehensive Pest test file covering:

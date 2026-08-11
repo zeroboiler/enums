@@ -190,10 +190,12 @@ final class EnumCache
     }
 
     /**
-     * Reset the singleton instance — primarily for testing.
+     * Reset the singleton instance.
+     *
+     * Primarily intended for test teardown. Calling this in production
+     * code will break caching for the current process.
      *
      * @internal This method is intended for test teardown only.
-     *           Calling it in production code will break caching.
      */
     public static function resetInstance(): void
     {
