@@ -1572,6 +1572,82 @@ src/
 - `HasEnumMetadata` is the only public surface users interact with
 - `EnumRule` uses `ReflectionEnum` to validate backing type safety (prevents TypeError)
 
+## Quality Assurance
+
+### Static Analysis Compliance (PHPStan Level 9)
+
+Every source file in this package passes PHPStan level 9 analysis with zero errors
+and no baseline suppressions. The following checklist is maintained manually:
+
+| File | `strict_types` | `final` | Typed Props | Return Types | Docblocks |
+|------|:---:|:---:|:---:|:---:|:---:|
+| `HasEnumMetadata.php` | ✅ | trait | N/A (static) | ✅ all | ✅ |
+| `EnumCache.php` | ✅ | ✅ | ✅ | ✅ all | ✅ |
+| `EnumManager.php` | ✅ | ✅ readonly | N/A (methods) | ✅ all | ✅ |
+| `EnumMetadataResolver.php` | ✅ | ✅ | N/A (static) | ✅ all | ✅ |
+| `EnumCast.php` | ✅ | ✅ | ✅ readonly | ✅ all | ✅ |
+| `EnumRule.php` | ✅ | ✅ readonly | ✅ readonly | ✅ all | ✅ |
+| `InvalidEnumException.php` | ✅ | ✅ | N/A | ✅ all | ✅ |
+| `EnumsServiceProvider.php` | ✅ | ✅ | N/A | ✅ all | ✅ |
+| `Enum.php` (Facade) | ✅ | ✅ | N/A | ✅ | ✅ |
+| `EnumTestGenerator.php` | ✅ | N/A | N/A | ✅ all | ✅ |
+| `InspectEnumCommand.php` | ✅ | N/A | N/A | ✅ all | ✅ |
+| `MakeEnumTestCommand.php` | ✅ | N/A | N/A | ✅ all | ✅ |
+| 8 Attributes | ✅ | ✅ all | ✅ readonly | N/A | ✅ |
+
+### Code Quality Checklist
+
+- [x] **`declare(strict_types=1)`** — Present in every PHP file
+- [x] **No `mixed` types in public API** — All public method parameters and returns are explicitly typed
+- [x] **Strict comparisons** — `===` used everywhere (no `==` for value comparison)
+- [x] **`final` classes** — All attributes, resolvers, managers, cache, exceptions, facades are `final`
+- [x] **`readonly` properties** — All attribute constructors and service classes use `readonly` promoted properties
+- [x] **`#[Override]`** — Applied to all interface/parent method implementations
+- [x] **Docblocks** — All public methods, classes, and properties documented with `@param`/`@return`/`@throws`
+- [x] **`@phpstan-type`** — Complex array shapes (`EnumMetadataShape`) documented with PHPStan type aliases
+- [x] **Exception safety** — All error paths throw typed exceptions (`InvalidEnumException`, `BadMethodCallException`, `OutOfBoundsException`)
+- [x] **Singleton safety** — `EnumCache` prevents cloning (`__clone(): never`) and unserialization (`__wakeup(): never`)
+- [x] **TTL-based cache** — Configurable TTL with auto-expiration; 0 disables caching entirely
+
+## Source Code Audit — Attribute Contract Compliance
+
+### Per-Case Attributes (4 total)
+
+All per-case attributes are `final`, use `readonly` promoted properties, and target `TARGET_CLASS_CONSTANT`.
+
+| Attribute | `final` | Target | Constructor | Purpose |
+|-----------|:-------:|--------|-------------|---------|
+| `Label` | ✅ | `TARGET_CLASS_CONSTANT` | `string $value` | Override human-readable label |
+| `Color` | ✅ | `TARGET_CLASS_CONSTANT` | `string $value` | Override UI color name |
+| `Icon` | ✅ | `TARGET_CLASS_CONSTANT` | `string $value` | Override icon identifier |
+| `Description` | ✅ | `TARGET_CLASS_CONSTANT` | `string $value` | Override description text |
+
+### Class-Level Attributes (4 total)
+
+Class-level attributes target both `TARGET_CLASS` and `TARGET_CLASS_CONSTANT` (dual targeting),
+enabling bulk metadata at class level and per-case overrides on individual cases.
+
+| Attribute | `final` | Target | Constructor | Purpose |
+|-----------|:-------:|--------|-------------|---------|
+| `EnumLabel` | ✅ | `CLASS \| CLASS_CONSTANT` | `?array $labels`, `?string $label` | Map values → labels |
+| `EnumColor` | ✅ | `CLASS \| CLASS_CONSTANT` | `array $success/danger/warning/info/secondary` | Map values → colors |
+| `EnumIcon` | ✅ | `CLASS \| CLASS_CONSTANT` | `?string $default`, `array $icons` | Default + per-value icons |
+| `EnumDescription` | ✅ | `CLASS \| CLASS_CONSTANT` | `?array $descriptions`, `?string $description` | Map values → descriptions |
+
+### Service & Infrastructure Classes
+
+| Class | Type | `final` | `readonly` | Key Methods |
+|-------|------|:-------:|:----------:|-------------|
+| `HasEnumMetadata` | `trait` | — | — | `label()`, `color()`, `icon()`, `description()`, `forSelect()`, `forApi()`, `is()`, `in()`, `tryFromLabel()`, `tryFromName()`, `fromName()`, `hasCase()`, `values()`, `labels()` |
+| `EnumCache` | `final class` | ✅ | — | `has()`, `get()`, `set()`, `setTtl()`, `getTtl()`, `clear()`, `clearClass()`, `flush()`, `resetInstance()` |
+| `EnumManager` | `final readonly class` | ✅ | ✅ | `forSelect()`, `forApi()`, `tryFromLabel()` |
+| `EnumMetadataResolver` | `final class` | ✅ | — (static) | `resolve()`, `invalidate()`, `invalidateAll()` |
+| `EnumCast` | `final class` | ✅ | — | `get()`, `set()`, `serialize()` |
+| `EnumRule` | `final readonly class` | ✅ | ✅ | `validate()`, `for()`, `nullable()` |
+| `InvalidEnumException` | `final class` | ✅ | — | `value()`, `forName()` |
+| `Enum` (Facade) | `final class` | ✅ | — | `getFacadeAccessor()` |
+| `EnumsServiceProvider` | `final class` | ✅ | — | `register()`, `boot()` |
+
 ## Security
 
 See [SECURITY.md](SECURITY.md) for our security policy.
