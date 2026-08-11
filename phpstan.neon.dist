@@ -1,13 +1,8 @@
 parameters:
     level: 9
-    phpVersion: 80500
     paths:
         - src
-    excludePaths:
-        - tests/*
-    treatPhpDocTypesAsCertain: false
-    reportUnmatchedIgnoredErrors: false
     bootstrapFiles:
-        - vendor/larastan/larastan/bootstrap.php
-    ignoreErrors:
-        - "#Trait .*HasEnumMetadata is used zero times#"
+        - vendor/autoload.php
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
