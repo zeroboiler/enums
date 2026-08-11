@@ -541,6 +541,70 @@ FeatureFlag::values();                      // ['TWO_FACTOR_AUTH', 'DARK_MODE'] 
 FeatureFlag::forSelect();                   // [['value' => 'TWO_FACTOR_AUTH', 'label' => 'Two Factor Auth'], ...]
 ```
 
+## Type System
+
+### Metadata Resolution Pipeline
+
+When a metadata method is called (`label()`, `color()`, etc.), the resolver follows
+this priority chain:
+
+```
+Request (e.g., UserStatus::ACTIVE->label())
+    │
+    ├─ 1. Check per-case attribute (#[Label], #[Color], #[Icon], #[Description])
+    │      Found → return immediately (highest priority)
+    │
+    ├─ 2. Check class-level attribute (#[EnumLabel], #[EnumColor], #[EnumIcon], #[EnumDescription])
+    │      Found → return class-level value for this case
+    │
+    ├─ 3. Auto-generate from case name (for label only)
+    │      'ACTIVE' → 'Active'
+    │      'USER_ROLE' → 'User Role'
+    │
+    ├─ 4. Return default (null for description/icon, 'secondary' for color)
+    │
+    ▼
+Return value
+```
+
+### Enum Backing Types
+
+| Backing Type | PHP Declaration | `values()` Returns | `forSelect()` Value | `tryFrom()` Input |
+|-------------|---------------|-------------------|---------------------|------------------|
+| **String** | `enum X: string` | `list<string>` | Backed value (string) | `tryFrom('active')` |
+| **Int** | `enum X: int` | `list<int>` | Backed value (int) | `tryFrom(1)` |
+| **None** (pure) | `enum X` | `list<string>` (case names) | Case name (string) | Not available |
+
+> **Note:** Pure enums do not support `tryFrom()` or `tryFromLabel()` by backed value.
+> Use `tryFromName()` or `fromName()` instead.
+
+### Color Values
+
+Only five predefined color names are valid for `#[Color]` and `#[EnumColor]`:
+
+| Color | Typical Usage | CSS Class Pattern |
+|-------|--------------|-------------------|
+| `success` | Active, approved, online | `badge-success`, `text-success` |
+| `danger` | Banned, deleted, error | `badge-danger`, `text-danger` |
+| `warning` | Pending, review needed | `badge-warning`, `text-warning` |
+| `info` | Informational, neutral | `badge-info`, `text-info` |
+| `secondary` | Default fallback | `badge-secondary`, `text-secondary` |
+
+Custom colors are not supported — this prevents typos and ensures UI consistency.
+
+### Attribute Target Types
+
+| Attribute | Target | Scope | Purpose |
+|-----------|--------|-------|---------|
+| `#[Label]` | `Attribute::TARGET_CLASS_CASE` | Per-case | Override label for a single case |
+| `#[Color]` | `Attribute::TARGET_CLASS_CASE` | Per-case | Override color for a single case |
+| `#[Icon]` | `Attribute::TARGET_CLASS_CASE` | Per-case | Override icon for a single case |
+| `#[Description]` | `Attribute::TARGET_CLASS_CASE` | Per-case | Override description for a single case |
+| `#[EnumLabel]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CASE` | Class + optional per-case | Bulk label mapping |
+| `#[EnumColor]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CASE` | Class + optional per-case | Bulk color mapping |
+| `#[EnumIcon]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CASE` | Class + optional per-case | Default icon + per-value map |
+| `#[EnumDescription]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CASE` | Class + optional per-case | Bulk description mapping |
+
 ## Advanced
 
 ### Class-Level Attributes
