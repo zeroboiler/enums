@@ -48,7 +48,7 @@ final class EnumCast implements CastsAttributes
      * @return T|null Returns null when $value is null or doesn't match any case
      */
     #[\Override]
-    public function get(object $model, string $key, $value, array $attributes)
+    public function get(object $model, string $key, int|string|null $value, array $attributes)
     {
         if ($value === null) {
             return null;
@@ -80,7 +80,7 @@ final class EnumCast implements CastsAttributes
      * @throws \InvalidArgumentException If value is not a valid enum, string, or int
      */
     #[\Override]
-    public function set(object $model, string $key, $value, array $attributes): int|string|null
+    public function set(object $model, string $key, BackedEnum|int|string|null $value, array $attributes): int|string|null
     {
         if ($value === null) {
             return null;
@@ -122,9 +122,9 @@ final class EnumCast implements CastsAttributes
      * @param  string  $key  The attribute name being serialized
      * @param  BackedEnum|int|string|null  $value  The enum instance or raw value
      * @param  array<string, mixed>  $attributes  All model attributes
+     * @return int|string|null
      */
-    #[\Override]
-    public function serialize(object $model, string $key, $value, array $attributes): int|string|null
+    public function serialize(object $model, string $key, BackedEnum|int|string|null $value, array $attributes): int|string|null
     {
         if ($value instanceof BackedEnum) {
             return $value->value;
