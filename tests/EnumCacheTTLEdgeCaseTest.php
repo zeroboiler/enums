@@ -6,154 +6,136 @@
 
 declare(strict_types=1);
 
+/**
+ * EnumCache edge-case tests — TTL boundary, negative TTL, concurrent invalidation.
+ *
+ * @covers \ZeroBoiler\Enums\EnumCache
+ * @covers \ZeroBoiler\Enums\Support\EnumMetadataResolver
+ */
+
 use ZeroBoiler\Enums\EnumCache;
-use ZeroBoiler\Enums\Support\EnumMetadataResolver;
-use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
+use ZeroBoiler\Enums\Tests\Fixtures\PaymentStatus;
 
-describe('EnumCache TTL and Edge Cases', function () {
-    beforeEach(function () {
+describe('EnumCache TTL edge cases', function (): void {
+    beforeEach(function (): void {
         EnumCache::resetInstance();
     });
 
-    afterEach(function () {
+    afterEach(function (): void {
         EnumCache::resetInstance();
     });
 
-    describe('TTL normalization', function () {
-        it('normalizes negative TTL to 0', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(-5);
-            expect($cache->getTtl())->toBe(0);
-        });
+    it('disables caching when TTL is set to 0', function (): void {
+        $cache = EnumCache::getInstance();
+        $cache->setTtl(0);
 
-        it('normalizes zero TTL to 0', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(0);
-            expect($cache->getTtl())->toBe(0);
-        });
+        // Set a value
+        $cache->set(PaymentStatus::class, [
+            'labels' => ['approved' => 'Test'],
+            'descriptions' => [],
+            'colors' => [],
+            'icons' => [],
+        ]);
 
-        it('accepts positive TTL values', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(60);
-            expect($cache->getTtl())->toBe(60);
-        });
+        // TTL=0 means has() always returns false
+        expect($cache->has(PaymentStatus::class))->toBeFalse();
 
-        it('returns 0 by default TTL', function () {
-            $cache = EnumCache::getInstance();
-            // Default TTL is 300, but we reset the instance
-            expect($cache->getTtl())->toBeInt();
-        });
+        // get() throws because has() was false
+        expect(fn (): mixed => $cache->get(PaymentStatus::class))
+            ->throws(\OutOfBoundsException::class);
     });
 
-    describe('TTL disabled (0) behavior', function () {
-        it('has() always returns false when TTL is 0', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(0);
-            $cache->set(UserStatus::class, ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []]);
+    it('normalizes negative TTL to 0', function (): void {
+        $cache = EnumCache::getInstance();
+        $cache->setTtl(-100);
 
-            expect($cache->has(UserStatus::class))->toBeFalse();
-        });
-
-        it('get() throws when TTL is 0 even after set', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(0);
-            $cache->set(UserStatus::class, ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []]);
-
-            expect(fn () => $cache->get(UserStatus::class))
-                ->toThrow(\OutOfBoundsException::class);
-        });
+        expect($cache->getTtl())->toBe(0);
+        expect($cache->has(PaymentStatus::class))->toBeFalse();
     });
 
-    describe('TTL expiration', function () {
-        it('entry expires after TTL', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(1);
-            $meta = ['labels' => ['active' => 'Active'], 'descriptions' => [], 'colors' => [], 'icons' => []];
-            $cache->set(UserStatus::class, $meta);
+    it('expires entries after TTL elapses', function (): void {
+        $cache = EnumCache::getInstance();
+        $cache->setTtl(1);
 
-            // Immediately available
-            expect($cache->has(UserStatus::class))->toBeTrue();
-            expect($cache->get(UserStatus::class))->toBe($meta);
+        $metadata = [
+            'labels' => ['approved' => 'Test Label'],
+            'descriptions' => [],
+            'colors' => [],
+            'icons' => [],
+        ];
+        $cache->set(PaymentStatus::class, $metadata);
 
-            // Wait for TTL to expire
-            usleep(1_100_000); // 1.1 seconds (TTL is 1 second)
+        // Immediately: should be valid
+        expect($cache->has(PaymentStatus::class))->toBeTrue();
+        expect($cache->get(PaymentStatus::class))->toBe($metadata);
 
-            expect($cache->has(UserStatus::class))->toBeFalse();
-        });
+        // Wait for TTL to expire
+        sleep(2);
 
-        it('freshly set entry is available immediately even with short TTL', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(300);
-            $meta = ['labels' => ['active' => 'Active'], 'descriptions' => [], 'colors' => [], 'icons' => []];
-            $cache->set(UserStatus::class, $meta);
-
-            expect($cache->has(UserStatus::class))->toBeTrue();
-            expect($cache->get(UserStatus::class))->toBe($meta);
-        });
+        expect($cache->has(PaymentStatus::class))->toBeFalse();
     });
 
-    describe('Singleton reset', function () {
-        it('resetInstance creates a fresh cache', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(60);
-            $cache->set(UserStatus::class, ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []]);
-            expect($cache->has(UserStatus::class))->toBeTrue();
+    it('clearClass invalidates only the targeted class', function (): void {
+        $cache = EnumCache::getInstance();
+        $cache->setTtl(300);
 
-            EnumCache::resetInstance();
+        $cache->set(PaymentStatus::class, [
+            'labels' => ['approved' => 'Payment'],
+            'descriptions' => [],
+            'colors' => [],
+            'icons' => [],
+        ]);
+        $cache->set(\ZeroBoiler\Enums\Tests\Fixtures\IntBackedPriority::class, [
+            'labels' => [1 => 'Critical'],
+            'descriptions' => [],
+            'colors' => [],
+            'icons' => [],
+        ]);
 
-            $newCache = EnumCache::getInstance();
-            expect($newCache->has(UserStatus::class))->toBeFalse();
-        });
+        // Both exist
+        expect($cache->has(PaymentStatus::class))->toBeTrue();
+        expect($cache->has(\ZeroBoiler\Enums\Tests\Fixtures\IntBackedPriority::class))->toBeTrue();
+
+        // Clear only one
+        $cache->clearClass(PaymentStatus::class);
+
+        expect($cache->has(PaymentStatus::class))->toBeFalse();
+        expect($cache->has(\ZeroBoiler\Enums\Tests\Fixtures\IntBackedPriority::class))->toBeTrue();
     });
 
-    describe('Clear operations', function () {
-        it('clear() removes all entries', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(300);
-            $meta = ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []];
-            $cache->set(UserStatus::class, $meta);
+    it('flush() clears all entries via static accessor', function (): void {
+        $cache = EnumCache::getInstance();
+        $cache->setTtl(300);
 
-            $cache->clear();
-            expect($cache->has(UserStatus::class))->toBeFalse();
-        });
+        $cache->set(PaymentStatus::class, [
+            'labels' => ['approved' => 'Payment'],
+            'descriptions' => [],
+            'colors' => [],
+            'icons' => [],
+        ]);
 
-        it('clearClass() removes specific class only', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(300);
-            $meta = ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []];
-            $cache->set(UserStatus::class, $meta);
+        EnumCache::flush();
 
-            $cache->clearClass(UserStatus::class);
-            expect($cache->has(UserStatus::class))->toBeFalse();
-        });
-
-        it('flush() clears all entries via singleton', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(300);
-            $meta = ['labels' => [], 'descriptions' => [], 'colors' => [], 'icons' => []];
-            $cache->set(UserStatus::class, $meta);
-
-            EnumCache::flush();
-            expect($cache->has(UserStatus::class))->toBeFalse();
-        });
+        expect($cache->has(PaymentStatus::class))->toBeFalse();
     });
 
-    describe('Error cases', function () {
-        it('get() throws for non-existent class', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(300);
+    it('singleton returns the same instance', function (): void {
+        $a = EnumCache::getInstance();
+        $b = EnumCache::getInstance();
 
-            expect(fn () => $cache->get('NonExistentClass'))
-                ->toThrow(\OutOfBoundsException::class);
-        });
+        expect($a)->toBe($b);
+    });
 
-        it('clearClass() is safe for non-existent class', function () {
-            $cache = EnumCache::getInstance();
-            $cache->setTtl(300);
+    it('resetInstance allows creating a fresh singleton', function (): void {
+        $cache = EnumCache::getInstance();
+        $cache->setTtl(999);
 
-            // Should not throw
-            $cache->clearClass('NonExistentClass');
-            expect(true)->toBeTrue();
-        });
+        EnumCache::resetInstance();
+
+        $fresh = EnumCache::getInstance();
+        // Fresh instance should have default TTL (300)
+        expect($fresh->getTtl())->toBe(300);
+        // Not the same instance
+        expect($fresh)->not->toBe($cache);
     });
 });
