@@ -259,6 +259,21 @@ trait HasEnumMetadata
     }
 
     /**
+     * Check if this enum case is NOT any of the given cases.
+     *
+     * Negation of {@see in()}. Useful for exclusion logic:
+     *
+     *   if ($status->notIn([UserStatus::BANNED, UserStatus::DELETED])) { ... }
+     *   if ($status->notIn(['BANNED', 'DELETED'])) { ... }
+     *
+     * @param  array<static|string>  $cases  List of case instances or names to exclude
+     */
+    public function notIn(array $cases): bool
+    {
+        return ! $this->in($cases);
+    }
+
+    /**
      * Get all backed values or case names for this enum.
      *
      * For backed enums returns the backed values (int|string).

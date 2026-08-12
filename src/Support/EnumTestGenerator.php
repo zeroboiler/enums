@@ -22,7 +22,7 @@ use UnitEnum;
  * - Bulk methods (forSelect, forApi, values, labels)
  * - Uniqueness of backed values
  * - Per-case label, color, icon, description accessors
- * - Comparison methods (is, isNot, in) with instances and strings
+ * - Comparison methods (is, isNot, in, notIn) with instances and strings
  * - Reverse lookups (tryFromLabel, tryFromName, fromName, hasCase)
  * - fromName() throw behavior for invalid names
  * - Type consistency checks (values/labels return types)
@@ -116,6 +116,16 @@ it('supports in() group matching with string names', function () {
 
 it('supports in() with mixed instances and strings', function () {
     expect({$shortName}::{$firstCase}->in([{$shortName}::{$firstCase}, '{$secondCase}']))->toBeTrue();
+});
+
+it('supports notIn() group exclusion with instances', function () {
+    expect({$shortName}::{$firstCase}->notIn([{$shortName}::{$secondCase}]))->toBeTrue();
+    expect({$shortName}::{$firstCase}->notIn([{$shortName}::{$firstCase}, {$shortName}::{$secondCase}]))->toBeFalse();
+});
+
+it('supports notIn() group exclusion with string names', function () {
+    expect({$shortName}::{$firstCase}->notIn(['{$secondCase}']))->toBeTrue();
+    expect({$shortName}::{$firstCase}->notIn(['{$firstCase}']))->toBeFalse();
 });
 
 it('supports tryFromLabel reverse lookup', function () {

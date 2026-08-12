@@ -122,3 +122,44 @@ describe('Enum in() method', function () {
         expect($pending->in([OrderStatus::DELIVERED, OrderStatus::CANCELLED]))->toBeFalse();
     });
 });
+
+describe('Enum notIn() method', function () {
+    it('returns true when case is not in the list', function () {
+        $active = UserStatus::ACTIVE;
+
+        expect($active->notIn([UserStatus::BANNED, UserStatus::SUSPENDED]))->toBeTrue();
+    });
+
+    it('returns false when case is in the list', function () {
+        $active = UserStatus::ACTIVE;
+
+        expect($active->notIn([UserStatus::ACTIVE, UserStatus::PENDING]))->toBeFalse();
+    });
+
+    it('works with string case names', function () {
+        $active = UserStatus::ACTIVE;
+
+        expect($active->notIn(['BANNED', 'SUSPENDED']))->toBeTrue();
+        expect($active->notIn(['ACTIVE', 'PENDING']))->toBeFalse();
+    });
+
+    it('works with mixed instance and string inputs', function () {
+        $active = UserStatus::ACTIVE;
+
+        expect($active->notIn([UserStatus::BANNED, 'INACTIVE']))->toBeTrue();
+        expect($active->notIn([UserStatus::ACTIVE, 'PENDING']))->toBeFalse();
+    });
+
+    it('returns true for empty array', function () {
+        $active = UserStatus::ACTIVE;
+
+        expect($active->notIn([]))->toBeTrue();
+    });
+
+    it('works with int-backed enums', function () {
+        $pending = OrderStatus::PENDING;
+
+        expect($pending->notIn([OrderStatus::DELIVERED, OrderStatus::CANCELLED]))->toBeTrue();
+        expect($pending->notIn([OrderStatus::PENDING, OrderStatus::SHIPPED]))->toBeFalse();
+    });
+});
