@@ -189,6 +189,8 @@ final class EnumMetadataResolver
                     $labels[$value] = $instance->value;
                 }
 
+                // EnumLabel can also be used at case level (TARGET_CLASS | TARGET_CLASS_CONSTANT).
+                // At case level, the `label` property is used for a single-case override.
                 if ($instance instanceof EnumLabel && $instance->label !== null && $instance->label !== '') {
                     $labels[$value] = $instance->label;
                 }
@@ -197,6 +199,8 @@ final class EnumMetadataResolver
                     $descriptions[$value] = $instance->value;
                 }
 
+                // EnumDescription can also be used at case level (TARGET_CLASS | TARGET_CLASS_CONSTANT).
+                // At case level, the `description` property is used for a single-case override.
                 if ($instance instanceof EnumDescription && $instance->description !== null && $instance->description !== '') {
                     $descriptions[$value] = $instance->description;
                 }
@@ -209,7 +213,8 @@ final class EnumMetadataResolver
                     $icons[$value] = $instance->value;
                 }
 
-                // Per-case EnumIcon overrides (single case icon via EnumIcon attribute)
+                // EnumIcon can also be used at case level for a single-case icon override.
+                // At case level, the `default` property acts as the override value.
                 if ($instance instanceof EnumIcon && $instance->default !== null && $instance->default !== '') {
                     $icons[$value] = $instance->default;
                 }

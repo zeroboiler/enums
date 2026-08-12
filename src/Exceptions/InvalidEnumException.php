@@ -38,6 +38,17 @@ final class InvalidEnumException extends Exception
     }
 
     /**
+     * Get a human-readable string representation of the exception.
+     *
+     * Useful for logging and display contexts where catching and
+     * re-throwing as a string is needed (e.g., custom error pages).
+     */
+    public function __toString(): string
+    {
+        return self::class.': '.$this->getMessage();
+    }
+
+    /**
      * Create an exception for an invalid case name lookup.
      *
      * @param  class-string  $enumClass
