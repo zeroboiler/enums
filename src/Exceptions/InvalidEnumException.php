@@ -29,6 +29,8 @@ final class InvalidEnumException extends Exception
      *
      * @param  class-string  $enumClass
      * @param  int|string|null  $value  The invalid backed value or case name
+     *
+     * @see \ZeroBoiler\Enums\Rules\EnumRule For the validation rule that uses value-based validation
      */
     public static function value(string $enumClass, int|string|null $value): self
     {
@@ -52,6 +54,9 @@ final class InvalidEnumException extends Exception
      * Create an exception for an invalid case name lookup.
      *
      * @param  class-string  $enumClass
+     * @param  string  $name  The invalid case name that was not found
+     *
+     * @see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::fromName() For the method that throws this on failure
      */
     public static function forName(string $enumClass, string $name): self
     {
