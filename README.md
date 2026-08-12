@@ -122,6 +122,9 @@ $status->is('ACTIVE');              // true (string name)
 $status->isNot(UserStatus::BANNED); // true
 $status->in(['ACTIVE', 'INACTIVE']); // true
 
+// ── Group Exclusion ──────────────────────────────────
+$status->notIn(['BANNED', 'SUSPENDED']); // true
+
 // ── Lookup ────────────────────────────────────────────────
 UserStatus::tryFromLabel('Active User');  // UserStatus::ACTIVE
 UserStatus::tryFromName('ACTIVE');       // UserStatus::ACTIVE
@@ -376,6 +379,10 @@ $status->isNot(UserStatus::BANNED);  // true
 $status->in([UserStatus::ACTIVE, UserStatus::PENDING]);  // true
 $status->in(['ACTIVE', 'PENDING']);                       // true (mixed)
 $status->in([UserStatus::BANNED, UserStatus::SUSPENDED]); // false
+
+// Group exclusion — check if NOT in a list of cases
+$status->notIn([UserStatus::BANNED, UserStatus::SUSPENDED]);  // true
+$status->notIn(['ACTIVE', 'PENDING']);                       // false
 ```
 
 ### Lookup
@@ -749,10 +756,11 @@ Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
 | `::tryFromName(string)` | `?static` | Resolve by case name (case-sensitive) |
 | `::fromName(string)` | `static` | Resolve by case name (throws on failure) |
 | `::hasCase(string)` | `bool` | Check if a case name exists |
-| `->is(self\|string)` | `bool` | Check if this case matches another (instance or name) |
-| `->isNot(self\|string)` | `bool` | Check if this case does NOT match another |
-| `->in(array<self\|string>)` | `bool` | Check if this case is in a list of cases |
-| `::values()` | `list<string\|int>` | All backed values or case names |
+| `->is(self|string)` | `bool` | Check if this case matches another (instance or name) |
+| `->isNot(self|string)` | `bool` | Check if this case does NOT match another |
+| `->in(array<self|string>)` | `bool` | Check if this case is in a list of cases |
+| `->notIn(array<self|string>)` | `bool` | Check if this case is NOT any of the given cases (negation of `in()`) |
+| `::values()` | `list<string|int>` | All backed values or case names |
 | `::labels()` | `list<string>` | All labels in declaration order |
 
 ### EnumRule
@@ -796,6 +804,7 @@ InvalidEnumException (extends Exception)
 Thrown by:
 - `fromName()` when the case name doesn't exist
 - `InvalidEnumException::value()` when a backed value is invalid (available for custom error handling)
+- `InvalidEnumException::__toString()` for human-readable string representation in logs/error pages
 
 > **Note:** `EnumRule` does **not** throw `InvalidEnumException`. It uses Laravel's
 > `ValidationRule` interface and fails silently via the `$fail` callback,
