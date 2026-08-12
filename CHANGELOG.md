@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `LICENSE` file — proprietary license text
+- `@internal` annotation on `EnumMetadataResolver` support class
 
 ### Changed
 - `EnumLabel` and `EnumDescription` now support case-level single-value parameters (`label`, `description`) for per-case overrides via class-level attributes

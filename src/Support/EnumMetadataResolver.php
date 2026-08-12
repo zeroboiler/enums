@@ -25,6 +25,11 @@ use ZeroBoiler\Enums\EnumCache;
  * Resolves metadata (labels, descriptions, colors, icons) for enums
  * from class-level and per-case attributes.
  *
+ * @internal Not part of the public API — used internally by
+ *           {@see HasEnumMetadata}. Consumers should use the trait's
+ *           public methods (label(), description(), color(), icon(), etc.)
+ *           instead of calling this class directly.
+ *
  * Extracted from HasEnumMetadata trait to reduce complexity.
  * Results are cached by {@see EnumCache} with TTL-based expiration.
  *
