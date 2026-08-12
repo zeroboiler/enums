@@ -27,6 +27,9 @@ trait HasEnumMetadata
      *
      *   SCREAMING_SNAKE_CASE → Title Case
      *   camelCase → Title Case
+     *
+     * @see \ZeroBoiler\Enums\Attributes\Label For per-case label override
+     * @see \ZeroBoiler\Enums\Attributes\EnumLabel For class-level label mapping
      */
     public function label(): string
     {
@@ -43,6 +46,9 @@ trait HasEnumMetadata
      *
      * Resolved from per-case #[Description] attribute, then class-level
      * #[EnumDescription], or null if not defined.
+     *
+     * @see \ZeroBoiler\Enums\Attributes\Description For per-case description override
+     * @see \ZeroBoiler\Enums\Attributes\EnumDescription For class-level description mapping
      */
     public function description(): ?string
     {
@@ -59,6 +65,9 @@ trait HasEnumMetadata
      *
      * Resolved from per-case #[Color] attribute, then class-level
      * #[EnumColor], or defaults to 'secondary'.
+     *
+     * @see \ZeroBoiler\Enums\Attributes\Color For per-case color override
+     * @see \ZeroBoiler\Enums\Attributes\EnumColor For class-level color mapping
      */
     public function color(): string
     {
@@ -75,6 +84,9 @@ trait HasEnumMetadata
      *
      * Resolved from per-case #[Icon] attribute, then class-level
      * #[EnumIcon], or null if not defined.
+     *
+     * @see \ZeroBoiler\Enums\Attributes\Icon For per-case icon override
+     * @see \ZeroBoiler\Enums\Attributes\EnumIcon For class-level icon mapping
      */
     public function icon(): ?string
     {
@@ -93,6 +105,8 @@ trait HasEnumMetadata
      * For backed enums, value is the backed value. For pure enums, value is the case name.
      *
      * @return list<array{value: int|string, label: string}>
+     *
+     * @see forApi() For full metadata output
      */
     public static function forSelect(): array
     {
@@ -109,6 +123,8 @@ trait HasEnumMetadata
      * description, color, and icon for each case — suitable for API responses.
      *
      * @return list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}>
+     *
+     * @see forSelect() For dropdown-ready value/label pairs only
      */
     public static function forApi(): array
     {
