@@ -622,14 +622,14 @@ Custom colors are not supported — this prevents typos and ensures UI consisten
 
 | Attribute | Target | Scope | Purpose |
 |-----------|--------|-------|---------|
-| `#[Label]` | `Attribute::TARGET_CLASS_CASE` | Per-case | Override label for a single case |
-| `#[Color]` | `Attribute::TARGET_CLASS_CASE` | Per-case | Override color for a single case |
-| `#[Icon]` | `Attribute::TARGET_CLASS_CASE` | Per-case | Override icon for a single case |
-| `#[Description]` | `Attribute::TARGET_CLASS_CASE` | Per-case | Override description for a single case |
-| `#[EnumLabel]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CASE` | Class + optional per-case | Bulk label mapping |
-| `#[EnumColor]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CASE` | Class + optional per-case | Bulk color mapping |
-| `#[EnumIcon]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CASE` | Class + optional per-case | Default icon + per-value map |
-| `#[EnumDescription]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CASE` | Class + optional per-case | Bulk description mapping |
+| `#[Label]` | `Attribute::TARGET_CLASS_CONSTANT` | Per-case | Override label for a single case |
+| `#[Color]` | `Attribute::TARGET_CLASS_CONSTANT` | Per-case | Override color for a single case |
+| `#[Icon]` | `Attribute::TARGET_CLASS_CONSTANT` | Per-case | Override icon for a single case |
+| `#[Description]` | `Attribute::TARGET_CLASS_CONSTANT` | Per-case | Override description for a single case |
+| `#[EnumLabel]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CONSTANT` | Class + optional per-case | Bulk label mapping |
+| `#[EnumColor]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CONSTANT` | Class + optional per-case | Bulk color mapping |
+| `#[EnumIcon]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CONSTANT` | Class + optional per-case | Default icon + per-value icon map |
+| `#[EnumDescription]` | `Attribute::TARGET_CLASS \| TARGET_CLASS_CONSTANT` | Class + optional per-case | Bulk description mapping |
 
 ## Advanced
 
