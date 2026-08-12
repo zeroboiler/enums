@@ -12,6 +12,7 @@ auto-casting, validation, serialization, and CLI tooling.
 ## Table of Contents
 
 - [Installation](#installation)
+- [Source Code Index](#source-code-index)
 - [Quick Reference Card](#quick-reference-card)
 - [Type System](#type-system)
   - [Resolution Priority](#resolution-priority)
@@ -157,6 +158,31 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 **Requirements:**
 - PHP 8.5+
 - Laravel 13+
+
+## Source Code Index
+
+| Class | Namespace | Purpose |
+|-------|-----------|---------|
+| `HasEnumMetadata` | `Concerns` | Trait providing all public API (label, color, icon, description, forSelect, forApi, comparison, lookup) |
+| `EnumMetadataResolver` | `Support` | Resolves metadata from class-level and per-case attributes via reflection; caches results |
+| `EnumCache` | Root | Singleton TTL-based cache for enum metadata; prevents repeated reflection |
+| `EnumManager` | Root | Runtime helper (injectable/facade); delegates to trait methods without direct trait usage |
+| `Enum` | `Facades` | Laravel facade for `EnumManager` — `Enum::forSelect(...)`, `Enum::forApi(...)` |
+| `EnumsServiceProvider` | Root | Registers singleton, artisan commands, dev cache TTL, and Octane flush listeners |
+| `EnumRule` | `Rules` | Laravel validation rule — `EnumRule::for(MyEnum::class)` with nullable support |
+| `EnumCast` | `Casts` | Eloquent cast attribute — auto-casts database values to backed enum instances |
+| `InvalidEnumException` | `Exceptions` | Thrown by `fromName()` on invalid case name lookups |
+| `Label` | `Attributes` | Per-case label override (`#[Label('Custom')]`) |
+| `Color` | `Attributes` | Per-case color override (`#[Color('success')]`) |
+| `Icon` | `Attributes` | Per-case icon override (`#[Icon('heroicon-o-check')]`) |
+| `Description` | `Attributes` | Per-case description override (`#[Description('...')]`) |
+| `EnumLabel` | `Attributes` | Class-level bulk label mapping (`#[EnumLabel(labels: [...])]`) |
+| `EnumColor` | `Attributes` | Class-level bulk color mapping (`#[EnumColor(success: [...], danger: [...])]`) |
+| `EnumIcon` | `Attributes` | Class-level default icon + per-value icon map (`#[EnumIcon(default: '...', icons: [...])]`) |
+| `EnumDescription` | `Attributes` | Class-level bulk description mapping (`#[EnumDescription(descriptions: [...])]`) |
+| `EnumTestGenerator` | `Support` | Generates Pest test files for enum classes |
+| `InspectEnumCommand` | `Console\Commands` | `php artisan zeroboiler:enum-inspect` — displays enum metadata table |
+| `MakeEnumTestCommand` | `Console\Commands` | `php artisan zeroboiler:enum-test` — generates Pest test file for an enum |
 
 ## Quick Start
 
