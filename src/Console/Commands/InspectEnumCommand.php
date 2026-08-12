@@ -70,6 +70,7 @@ final class InspectEnumCommand extends Command
      *
      * @param  UnitEnum  $case  The enum case to inspect
      * @param  string  $method  The metadata method name (e.g., 'label', 'color')
+     * @return string|null The method result, or null if unavailable
      */
     private function safeCall(UnitEnum $case, string $method): ?string
     {

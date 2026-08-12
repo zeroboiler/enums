@@ -113,6 +113,7 @@ final class EnumMetadataResolver
      *
      * @throws \LogicException If the class exists but is not an enum
      * @throws \ReflectionException If the class does not exist
+     * @throws \InvalidArgumentException If a ReflectionAttribute::newInstance() fails
      */
     private static function buildMetadata(string $enumClass): array
     {
