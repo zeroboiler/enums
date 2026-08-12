@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `LICENSE` file — proprietary license text
+
 ### Changed
 - `EnumLabel` and `EnumDescription` now support case-level single-value parameters (`label`, `description`) for per-case overrides via class-level attributes
 - Case-level `EnumLabel` and `EnumDescription` resolve after per-case `#[Label]`/`#[Description]` but before auto-generated labels
