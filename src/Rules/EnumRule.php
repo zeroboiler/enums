@@ -72,6 +72,8 @@ final readonly class EnumRule implements ValidationRule
      * For pure enums: validates that the value string matches a case name.
      * Null values are rejected unless the nullable flag is set.
      *
+     * @param  string  $attribute  The attribute name being validated
+     * @param  mixed  $value  The value to validate (int|string for backed, string for pure enums)
      * @param  Closure(string, string|null=): PotentiallyTranslatedString  $fail
      *
      * @throws \ReflectionException If the enum class does not exist or is not an enum
