@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `EnumLabel` and `EnumDescription` now support case-level single-value parameters (`label`, `description`) for per-case overrides via class-level attributes
 - Case-level `EnumLabel` and `EnumDescription` resolve after per-case `#[Label]`/`#[Description]` but before auto-generated labels
 - `EnumMetadataResolver::buildMetadata()` now checks for `EnumLabel.label` and `EnumDescription.description` single-value properties on per-case attributes
+- Enhanced docblocks on `InvalidEnumException` factory methods and `EnumMetadataResolver` for PHPStan L9 completeness
 
 ### Added
 - `EnumMetadataTypeShapeAndLifecycleTest` — validates metadata resolver output structure, cache lifecycle, and strict type safety for all enum types
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `EnumHasEnumMetadataTraitContractTest` — verifies all HasEnumMetadata trait methods exist with correct signatures across all enum flavors
 - `composer.json` now includes `support` field with issue tracker and source URLs
 - README: Quality Assurance section with PHPStan L9 compliance table, Code Quality Checklist, and Source Code Audit
+- `notIn()` comparison and lookup edge case tests for full coverage
 
 ## [1.0.0] - 2025-08-08
 
