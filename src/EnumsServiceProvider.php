@@ -32,7 +32,7 @@ final class EnumsServiceProvider extends ServiceProvider
     #[\Override]
     public function register(): void
     {
-        $this->app->singleton('zeroboiler.enum', fn (): EnumManager => new EnumManager);
+        $this->app->singleton('zeroboiler.enum', fn(): EnumManager => new EnumManager);
     }
 
     /**

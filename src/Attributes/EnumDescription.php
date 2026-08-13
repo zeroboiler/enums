@@ -17,6 +17,7 @@ use Attribute;
  * At case level, sets a single case's description (override).
  *
  * Per-case overrides always win over class-level definitions.
+ * If neither is set, {@see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::description()} returns null.
  *
  * Usage (class-level):
  *   #[EnumDescription(descriptions: ['active' => 'User is active and can login'])]
@@ -24,6 +25,9 @@ use Attribute;
  * Per-case override:
  *   #[Description('User is active and can login')]
  *   case ACTIVE = 'active';
+ *
+ * @see Description For per-case description override
+ * @see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::description() For the description accessor
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_CLASS_CONSTANT)]
 final class EnumDescription
