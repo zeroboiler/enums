@@ -60,8 +60,8 @@ final class EnumMetadataResolver
      * @param  class-string<UnitEnum>  $enumClass  The enum class to resolve metadata for
      * @return EnumMetadataShape Resolved metadata keyed by category
      *
-     * @throws \LogicException If the class exists but is not an enum
-     * @throws \ReflectionException If the class does not exist
+     * @throws \LogicException If the class is not a valid enum (missing or non-enum)
+     * @throws \ReflectionException If attribute instantiation fails
      */
     public static function resolve(string $enumClass): array
     {

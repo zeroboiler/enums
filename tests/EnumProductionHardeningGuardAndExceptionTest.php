@@ -29,10 +29,10 @@ describe('Enum production hardening — metadata guard, exception factory, and c
     });
 
     it('throws LogicException when resolving metadata for a non-existent class', function () {
-        // ReflectionEnum throws ReflectionException for non-existent classes,
-        // which is caught before our guard — this documents expected behavior
+        // enum_exists() returns false for non-existent classes,
+        // so our guard throws LogicException before ReflectionEnum is reached
         expect(fn () => EnumMetadataResolver::resolve('NonExistentClass'))
-            ->toThrow(\ReflectionException::class);
+            ->toThrow(\LogicException::class, 'is not a valid enum class');
     });
 
     // ── InvalidEnumException factory methods ────────────────────────────────
@@ -207,7 +207,7 @@ describe('Enum production hardening — metadata guard, exception factory, and c
         expect($high->is(Priority::HIGH))->toBeTrue();
         expect($high->is('HIGH'))->toBeTrue();
         expect($high->in([Priority::HIGH, Priority::LOW]))->toBeTrue();
-        expect($high->in([1, 2]))->toBeTrue();  // int values? No — in() checks case names/instances
+        expect($high->in(['HIGH', 'LOW']))->toBeTrue();
         expect($high->notIn([Priority::CRITICAL]))->toBeTrue();
     });
 
