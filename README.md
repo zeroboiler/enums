@@ -1566,3 +1566,33 @@ enabling bulk metadata at class level and per-case overrides on individual cases
 ## Security
 
 See [SECURITY.md](SECURITY.md) for our security policy.
+
+### Built-In Security Features
+
+| Feature | Implementation | Description |
+|---------|---------------|-------------|
+| **Input validation** | `EnumRule` with backing type check | Rejects values that don't match the enum's backing type — prevents TypeError from `tryFrom()` |
+| **No mixed types** | PHPStan level 9 clean | Zero `mixed` types in public API — all parameters and returns are explicitly typed |
+| **Strict comparisons** | `===` everywhere | No loose equality — prevents accidental type coercion bugs |
+| **Singleton protection** | `__clone(): never`, `__wakeup(): never` | EnumCache cannot be cloned or unserialized — prevents state tampering |
+| **Final classes** | All public classes are `final` | No unintended subclassing — prevents LSP violations |
+| **Readonly properties** | All attribute constructors | Immutable attribute parameters — no runtime mutation |
+| **Exception safety** | Typed exceptions with named constructors | `InvalidEnumException::value()`, `::forName()` — clear error context for debugging |
+
+### Safe by Default
+
+```php
+// EnumRule rejects invalid types before tryFrom() — no TypeError
+'status' => ['required', EnumRule::for(UserStatus::class)];
+// Input '1' (int) for string-backed enum → validation error (not TypeError)
+// Input 'active' (string) for string-backed enum → passes validation
+
+// Enum values are validated at Eloquent cast level too
+protected $casts = ['status' => UserStatus::class];
+// EnumCast::set() validates type + value before storing
+
+// EnumCache is tamper-proof
+EnumCache::getInstance();  // singleton — one instance per process
+// $cache = clone EnumCache::getInstance();  // throws RuntimeException
+// unserialize('...');  // throws RuntimeException
+```
