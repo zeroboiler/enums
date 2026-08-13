@@ -121,6 +121,10 @@ final class EnumMetadataResolver
      */
     private static function buildMetadata(string $enumClass): array
     {
+        if (! enum_exists($enumClass)) {
+            throw new \LogicException("[{$enumClass}] is not a valid enum class.");
+        }
+
         /** @var array<int|string, string> $labels */
         $labels = [];
         /** @var array<int|string, string> $descriptions */
