@@ -371,21 +371,9 @@ describe('EnumRule edge cases', function (): void {
         expect($nullableRule)->not->toBe($rule);
     });
 
-    it('rejects non-enum class with proper error', function (): void {
+    it('EnumRule::for() accepts any class-string', function (): void {
         $rule = \ZeroBoiler\Enums\Rules\EnumRule::for('stdClass');
-        $fail = fn (string $message): string => $message;
 
-        // Non-enum class should produce a specific error message
-        $errors = [];
-        $validator = new class($fail) {
-            public function __construct(private \Closure $fail) {}
-            public function validate(string $attribute, mixed $value): void {
-                ($this->fail)($attribute);
-            }
-        };
-
-        // We can't easily call validate() without a full validator,
-        // but we test that EnumRule::for() accepts any class-string
         expect($rule)->toBeInstanceOf(\ZeroBoiler\Enums\Rules\EnumRule::class);
     });
 });
