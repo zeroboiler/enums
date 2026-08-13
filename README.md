@@ -156,6 +156,20 @@ php artisan zeroboiler:enum-inspect "App\Enums\UserStatus"
 php artisan zeroboiler:enum-test "App\Enums\UserStatus"
 ```
 
+## Why ZeroBoiler Enums?
+
+| Problem | ZeroBoiler Solution |
+|---------|-------------------|
+| Hardcoded label/color maps scattered across codebase | **Attribute-driven metadata** — `#[Label]`, `#[Color]`, `#[Icon]`, `#[Description]` directly on enum cases |
+| Verbose switch/match for enum display values | **Auto-generated labels** — `SCREAMING_SNAKE_CASE → Title Case` with zero config |
+| Manual select dropdown arrays in every controller | **`forSelect()` / `forApi()`** — one-liner bulk metadata generation |
+| Inconsistent enum validation in Form Requests | **`EnumRule::for()`** — works for backed AND pure enums with type-safe validation |
+| Fragile enum casting in Eloquent models | **Auto-cast** — just put the enum class in `$casts`, it works |
+| No CLI visibility into enum metadata | **`zeroboiler:enum-inspect`** — instant table view of all cases + metadata |
+| Manual test writing for every enum | **`zeroboiler:enum-test`** — generates comprehensive Pest tests automatically |
+
+**Zero ceremony. Zero boilerplate. Production-grade from day one.**
+
 ## Installation
 
 ```bash
