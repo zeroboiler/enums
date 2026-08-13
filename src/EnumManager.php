@@ -85,4 +85,46 @@ final readonly class EnumManager
 
         return $enumClass::tryFromLabel($label);
     }
+
+    /**
+     * Resolve a case by its enum name (e.g. 'ACTIVE' → UserStatus::ACTIVE).
+     *
+     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  string  $name  The case name (e.g. 'ACTIVE', 'PENDING')
+     * @return \UnitEnum|null The enum case, or null if not found
+     *
+     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \ReflectionException If the enum class does not exist
+     */
+    public function tryFromName(string $enumClass, string $name): ?\UnitEnum
+    {
+        if (! method_exists($enumClass, 'tryFromName')) {
+            throw new \BadMethodCallException(
+                "[{$enumClass}] does not use HasEnumMetadata trait."
+            );
+        }
+
+        return $enumClass::tryFromName($name);
+    }
+
+    /**
+     * Check if a case with the given name exists on the enum.
+     *
+     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  string  $name  The case name (e.g. 'ACTIVE')
+     * @return bool True if the case exists, false otherwise
+     *
+     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \ReflectionException If the enum class does not exist
+     */
+    public function hasCase(string $enumClass, string $name): bool
+    {
+        if (! method_exists($enumClass, 'hasCase')) {
+            throw new \BadMethodCallException(
+                "[{$enumClass}] does not use HasEnumMetadata trait."
+            );
+        }
+
+        return $enumClass::hasCase($name);
+    }
 }

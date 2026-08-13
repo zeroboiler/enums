@@ -144,6 +144,8 @@ use ZeroBoiler\Enums\Facades\Enum;
 Enum::forSelect(UserStatus::class);
 Enum::forApi(UserStatus::class);
 Enum::tryFromLabel(UserStatus::class, 'Active User');
+Enum::tryFromName(UserStatus::class, 'ACTIVE');
+Enum::hasCase(UserStatus::class, 'ACTIVE');
 
 // ── CLI ─────────────────────────────────────────────────────
 php artisan zeroboiler:enum-inspect "App\Enums\UserStatus"
@@ -791,7 +793,9 @@ Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
 |---------------|-------------|
 | `Enum::forSelect(string)` | Generate select options for an enum class |
 | `Enum::forApi(string)` | Generate full API metadata |
-| `Enum::tryFromLabel(string, string)` | Resolve by label |
+| `Enum::tryFromLabel(string, string)` | Resolve by label (case-insensitive) |
+| `Enum::tryFromName(string, string)` | Resolve by case name |
+| `Enum::hasCase(string, string)` | Check if a case name exists |
 
 ### Exception Hierarchy
 
@@ -1468,7 +1472,7 @@ src/
 │   ├── EnumMetadataResolver.php  # Reads attributes via ReflectionEnum, builds metadata map
 │   └── EnumTestGenerator.php     # Generates Pest test files from enum classes
 ├── EnumCache.php             # Singleton TTL-based metadata cache
-├── EnumManager.php           # Runtime helper (forSelect, forApi, tryFromLabel)
+├── EnumManager.php           # Runtime helper (forSelect, forApi, tryFromLabel, tryFromName, hasCase)
 └── EnumsServiceProvider.php   # Registers singleton, commands, cache listeners
 ```
 
