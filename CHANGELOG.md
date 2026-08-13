@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `composer.json` now includes `support` field with issue tracker and source URLs
 - README: Quality Assurance section with PHPStan L9 compliance table, Code Quality Checklist, and Source Code Audit
 - `notIn()` comparison and lookup edge case tests for full coverage
+- `Enum::tryFromName()`, `Enum::hasCase()` via facade — full EnumManager method delegation
 
 ## [1.0.0] - 2025-08-08
 

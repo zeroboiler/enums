@@ -76,6 +76,10 @@ auto-casting, validation, serialization, and CLI tooling.
   - [Per-Case Attributes](#per-case-attributes-1)
   - [Class-Level Attributes](#class-level-attributes-1)
   - [Service & Infrastructure Classes](#service--infrastructure-classes)
+- [Source Code Structure](#source-code-structure)
+- [Troubleshooting](#troubleshooting)
+  - [Common Issues](#common-issues)
+  - [FAQ](#faq)
 
 ## Quick Reference Card
 
