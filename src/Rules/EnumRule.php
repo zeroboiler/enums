@@ -59,6 +59,13 @@ final readonly class EnumRule implements ValidationRule
 
     /**
      * Create a nullable instance of this rule.
+     *
+     * When nullable, null values pass validation without error.
+     * Non-null values are still validated against the enum.
+     *
+     *   'status' => [EnumRule::for(UserStatus::class)->nullable()],
+     *
+     * @return self A new instance with nullable enabled
      */
     public function nullable(): self
     {

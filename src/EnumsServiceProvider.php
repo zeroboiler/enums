@@ -20,9 +20,10 @@ use ZeroBoiler\Enums\Console\Commands\MakeEnumTestCommand;
  *
  * Auto-discovered via Laravel's package discovery — no manual registration needed.
  *
- * @see \ZeroBoiler\Enums\EnumManager
- * @see \ZeroBoiler\Enums\Console\Commands\InspectEnumCommand
- * @see \ZeroBoiler\Enums\Console\Commands\MakeEnumTestCommand
+ * @see \ZeroBoiler\Enums\EnumManager For the singleton manager
+ * @see \ZeroBoiler\Enums\Console\Commands\InspectEnumCommand For the enum inspection command
+ * @see \ZeroBoiler\Enums\Console\Commands\MakeEnumTestCommand For the test generation command
+ * @see \ZeroBoiler\Enums\EnumCache For the TTL-based metadata cache
  */
 final class EnumsServiceProvider extends ServiceProvider
 {
