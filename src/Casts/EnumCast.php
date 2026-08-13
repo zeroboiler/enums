@@ -20,9 +20,9 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
  *       'status' => UserStatus::class,  // works automatically
  *   ];
  *
- * @template T of \BackedEnum
+ * @template T of \\BackedEnum
  *
- * @implements CastsAttributes<int|string, int|string|null>
+ * @implements CastsAttributes<T|null, int|string|null>
  */
 final class EnumCast implements CastsAttributes
 {
@@ -48,7 +48,7 @@ final class EnumCast implements CastsAttributes
      * @return T|null Returns null when $value is null or doesn't match any case
      */
     #[\Override]
-    public function get(object $model, string $key, int|string|null $value, array $attributes)
+    public function get(object $model, string $key, int|string|null $value, array $attributes): ?BackedEnum
     {
         if ($value === null) {
             return null;
