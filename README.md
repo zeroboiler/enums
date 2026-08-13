@@ -1596,3 +1596,260 @@ EnumCache::getInstance();  // singleton — one instance per process
 // $cache = clone EnumCache::getInstance();  // throws RuntimeException
 // unserialize('...');  // throws RuntimeException
 ```
+
+## Complete API Cookbook
+
+### HasEnumMetadata Trait — Full Method Reference
+
+```php
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
+enum OrderStatus: string
+{
+    use HasEnumMetadata;
+
+    case PENDING = 'pending';
+    case PROCESSING = 'processing';
+    case SHIPPED = 'shipped';
+    case DELIVERED = 'delivered';
+    case CANCELLED = 'cancelled';
+}
+
+// ── Metadata Accessors ────────────────────────────────────────
+OrderStatus::PENDING->label();       // "Pending" (auto-generated)
+OrderStatus::PENDING->color();       // "secondary" (default)
+OrderStatus::PENDING->icon();       // null (not defined)
+OrderStatus::PENDING->description(); // null (not defined)
+
+// ── Bulk Data Methods ─────────────────────────────────────────
+OrderStatus::forSelect();
+// [['value' => 'pending', 'label' => 'Pending'], ['value' => 'processing', 'label' => 'Processing'], ...]
+
+OrderStatus::forApi();
+// [['value' => 'pending', 'name' => 'PENDING', 'label' => 'Pending', 'description' => null, 'color' => 'secondary', 'icon' => null], ...]
+
+OrderStatus::values();
+// ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+
+OrderStatus::labels();
+// ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
+
+// ── Comparison Methods ───────────────────────────────────────
+$status = OrderStatus::PROCESSING;
+
+$status->is(OrderStatus::PROCESSING);     // true (instance)
+$status->is('PROCESSING');                  // true (string name, case-sensitive)
+$status->isNot(OrderStatus::CANCELLED);    // true
+
+$status->in([OrderStatus::PENDING, OrderStatus::PROCESSING]);  // true
+$status->in(['PENDING', 'PROCESSING']);     // true (mixed instances + strings)
+
+$status->notIn([OrderStatus::CANCELLED]);  // true
+$status->notIn(['CANCELLED']);              // true
+
+// ── Lookup Methods ────────────────────────────────────────────
+OrderStatus::tryFromLabel('Processing');   // OrderStatus::PROCESSING
+OrderStatus::tryFromLabel('processing');    // OrderStatus::PROCESSING (case-insensitive)
+OrderStatus::tryFromLabel('unknown');       // null
+
+OrderStatus::tryFromName('SHIPPED');       // OrderStatus::SHIPPED
+OrderStatus::tryFromName('shipped');       // null (case-sensitive!)
+OrderStatus::tryFromName('unknown');        // null
+
+OrderStatus::fromName('DELIVERED');         // OrderStatus::DELIVERED
+// OrderStatus::fromName('unknown');         // throws InvalidEnumException
+
+OrderStatus::hasCase('CANCELLED');         // true
+OrderStatus::hasCase('unknown');           // false
+```
+
+### EnumCache — Cache Management Patterns
+
+```php
+use ZeroBoiler\Enums\EnumCache;
+
+// Singleton access
+$cache = EnumCache::getInstance();
+
+// Configure TTL (default: 300s = 5 minutes)
+$cache->setTtl(60);      // 1 minute TTL
+$cache->setTtl(0);       // disable caching entirely
+$cache->getTtl();         // 0
+
+// Flush entire cache
+EnumCache::flush();       // static shortcut
+$cache->clear();          // instance method
+
+// Flush specific class
+$cache->clearClass(\App\Enums\UserStatus::class);
+
+// Reset singleton (testing only)
+EnumCache::resetInstance();
+```
+
+### EnumRule — Advanced Validation Patterns
+
+```php
+use ZeroBoiler\Enums\Rules\EnumRule;
+
+// Required field
+'status' => ['required', EnumRule::for(OrderStatus::class)],
+
+// Nullable field (null passes, other values validated)
+'status' => [EnumRule::for(OrderStatus::class)->nullable()],
+
+// With custom message key
+'status' => ['required', EnumRule::for(OrderStatus::class)],
+// Error: "The selected status is invalid. Allowed values: pending, processing, shipped, delivered, cancelled."
+```
+
+### EnumCast — Eloquent Integration Patterns
+
+```php
+use ZeroBoiler\Enums\Casts\EnumCast;
+
+// Auto-detection (recommended — Laravel auto-discovers)
+protected $casts = [
+    'status' => OrderStatus::class,  // EnumCast is auto-applied
+];
+
+// Explicit cast registration (rarely needed)
+protected $casts = [
+    'status' => new EnumCast(OrderStatus::class),
+];
+
+// EnumCast::get() — database value → enum instance
+// EnumCast::set() — enum instance/raw value → database value (validates)
+// EnumCast::serialize() — enum instance → JSON value
+
+// Reading from database
+$user->status;  // OrderStatus::ACTIVE instance (or null)
+
+// Writing to database
+$user->status = OrderStatus::CANCELLED;  // validated before storage
+$user->save();
+
+// set() validates type + value:
+// $user->status = 999;  // throws InvalidArgumentException (not a valid enum value)
+// $user->status = 'invalid';  // throws InvalidArgumentException
+```
+
+### InvalidEnumException — Error Handling
+
+```php
+use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
+
+// fromName() throws on invalid case
+try {
+    OrderStatus::fromName('EXPIRED');
+} catch (InvalidEnumException $e) {
+    // "Case name [EXPIRED] does not exist on enum [App\Enums\OrderStatus]."
+    Log::warning($e->getMessage());
+}
+
+// value() factory method for custom error messages
+$exception = InvalidEnumException::value(
+    OrderStatus::class,
+    'expired-value'
+);
+// "Value [expired-value] is not a valid case of [App\Enums\OrderStatus]."
+
+// __toString() for logging
+(string) $exception;
+// "ZeroBoiler\Enums\Exceptions\InvalidEnumException: Case name [EXPIRED] does not exist..."
+```
+
+### Real-World Controller Integration
+
+```php
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Attributes\Label;
+use ZeroBoiler\Enums\Attributes\Icon;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Rules\EnumRule;
+use ZeroBoiler\Enums\Facades\Enum;
+
+// ── FormRequest Validation ────────────────────────────────────
+class UpdateOrderRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return [
+            'status' => ['sometimes', EnumRule::for(OrderStatus::class)],
+        ];
+    }
+}
+
+// ── Controller ────────────────────────────────────────────────
+class OrderController extends Controller
+{
+    public function index(): JsonResponse
+    {
+        return response()->json(Enum::forApi(OrderStatus::class));
+    }
+
+    public function update(UpdateOrderRequest $request, Order $order): JsonResponse
+    {
+        $status = OrderStatus::fromName($request->input('status'));
+
+        if ($status->in([OrderStatus::CANCELLED, OrderStatus::DELIVERED])) {
+            return response()->json(['error' => 'Cannot update a closed order'], 409);
+        }
+
+        $order->update(['status' => $status->value]);
+        return response()->json(['status' => $status->label()]);
+    }
+}
+
+// ── Blade Template (Dropdown) ──────────────────────────────────
+// <select name="status">
+//     @foreach(OrderStatus::forSelect() as $option)
+//         <option value="{{ $option['value'] }}">{{ $option['label'] }}</option>
+//     @endforeach
+// </select>
+
+// ── Inertia/Vue.js (API data) ────────────────────────────────
+// Enum::forApi(OrderStatus::class) → full JSON with colors for badge rendering
+```
+
+### Advanced: EnumLabel with EnumColor Dual Targeting
+
+```php
+use ZeroBoiler\Enums\Attributes\EnumLabel;
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Attributes\Icon;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
+// Class-level: bulk label + color mapping
+#[EnumLabel(labels: [
+    'pending_review' => 'Pending Review',
+    'approved' => 'Approved',
+    'rejected' => 'Rejected',
+])]
+#[EnumColor(success: ['approved'], danger: ['rejected'], warning: ['pending_review'])]
+enum DocumentStatus: string
+{
+    use HasEnumMetadata;
+
+    // Per-case: icon override
+    #[Icon('heroicon-o-clock')]
+    case PENDING_REVIEW = 'pending_review';
+
+    #[Icon('heroicon-o-check-circle')]
+    case APPROVED = 'approved';
+
+    #[Icon('heroicon-o-x-circle')]
+    case REJECTED = 'rejected';
+}
+
+DocumentStatus::APPROVED->label();  // "Approved" (from EnumLabel)
+DocumentStatus::APPROVED->color();  // "success" (from EnumColor)
+DocumentStatus::APPROVED->icon();   // "heroicon-o-check-circle" (per-case)
+DocumentStatus::REJECTED->label(); // "Rejected" (from EnumLabel)
+DocumentStatus::REJECTED->color(); // "danger" (from EnumColor)
+
+// If EnumLabel didn't have 'rejected':
+// DocumentStatus::REJECTED->label(); // "Rejected" (auto-generated from REJECTED)
+```
