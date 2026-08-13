@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `LICENSE` file — proprietary license text
 - `@internal` annotation on `EnumMetadataResolver` support class
+- GitHub issue templates (bug report, feature request) and pull request template
+- `EnumSourceCodeProductionReadinessAuditTest` — comprehensive PHPStan Level 9 structural audit verifying strict_types, final classes, return types, typed properties, attribute contracts, and docblock completeness across all source files
 
 ### Changed
 - `EnumLabel` and `EnumDescription` now support case-level single-value parameters (`label`, `description`) for per-case overrides via class-level attributes
@@ -17,10 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `EnumMetadataResolver::buildMetadata()` now checks for `EnumLabel.label` and `EnumDescription.description` single-value properties on per-case attributes
 - Enhanced docblocks on `InvalidEnumException` factory methods and `EnumMetadataResolver` for PHPStan L9 completeness
 
-### Added
+### Added (Tests)
 - `EnumMetadataTypeShapeAndLifecycleTest` — validates metadata resolver output structure, cache lifecycle, and strict type safety for all enum types
 - `EnumFinalProductionAuditV2Test` — 30+ production readiness tests covering strict_types audit, cache TTL edge cases, label generation, single-case enums, zero-value int-backed enums
 - `EnumHasEnumMetadataTraitContractTest` — verifies all HasEnumMetadata trait methods exist with correct signatures across all enum flavors
+- `EnumTestGeneratorOutputValidationTest` — verifies generated PHP structure, per-case coverage, backing type detection, comparison tests, balanced braces, and API response schema tests
 - `composer.json` now includes `support` field with issue tracker and source URLs
 - README: Quality Assurance section with PHPStan L9 compliance table, Code Quality Checklist, and Source Code Audit
 - `notIn()` comparison and lookup edge case tests for full coverage
