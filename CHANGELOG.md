@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All classes marked `final` where appropriate
 - All attributes use `readonly` promoted constructor properties
 - Comprehensive PHPDoc with `@param`, `@return`, `@throws` annotations
-- 220 test files (198 unit tests + 22 fixtures)
+- 226 test files (204 unit tests + 22 fixtures)
 
 ## [Unreleased]
 

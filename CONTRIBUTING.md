@@ -1,97 +1,73 @@
 # Contributing to ZeroBoiler Enums
 
-Thank you for your interest in contributing! This guide covers the development workflow.
+Thank you for your interest in contributing! This document outlines the standards and workflow for this package.
 
-## Requirements
+## Code Standards
 
-- **PHP 8.5+**
-- **Composer** for dependency management
-- **Laravel 13+** (for integration testing)
-
-## Development Setup
-
-```bash
-git clone git@github.com:zeroboiler/enums.git
-cd enums
-composer install
-```
-
-## Code Quality
-
-All contributions must pass the full CI pipeline:
-
-```bash
-# Run all quality checks at once
-composer ci
-
-# Or individually:
-composer test       # Pest test suite
-composer analyse     # PHPStan level 9 (zero errors, no baseline)
-composer lint        # Laravel Pint (PSR-12)
-composer rector      # Rector (automated refactoring)
-```
-
-### PHPStan Level 9
-
-This package targets **PHPStan level 9 with zero ignored errors**. All code must:
-- Use `declare(strict_types=1)` in every file
-- Declare return types on all methods
-- Use typed properties (no `mixed` without explicit annotation)
-- Use strict comparisons (`===`, `!==`)
-
-### Code Style
-
-We follow **PSR-12** via Laravel Pint. Run `composer lint` before committing.
+- **PHP 8.5+** — all source files must use `declare(strict_types=1)`
+- **PHPStan Level 9** — zero warnings, no `mixed` types in public API
+- **100% strict types** — every method has return type declarations, every parameter has type hints
+- **Typed properties** — all class properties are `public readonly` with explicit types
+- **Docblocks** — every class, method, and property has a descriptive PHPDoc block with `@param`, `@return`, `@throws` annotations
+- **`#[\Override]`** — use on all interface/parent method implementations
 
 ## Architecture
 
-```
-src/
-├── Attributes/       — PHP 8 attribute classes (final, readonly)
-├── Concerns/         — HasEnumMetadata trait (public API)
-├── Casts/            — Eloquent cast (EnumCast)
-├── Console/Commands/ — Artisan commands
-├── Exceptions/       — InvalidEnumException
-├── Facades/          — Laravel facade (Enum)
-├── Rules/            — Validation rule (EnumRule)
-├── Support/          — EnumMetadataResolver, EnumTestGenerator
-├── EnumCache.php     — TTL singleton cache
-├── EnumManager.php   — Runtime helper (facade-backed)
-└── EnumsServiceProvider.php — Auto-discovery
+| Component | Responsibility |
+|-----------|---------------|
+| `HasEnumMetadata` (trait) | Public API: `label()`, `color()`, `icon()`, `description()`, `forSelect()`, `forApi()`, `is()`, `in()`, `tryFromLabel()`, etc. |
+| `EnumMetadataResolver` | Reflection-based attribute resolution (internal) |
+| `EnumCache` | Singleton TTL-based metadata cache |
+| `EnumManager` | Injectable/facade helper, delegates to trait methods |
+| `EnumRule` | Laravel validation rule for backed and pure enums |
+| `EnumCast` | Eloquent cast attribute for backed enums |
+
+## Resolution Priority
+
+Metadata is resolved in this order (later wins):
+
+1. **Per-case attribute** — `#[Label]`, `#[Color]`, `#[Icon]`, `#[Description]`
+2. **Class-level attribute** — `#[EnumLabel]`, `#[EnumColor]`, `#[EnumIcon]`, `#[EnumDescription]`
+3. **Auto-generated** — Labels only: `SCREAMING_SNAKE_CASE → Title Case`
+
+## Adding a New Attribute
+
+1. Create `src/Attributes/YourAttribute.php` (final class, `#[Attribute]`)
+2. Use `Attribute::TARGET_CLASS_CONSTANT` for per-case, `Attribute::TARGET_CLASS | TARGET_CLASS_CONSTANT` for class-level
+3. Register resolution logic in `EnumMetadataResolver::buildMetadata()`
+4. Add accessor method in `HasEnumMetadata` trait (if needed)
+5. Update `EnumManager` delegation methods (if new public API)
+6. Add tests in `tests/`
+7. Update this README's Attributes Reference section
+
+## Running Tests
+
+```bash
+composer test              # Run full Pest suite
+composer test:coverage    # With coverage report
+composer stan             # PHPStan Level 9 analysis
+composer cs               # Pint code style fixer
+composer analyse          # Full QA (stan + cs + test)
 ```
 
 ## Commit Messages
 
-We use [Conventional Commits](https://www.conventionalcommits.org/):
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-feat: add custom attribute support
-fix: resolve metadata cache TTL edge case
-refactor: improve EnumMetadataResolver type safety
-test: add comparison method edge case tests
+feat: add EnumIcon class-level attribute support
+fix: resolve label fallback for pure enums
+refactor: extract cache logic to EnumCache singleton
 docs: update README with pure enum examples
+test: add coverage for class-level attribute overrides
 ```
 
-## Pull Request Process
+## Pull Request Checklist
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feat/my-feature`)
-3. Make changes with tests
-4. Ensure `composer ci` passes
-5. Open a pull request with a clear description
-
-## Testing
-
-Tests use [Pest](https://pestphp.com/). Test fixtures are in `tests/Fixtures/`.
-
-```bash
-# Run all tests
-composer test
-
-# Run a specific test file
-vendor/bin/pest tests/EnumComparisonEdgeCasesTest.php
-```
-
-## License
-
-Proprietary — see LICENSE file.
+- [ ] `declare(strict_types=1)` in new/modified files
+- [ ] Return types on all methods
+- [ ] Docblocks with `@param`, `@return`, `@throws`
+- [ ] PHPStan Level 9 passes with zero errors
+- [ ] New features have test coverage
+- [ ] README updated if public API changed
+- [ ] No `mixed` types in public API
