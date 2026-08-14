@@ -2,6 +2,13 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [1.0.7] - 2026-08-14
+
+### Changed
+- Enriched README with comprehensive Integer-Backed and Pure Enum usage examples including comparison, lookup, validation, and Eloquent cast patterns
+- Updated test count badge (203 tests, 22 fixtures)
+- Updated Package Statistics section
+
 ## [1.0.0] - 2025-08-14
 
 ### Added

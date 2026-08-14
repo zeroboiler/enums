@@ -3,8 +3,8 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 205](https://img.shields.io/badge/Tests-205-brightgreen)]()
-|[![Version 1.0.6](https://img.shields.io/badge/Version-1.0.6-green)](https://github.com/zeroboiler/enums/releases)|
+|[![Tests: 203](https://img.shields.io/badge/Tests-203-brightgreen)]()
+|[![Version 1.0.7](https://img.shields.io/badge/Version-1.0.7-green)](https://github.com/zeroboiler/enums/releases)|
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -553,9 +553,13 @@ $case = $manager->tryFromLabel(UserStatus::class, 'Active User');
 
 ### Integer-Backed Enum Example
 
+Integer-backed enums are ideal for database columns storing status codes,
+priority levels, or any numeric representation:
+
 ```php
 use ZeroBoiler\Enums\Attributes\EnumColor;
 use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Attributes\Description;
 use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
 
 #[EnumColor(success: [3, 4], danger: [1], warning: [2])]
@@ -564,9 +568,11 @@ enum Priority: int
     use HasEnumMetadata;
 
     #[Color('danger')]
+    #[Description('System cannot proceed without attention')]
     case CRITICAL = 1;
 
     #[Color('warning')]
+    #[Description('Requires attention within 24 hours')]
     case HIGH = 2;
 
     #[Color('success')]
@@ -575,14 +581,45 @@ enum Priority: int
     case NONE = 4;
 }
 
-Priority::HIGH->label();         // "High" (auto-generated)
-Priority::HIGH->color();         // "warning" (per-case override)
-Priority::CRITICAL->value;       // 1 (int backed)
-Priority::values();              // [1, 2, 3, 4]
-Priority::forSelect();           // [['value' => 1, 'label' => 'Critical'], ...]
+// Accessors
+Priority::HIGH->label();         // "High" (auto-generated from case name)
+Priority::HIGH->color();         // "warning" (per-case #[Color] override)
+Priority::HIGH->description();   // "Requires attention within 24 hours"
+Priority::CRITICAL->value;       // 1 (int backed value)
+
+// Bulk methods
+Priority::values();              // [1, 2, 3, 4] (int values)
+Priority::labels();              // ['Critical', 'High', 'Low', 'None']
+Priority::forSelect();
+// [['value' => 1, 'label' => 'Critical'], ['value' => 2, 'label' => 'High'], ...]
+
+Priority::forApi();
+// [['value' => 1, 'name' => 'CRITICAL', 'label' => 'Critical', 'color' => 'danger', ...], ...]
+
+// Comparison
+Priority::HIGH->is(Priority::CRITICAL);       // false
+Priority::HIGH->is('HIGH');                    // true (string name)
+Priority::HIGH->in([Priority::HIGH, Priority::CRITICAL]); // true
+Priority::HIGH->notIn([Priority::LOW, Priority::NONE]);   // true
+
+// Lookup
+Priority::tryFromName('HIGH');     // Priority::HIGH
+Priority::fromName('CRITICAL');     // Priority::CRITICAL (throws on invalid)
+Priority::hasCase('UNKNOWN');       // false
+
+// Validation (validates against int-backed values)
+'priority' => ['required', EnumRule::for(Priority::class)],
+// Rejects 'HIGH' (string), only accepts 1, 2, 3, 4 (int values)
+
+// Eloquent Cast (auto-stores int value)
+protected $casts = ['priority' => Priority::class];
 ```
 
 ### Pure Enum Example
+
+Pure enums (no backing type) are ideal for state machines, feature flags,
+and any scenario where you don't need database storage — the enum itself
+is the source of truth:
 
 ```php
 use ZeroBoiler\Enums\Attributes\Icon;
@@ -597,14 +634,50 @@ enum FeatureFlag
     #[Description('Two-factor authentication for all users')]
     case TWO_FACTOR_AUTH;
 
+    #[Icon('heroicon-o-moon')]
     #[Description('Dark mode theme support')]
     case DARK_MODE;
+
+    #[Description('API rate limiting for public endpoints')]
+    case RATE_LIMITING;
 }
 
-FeatureFlag::TWO_FACTOR_AUTH->label();       // "Two Factor Auth"
-// FeatureFlag::TWO_FACTOR_AUTH->value;     // NOT AVAILABLE (pure enum)
-FeatureFlag::values();                      // ['TWO_FACTOR_AUTH', 'DARK_MODE'] (case names)
-FeatureFlag::forSelect();                   // [['value' => 'TWO_FACTOR_AUTH', 'label' => 'Two Factor Auth'], ...]
+// Accessors
+FeatureFlag::TWO_FACTOR_AUTH->label();       // "Two Factor Auth" (auto-generated)
+FeatureFlag::TWO_FACTOR_AUTH->icon();        // "heroicon-o-shield-check"
+FeatureFlag::TWO_FACTOR_AUTH->description(); // "Two-factor authentication for all users"
+FeatureFlag::RATE_LIMITING->icon();          // null (no icon defined)
+FeatureFlag::RATE_LIMITING->color();         // "secondary" (default)
+
+// Note: Pure enums have NO ->value property
+// FeatureFlag::TWO_FACTOR_AUTH->value;     // ERROR — pure enums have no backing value
+
+// Bulk methods — uses case NAME as value (not a backed value)
+FeatureFlag::values();
+// ['TWO_FACTOR_AUTH', 'DARK_MODE', 'RATE_LIMITING']
+
+FeatureFlag::labels();
+// ['Two Factor Auth', 'Dark Mode', 'Rate Limiting']
+
+FeatureFlag::forSelect();
+// [['value' => 'TWO_FACTOR_AUTH', 'label' => 'Two Factor Auth'], ...]
+
+FeatureFlag::forApi();
+// [['value' => 'TWO_FACTOR_AUTH', 'name' => 'TWO_FACTOR_AUTH', 'label' => 'Two Factor Auth', ...], ...]
+
+// Comparison — works identically to backed enums
+FeatureFlag::DARK_MODE->is('DARK_MODE');          // true (string name)
+FeatureFlag::DARK_MODE->isNot(FeatureFlag::TWO_FACTOR_AUTH); // true
+
+// Lookup — use tryFromName/fromName (NOT tryFrom — that requires a backed value)
+FeatureFlag::tryFromName('DARK_MODE');     // FeatureFlag::DARK_MODE
+FeatureFlag::fromName('RATE_LIMITING');    // FeatureFlag::RATE_LIMITING
+FeatureFlag::hasCase('UNKNOWN');           // false
+
+// Validation — EnumRule validates against case NAMES for pure enums
+'feature' => [EnumRule::for(FeatureFlag::class)],
+// Accepts 'TWO_FACTOR_AUTH', 'DARK_MODE', 'RATE_LIMITING' (case names)
+// Rejects 'two_factor_auth' (case-sensitive!)
 ```
 
 ## Type System
