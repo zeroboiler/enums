@@ -1885,6 +1885,48 @@ DocumentStatus::REJECTED->color(); // "danger" (from EnumColor)
 // DocumentStatus::REJECTED->label(); // "Rejected" (auto-generated from REJECTED)
 ```
 
+## Attribute Type Signatures
+
+### Per-Case Attributes
+
+All per-case attributes use promoted `readonly` properties and are `final` classes.
+
+| Attribute | Target | Constructor Signature |
+|-----------|--------|----------------------|
+| `Label` | `TARGET_CLASS_CONSTANT` | `(string $value)` |
+| `Color` | `TARGET_CLASS_CONSTANT` | `(string $value)` |
+| `Icon` | `TARGET_CLASS_CONSTANT` | `(string $value)` |
+| `Description` | `TARGET_CLASS_CONSTANT` | `(string $value)` |
+
+### Class-Level Attributes
+
+Class-level attributes can target both the enum class itself and individual cases
+(`TARGET_CLASS \| TARGET_CLASS_CONSTANT`), enabling dual-use patterns.
+
+| Attribute | Target | Constructor Signature | Resolves |
+|-----------|--------|----------------------|----------|
+| `EnumLabel` | `CLASS \| CLASS_CONSTANT` | `(?string $label = null, array $labels = [])` | `label()` |
+| `EnumColor` | `CLASS \| CLASS_CONSTANT` | `(array $success = [], array $danger = [], array $warning = [], array $info = [], array $secondary = [])` | `color()` |
+| `EnumIcon` | `CLASS \| CLASS_CONSTANT` | `(?string $default = null, array $icons = [])` | `icon()` |
+| `EnumDescription` | `CLASS \| CLASS_CONSTANT` | `(?string $description = null, array $descriptions = [])` | `description()` |
+
+> **Note:** When `EnumLabel`, `EnumIcon`, or `EnumDescription` are used at case level, their
+> single-value property (`$label`, `$default`, `$description` respectively) acts as a per-case override.
+> This dual-target design allows these attributes to serve as both bulk mappings (class-level)
+> and individual overrides (case-level) without needing separate attribute classes.
+
+### PHP 8.5 Features Used
+
+| Feature | Where Used | Benefit |
+|---------|-------------|---------|
+| `final readonly class` | `EnumManager`, `EnumRule` | Compile-time immutability and non-extensibility guarantee |
+| `#[\Override]` | `EnumsServiceProvider`, `EnumRule`, `Enum` facade, `InvalidEnumException` | Explicit override intent, catches base class method signature changes |
+| Promoted `readonly` properties | All Attribute constructors | Immutable, concise DTO-like attribute definitions |
+| `never` return type | `EnumCache::__clone()`, `EnumCache::__wakeup()` | Function always throws — enforced by PHP engine |
+| Named arguments | Throughout test generators | Improves readability of complex constructor calls |
+| Backed enums | Core design | Type-safe value mapping for database storage |
+| Match expressions | `EnumMetadataResolver`, `EnumRule` | Exhaustive pattern matching with compiler optimization |
+
 ## Production Readiness Checklist
 
 This package is production-ready. Every source file passes the following checks:
