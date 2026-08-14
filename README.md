@@ -3,7 +3,7 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 222](https://img.shields.io/badge/Tests-222-brightgreen)]()|
+|[![Tests: 250](https://img.shields.io/badge/Tests-250-brightgreen)]()|
 |[![Version 1.0.14](https://img.shields.io/badge/Version-1.0.14-green)](https://github.com/zeroboiler/enums/releases)|
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
@@ -190,7 +190,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 **Package Statistics:**
 |- 20 source files in `src/`
-|- 222 test files in `tests/` (28 fixtures)
+|- 250 test files in `tests/` (28 fixtures)
 - PHPStan Level 9 (`phpstan.neon`)
 - 100% `declare(strict_types=1)` coverage
 - Zero `mixed` return types in public API
