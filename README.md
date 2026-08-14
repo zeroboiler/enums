@@ -3,7 +3,7 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-[![Tests: 202](https://img.shields.io/badge/Tests-202-brightgreen)]()
+[![Tests: 224](https://img.shields.io/badge/Tests-224-brightgreen)]()
 [![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-green)](https://github.com/zeroboiler/enums/releases)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
@@ -188,8 +188,8 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 - Laravel 13+
 
 **Package Statistics:**
-- 20 source files in `src/`
-- 202 test files in `tests/` (22 fixtures)
+|- 20 source files in `src/`
+|- 224 test files in `tests/` (22 fixtures)
 - PHPStan Level 9 (`phpstan.neon`)
 - 100% `declare(strict_types=1)` coverage
 - Zero `mixed` return types in public API
@@ -1043,6 +1043,7 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 | 1.0.2 | 2025-08 | README enrichment, corrected test counts, production audit pass |
 | 1.0.4 | 2025-08-14 | Test count update (208 files), new facade contract tests, README accuracy fix |
 | 1.0.5 | 2025-08-14 | CHANGELOG.md added, README test count accuracy, full source audit — production ready |
+| 1.0.6 | 2025-08-14 | Test count update (224 files), badge accuracy, README documentation pass |
 
 ## Internal Components
 
@@ -1184,7 +1185,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **201 test files** (179 unit tests + 22 fixtures) covering:
+The test suite includes **224 test files** (202 unit tests + 22 fixtures) covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|
