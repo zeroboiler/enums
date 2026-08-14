@@ -42,7 +42,7 @@ final class MakeEnumTestCommand extends Command
 
         $defaultDir = \function_exists('base_path') ? base_path('tests/Unit/Enums') : getcwd().'/tests/Unit/Enums';
         $dir = (string) ($this->option('dir') ?? $defaultDir);
-        $path = rtrim($dir, '/')."/{$shortName}Test.php";
+        $path = rtrim($dir, '/\\')."/{$shortName}Test.php";
 
         if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
