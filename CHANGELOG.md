@@ -5,83 +5,35 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.7] - 2026-08-14
+## [1.0.0] - 2025-08-14
 
 ### Added
-- `EnumResolverInvalidationAndCacheBoundaryTest` — tests EnumMetadataResolver::invalidate/invalidateAll lifecycle, EnumCache TTL boundary conditions (zero, negative, persistence), InvalidEnumException factory methods, singleton reset, and label generation consistency
-
-### Fixed
-- Corrected README test count badge (214→191) to match actual test file count
-
-## [1.0.6] - 2026-08-14
-
-### Added
-- `EnumAttributePropertyConsistencyTest` — verifies attribute property types, naming conventions, defaults, and readonly enforcement
-- `EnumMetadataResolverInvalidationBehaviorTest` — tests cache invalidation (invalidate/invalidateAll), TTL=0 behavior, clearClass, and flush
-
-### Changed
-- Updated README test count badge (211→213) to match actual test file count
-
-## [1.0.5] - 2025-08-14
-
-### Changed
-- Fixed README test count badge (208→210) to match actual test file count
-
-## [1.0.4] - 2025-08-14
-
-### Changed
-- Fixed README test count badge (185→208) to match actual test file count
-- Added facade contract tests (EnumFacadeMethodSignatureContractTest)
-
-## [1.0.3] - 2025-08
-
-
-### Added
-- `LICENSE` file — proprietary license text
-- `@internal` annotation on `EnumMetadataResolver` support class
-- GitHub issue templates (bug report, feature request) and pull request template
-- `EnumSourceCodeProductionReadinessAuditTest` — comprehensive PHPStan Level 9 structural audit verifying strict_types, final classes, return types, typed properties, attribute contracts, and docblock completeness across all source files
-
-### Changed
-- `EnumLabel` and `EnumDescription` now support case-level single-value parameters (`label`, `description`) for per-case overrides via class-level attributes
-- Case-level `EnumLabel` and `EnumDescription` resolve after per-case `#[Label]`/`#[Description]` but before auto-generated labels
-- `EnumMetadataResolver::buildMetadata()` now checks for `EnumLabel.label` and `EnumDescription.description` single-value properties on per-case attributes
-- Enhanced docblocks on `InvalidEnumException` factory methods and `EnumMetadataResolver` for PHPStan L9 completeness
-
-### Added (Tests)
-- `EnumMetadataTypeShapeAndLifecycleTest` — validates metadata resolver output structure, cache lifecycle, and strict type safety for all enum types
-- `EnumFinalProductionAuditV2Test` — 30+ production readiness tests covering strict_types audit, cache TTL edge cases, label generation, single-case enums, zero-value int-backed enums
-- `EnumHasEnumMetadataTraitContractTest` — verifies all HasEnumMetadata trait methods exist with correct signatures across all enum flavors
-- `EnumTestGeneratorOutputValidationTest` — verifies generated PHP structure, per-case coverage, backing type detection, comparison tests, balanced braces, and API response schema tests
-- `composer.json` now includes `support` field with issue tracker and source URLs
-- README: Quality Assurance section with PHPStan L9 compliance table, Code Quality Checklist, and Source Code Audit
-- `notIn()` comparison and lookup edge case tests for full coverage
-- `Enum::tryFromName()`, `Enum::hasCase()` via facade — full EnumManager method delegation
-
-### Changed
-- Updated README test count badge to reflect 208 test files (was 184)
-
-## [1.0.0] - 2025-08-08
-
-### Added
-- Smart enum trait (`HasEnumMetadata`) with attribute-based metadata resolution
-  - `label()`, `description()`, `color()`, `icon()` accessors
-  - `forSelect()`, `forApi()` bulk data methods
-  - `tryFromLabel()`, `tryFromName()`, `fromName()` lookup methods
-  - `is()`, `isNot()`, `in()` comparison helpers
-  - `values()`, `labels()` collection methods
-  - `hasCase()` existence check
+- `HasEnumMetadata` trait — core public API providing `label()`, `color()`, `icon()`, `description()`, `forSelect()`, `forApi()`, `values()`, `labels()`, `is()`, `isNot()`, `in()`, `notIn()`, `tryFromLabel()`, `tryFromName()`, `fromName()`, `hasCase()`
+- `EnumMetadataResolver` — reflection-based metadata resolution from class-level and per-case attributes with TTL-based caching
+- `EnumCache` — singleton TTL-based cache for enum metadata, with `setTtl()`, `clear()`, `clearClass()`, `flush()`, `resetInstance()`
+- `EnumManager` — runtime helper (injectable/facade) delegating to trait methods
+- `Enum` facade — Laravel facade for `EnumManager`
+- `EnumsServiceProvider` — auto-discovery service provider with Octane cache flush support
 - Per-case attributes: `#[Label]`, `#[Color]`, `#[Icon]`, `#[Description]`
 - Class-level attributes: `#[EnumLabel]`, `#[EnumColor]`, `#[EnumIcon]`, `#[EnumDescription]`
-- `EnumMetadataResolver` — reflection-based metadata resolution with TTL-based caching
-- `EnumCache` — singleton cache with configurable TTL and class-level invalidation
-- `EnumCast` — universal Eloquent cast for backed enums (`get`/`set`/`serialize`)
-- `EnumRule` — Laravel validation rule for both backed and pure enums
-- `InvalidEnumException` — named constructors for value/name lookup failures
-- `EnumManager` — runtime helper accessible via `Enum` facade
-- `Enum` facade — `Enum::forSelect()`, `Enum::forApi()`, `Enum::tryFromLabel()`
-- `EnumsServiceProvider` — auto-discovery with Octane cache flush support
-- Artisan commands: `zeroboiler:enum-test`, `zeroboiler:enum-inspect`
-- PHPStan level 9 compliance across all source files
-- Comprehensive test suite with 150+ test files covering all edge cases
-- Full README with usage examples, architecture diagrams, and API reference
+- `EnumRule` — universal validation rule for backed and pure enums with `nullable()` support
+- `EnumCast` — Eloquent cast for backed enums with `get()`, `set()`, `serialize()`
+- `InvalidEnumException` — named constructors `value()` and `forName()`
+- `InspectEnumCommand` — `php artisan zeroboiler:enum-inspect` CLI table viewer
+- `MakeEnumTestCommand` — `php artisan zeroboiler:enum-test` Pest test generator
+- `EnumTestGenerator` — comprehensive test file generation engine
+- Auto-generated labels from `SCREAMING_SNAKE_CASE` → `Title Case`
+- Support for string-backed, int-backed, and pure enums
+- Metadata resolution priority: per-case attribute > class-level attribute > auto-generated
+
+### Quality
+- 100% `declare(strict_types=1)` coverage across all 20 source files
+- PHPStan Level 9 compatible — zero `mixed` return types in public API
+- All classes marked `final` where appropriate
+- All attributes use `readonly` promoted constructor properties
+- Comprehensive PHPDoc with `@param`, `@return`, `@throws` annotations
+- 220 test files (198 unit tests + 22 fixtures)
+
+## [Unreleased]
+
+_No unreleased changes._

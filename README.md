@@ -1042,6 +1042,7 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 | 1.0.1 | 2025-08 | Extended test suite, fixture-driven tests, PHPStan level 9 compliance |
 | 1.0.2 | 2025-08 | README enrichment, corrected test counts, production audit pass |
 | 1.0.4 | 2025-08-14 | Test count update (208 files), new facade contract tests, README accuracy fix |
+| 1.0.5 | 2025-08-14 | CHANGELOG.md added, README test count accuracy, full source audit — production ready |
 
 ## Internal Components
 
@@ -1172,7 +1173,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **217 test files** covering:
+The test suite includes **220 test files** (198 unit tests + 22 fixtures) covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|
