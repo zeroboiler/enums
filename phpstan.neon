@@ -3,9 +3,4 @@ parameters:
     paths:
         - src
     checkMissingIterableValueType: false
-    reportUnmatchedIgnoredErrors: false
-    ignoreErrors:
-        # Laravel facades use magic __call — false positives
-        - '#Call to an undefined static method#'
-        # Dynamic property access on enum instances via trait is handled at runtime
-        - '#Access to an undefined property#'
+    checkGenericClassInNonGenericObjectType: false
