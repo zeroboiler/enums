@@ -3,8 +3,8 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 217](https://img.shields.io/badge/Tests-217-brightgreen)]()|
-|[![Version 1.0.11](https://img.shields.io/badge/Version-1.0.11-green)](https://github.com/zeroboiler/enums/releases)|
+|[![Tests: 218](https://img.shields.io/badge/Tests-218-brightgreen)]()|
+|[![Version 1.0.12](https://img.shields.io/badge/Version-1.0.12-green)](https://github.com/zeroboiler/enums/releases)|
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -190,7 +190,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 **Package Statistics:**
 |- 20 source files in `src/`
-|- 217 test files in `tests/` (28 fixtures)
+|- 218 test files in `tests/` (28 fixtures)
 - PHPStan Level 9 (`phpstan.neon`)
 - 100% `declare(strict_types=1)` coverage
 - Zero `mixed` return types in public API
@@ -1341,6 +1341,10 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 | 1.0.5 | 2025-08-14 | CHANGELOG.md added, README test count accuracy, full source audit — production ready |
 | 1.0.6 | 2025-08-14 | Test count update (224 files), badge accuracy, README documentation pass |
 | 1.0.8 | 2025-08-14 | Full metadata resolution contract tests (240 files), README accuracy |
+| 1.0.9 | 2025-08-14 | Test count badge fix, version bump, production readiness audit |
+| 1.0.10 | 2025-08-14 | EnumCache TTL/singleton edge-case tests, EnumRule type mismatch coverage |
+| 1.0.11 | 2025-08-14 | Test count badge fix, version bump |
+| 1.0.12 | 2025-08-14 | Production readiness V7 test (full attribute resolution, cache lifecycle, exception factory, attribute contracts, EnumRule), version bump |
 
 ## Internal Components
 
@@ -1482,7 +1486,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **205 test files** (205 unit tests + 22 fixtures) covering:
+The test suite includes **218 test files** (218 unit tests + 28 fixtures) covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|

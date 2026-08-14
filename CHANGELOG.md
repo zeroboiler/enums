@@ -2,6 +2,16 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [1.0.12] - 2026-08-14
+
+### Added
+- Production readiness V7 test: comprehensive full attribute resolution (class-level + per-case), empty string edge cases, EnumCache lifecycle (TTL, singleton, flush, reset), InvalidEnumException factory methods, attribute contract verification, EnumRule validation
+- Updated test count (217 → 218)
+
+### Changed
+- README test count badge and Package Statistics updated to 218 tests
+- Version bump to 1.0.12
+
 ## [1.0.11] - 2026-08-14
 
 ### Changed
