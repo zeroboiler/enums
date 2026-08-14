@@ -202,10 +202,18 @@ final class EnumCache
     /**
      * Reset the singleton instance.
      *
-     * Primarily intended for test teardown. Calling this in production
-     * code will break caching for the current process.
+     * Destroys the cached singleton so the next call to {@see getInstance()}
+     * creates a fresh instance with an empty cache. This also clears
+     * any custom TTL setting back to the default (300 seconds).
      *
-     * @internal This method is intended for test teardown only.
+     * **WARNING:** Calling this in production code will break caching
+     * for the current process and degrade performance. All enum metadata
+     * will need to be re-resolved via reflection on the next access.
+     *
+     * @internal This method is intended for **test teardown only** (e.g. in `tearDown()` or `afterEach()`).
+     *           Never call this in production code or middleware.
+     * @see EnumCache::clear() For production-safe single-class cache clearing
+     * @see EnumCache::flush() For production-safe full cache clearing
      */
     public static function resetInstance(): void
     {
