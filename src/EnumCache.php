@@ -81,6 +81,11 @@ final class EnumCache
      * Check if cached metadata exists for an enum class.
      *
      * Automatically expires stale entries based on TTL.
+     * When TTL is 0 or less, caching is disabled and this
+     * method always returns false.
+     *
+     * @param  string  $enumClass  The fully-qualified enum class name
+     * @return bool True if valid cached metadata exists, false otherwise
      */
     public function has(string $enumClass): bool
     {
@@ -129,12 +134,18 @@ final class EnumCache
     }
 
     /**
-     * @param array{
+     * Store cached metadata for an enum class and record the creation timestamp.
+     *
+     * Overwrites any existing entry for the same class.
+     * The TTL check in {@see has()} uses the stored timestamp
+     * to determine staleness.
+     *
+     * @param  array{
      *     labels: array<int|string, string>,
      *     descriptions: array<int|string, string>,
      *     colors: array<int|string, string>,
      *     icons: array<int|string, string>
-     * } $metadata
+     * } $metadata  The resolved metadata to cache
      * @return void
      */
     public function set(string $enumClass, array $metadata): void
