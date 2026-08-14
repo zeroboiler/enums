@@ -7,7 +7,6 @@
 declare(strict_types=1);
 
 use ZeroBoiler\Enums\EnumCache;
-use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Tests\Fixtures\Priority;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
 
