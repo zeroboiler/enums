@@ -4,7 +4,7 @@
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
 |[![Tests: 224](https://img.shields.io/badge/Tests-224-brightgreen)]()|
-|[![Version 1.0.17](https://img.shields.io/badge/Version-1.0.17-green)](https://github.com/zeroboiler/enums/releases)|
+|[![Version 1.0.18](https://img.shields.io/badge/Version-1.0.18-green)](https://github.com/zeroboiler/enums/releases)|
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -1345,6 +1345,8 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 | 1.0.10 | 2025-08-14 | EnumCache TTL/singleton edge-case tests, EnumRule type mismatch coverage |
 | 1.0.11 | 2025-08-14 | Test count badge fix, version bump |
 | 1.0.12 | 2025-08-14 | Production readiness V7 test (full attribute resolution, cache lifecycle, exception factory, attribute contracts, EnumRule), version bump |
+| 1.0.13-17 | 2025-08-14 | README documentation pass, edge-case tests, badge accuracy, structural compliance |
+| 1.0.18 | 2025-08-14 | Full source audit — all 20 source files verified production-ready (strict types, return types, docblocks, typed properties, PHPStan L9 compliance), version bump |
 
 ## Internal Components
 
