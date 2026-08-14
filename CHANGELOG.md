@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `notIn()` comparison and lookup edge case tests for full coverage
 - `Enum::tryFromName()`, `Enum::hasCase()` via facade — full EnumManager method delegation
 
+### Changed
+- Updated README test count badge to reflect 208 test files (was 184)
+
 ## [1.0.0] - 2025-08-08
 
 ### Added
