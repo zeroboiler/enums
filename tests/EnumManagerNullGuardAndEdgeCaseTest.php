@@ -6,11 +6,9 @@
 
 declare(strict_types=1);
 
-use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
 use ZeroBoiler\Enums\EnumManager;
 use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Tests\Fixtures\IntBackedPriority;
-use ZeroBoiler\Enums\Tests\Fixtures\PureFeatureFlag;
 use ZeroBoiler\Enums\Tests\Fixtures\SingleCaseEnum;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
 
