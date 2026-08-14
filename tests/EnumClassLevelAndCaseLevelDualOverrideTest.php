@@ -6,6 +6,8 @@
 
 declare(strict_types=1);
 
+namespace ZeroBoiler\Enums\Tests;
+
 use ZeroBoiler\Enums\Attributes\Color;
 use ZeroBoiler\Enums\Attributes\Description;
 use ZeroBoiler\Enums\Attributes\EnumColor;

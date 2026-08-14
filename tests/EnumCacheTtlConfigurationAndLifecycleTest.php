@@ -6,6 +6,8 @@
 
 declare(strict_types=1);
 
+namespace ZeroBoiler\Enums\Tests;
+
 use ZeroBoiler\Enums\EnumCache;
 use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 use ZeroBoiler\Enums\Tests\Fixtures\EmptyDefaultsStatus;
