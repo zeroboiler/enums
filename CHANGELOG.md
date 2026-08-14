@@ -2,6 +2,12 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [1.0.8] - 2026-08-14
+
+### Changed
+- Updated test count badge (211 → 236 tests, 27 fixtures)
+- Updated Package Statistics section with accurate test and fixture counts
+
 ## [1.0.7] - 2026-08-14
 
 ### Changed
