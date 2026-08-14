@@ -3,7 +3,7 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 223](https://img.shields.io/badge/Tests-223-brightgreen)]()
+|[![Tests: 201](https://img.shields.io/badge/Tests-201-brightgreen)]()
 |[![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-green)](https://github.com/zeroboiler/enums/releases)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
@@ -189,7 +189,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 **Package Statistics:**
 - 20 source files in `src/`
-- 223 test files in `tests/` (22 fixtures)
+- 201 test files in `tests/` (22 fixtures)
 - PHPStan Level 9 (`phpstan.neon`)
 - 100% `declare(strict_types=1)` coverage
 - Zero `mixed` return types in public API
@@ -1140,6 +1140,17 @@ enum types and attribute combinations:
 | `ZeroPriority` | `int` | None | Edge case: zero as a valid backed value |
 | `MixedAttributeStatus` | `string` | Mixed per-case attributes | Mixed attribute combinations on a single enum |
 | `RequestState` | `string` | Various | Request lifecycle state machine pattern |
+| `OrderStatus` | `string` | `EnumLabel`, `EnumColor` | Order lifecycle with label and color metadata |
+| `PaymentStatus` | `string` | `EnumDescription`, `EnumIcon` | Payment flow with description and icon |
+| `SystemStatus` | `int` | `EnumIcon` with default | Int-backed with default icon for all cases |
+| `DetailedTicketStatus` | `string` | `Label`, `Color`, `Description`, `Icon` | Full per-case attribute coverage |
+| `IntBackedPriority` | `int` | `EnumLabel` | Int-backed with class-level label mapping |
+| `LabelMapEnum` | `string` | `EnumLabel` | Class-level label map testing |
+| `OrderWorkflowStatus` | `string` | `EnumLabel`, `EnumDescription` | Workflow state transitions |
+| `DefaultIconFeature` | `string` | `EnumIcon` with default | Default icon for all cases pattern |
+| `OverriddenIconRole` | `string` | `EnumIcon`, `Icon` per-case | Default + per-case icon override |
+| `SingleCaseToggle` | `string` | None | Single-case toggle enum edge case |
+| `ZeroBackedPriority` | `int` | None | Edge case: zero as valid int-backed value |
 
 ```php
 // Each fixture is used in multiple test files. Example:
@@ -1173,7 +1184,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **223 test files** (201 unit tests + 22 fixtures) covering:
+The test suite includes **201 test files** (179 unit tests + 22 fixtures) covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|
@@ -1587,7 +1598,7 @@ enabling bulk metadata at class level and per-case overrides on individual cases
 |-------|------|:-------:|:----------:|-------------|
 | `HasEnumMetadata` | `trait` | — | — | `label()`, `color()`, `icon()`, `description()`, `forSelect()`, `forApi()`, `is()`, `in()`, `tryFromLabel()`, `tryFromName()`, `fromName()`, `hasCase()`, `values()`, `labels()` |
 | `EnumCache` | `final class` | ✅ | — | `has()`, `get()`, `set()`, `setTtl()`, `getTtl()`, `clear()`, `clearClass()`, `flush()`, `resetInstance()` |
-| `EnumManager` | `final readonly class` | ✅ | ✅ | `forSelect()`, `forApi()`, `tryFromLabel()` |
+| `EnumManager` | `final readonly class` | ✅ | ✅ | `forSelect()`, `forApi()`, `tryFromLabel()`, `tryFromName()`, `fromName()`, `hasCase()`, `values()`, `labels()` |
 | `EnumMetadataResolver` | `final class` | ✅ | — (static) | `resolve()`, `invalidate()`, `invalidateAll()` |
 | `EnumCast` | `final class` | ✅ | — | `get()`, `set()`, `serialize()` |
 | `EnumRule` | `final readonly class` | ✅ | ✅ | `validate()`, `for()`, `nullable()` |
