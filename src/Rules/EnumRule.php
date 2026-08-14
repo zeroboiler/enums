@@ -51,6 +51,7 @@ final readonly class EnumRule implements ValidationRule
      * Named constructor for readability.
      *
      * @param  class-string<UnitEnum>  $enumClass
+     * @return self
      */
     public static function for(string $enumClass): self
     {
@@ -149,6 +150,8 @@ final readonly class EnumRule implements ValidationRule
 
     /**
      * Generate a descriptive error message.
+     *
+     * @return string Human-readable validation error message
      */
     private function message(string $attribute): string
     {
