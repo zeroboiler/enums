@@ -2,6 +2,13 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [1.0.10] - 2026-08-14
+
+### Added
+- EnumRule type mismatch edge-case tests (int/string/float/bool/array rejection, nullable semantics, pure enum validation, boundary values, structural contract)
+- EnumCache singleton lifecycle and TTL edge-case tests (multi-class isolation, TTL expiration, flush/clear, structural contract)
+- Updated test count (218 → 219)
+
 ## [1.0.9] - 2026-08-14
 
 ### Added
