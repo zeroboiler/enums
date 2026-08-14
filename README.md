@@ -14,6 +14,7 @@ auto-casting, validation, serialization, and CLI tooling.
 
 - [Installation](#installation)
 - [Source Code Index](#source-code-index)
+- [Quick Start](#quick-start)
 - [Quick Reference Card](#quick-reference-card)
 - [Type System](#type-system)
   - [Resolution Priority](#resolution-priority)
