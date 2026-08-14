@@ -2,6 +2,16 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [1.0.14] - 2026-08-14
+
+### Added
+- `EnumCacheTtlEdgeCaseTest`: comprehensive TTL clamping (negative→0), zero-disable behavior, positive TTL caching, clearClass specificity, singleton lifecycle, flush/cover behavior, get() without has() OutOfBoundsException (15 test methods)
+
+### Changed
+- Full production-ready audit of all 20 source files: verified `declare(strict_types=1)`, return type declarations, typed properties, PHPStan L9 compliance (no mixed types, strict comparisons), complete docblocks
+- Updated README test count badge and Package Statistics (219 → 222 tests)
+- Version bump to 1.0.14
+
 ## [1.0.13] - 2026-08-14
 
 ### Changed
