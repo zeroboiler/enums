@@ -82,6 +82,7 @@ auto-casting, validation, serialization, and CLI tooling.
 - [Troubleshooting](#troubleshooting)
   - [Common Issues](#common-issues)
   - [FAQ](#faq)
+- [Common Patterns & Recipes](#common-patterns--recipes)
 
 ## Quick Reference Card
 
@@ -979,6 +980,228 @@ Enum + Blade select helper:
         </option>
     @endforeach
 </select>
+```
+
+## Common Patterns & Recipes
+
+### Pattern 1: State Machine with Method Dispatch
+
+```php
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Attributes\EnumLabel;
+use ZeroBoiler\Enums\Attributes\EnumColor;
+
+#[EnumColor(success: ['active'], danger: ['cancelled'], warning: ['pending'])]
+enum OrderStatus: string
+{
+    use HasEnumMetadata;
+
+    case Pending   = 'pending';
+    case Active    = 'active';
+    case Shipped   = 'shipped';
+    case Delivered = 'delivered';
+    case Cancelled = 'cancelled';
+
+    /**
+     * Get allowed transitions from this state.
+     *
+     * @return list<self>
+     */
+    public function allowedTransitions(): array
+    {
+        return match ($this) {
+            self::Pending   => [self::Active, self::Cancelled],
+            self::Active    => [self::Shipped, self::Cancelled],
+            self::Shipped   => [self::Delivered],
+            self::Delivered => [],
+            self::Cancelled => [],
+        };
+    }
+
+    /** Check if this status allows transition to the target. */
+    public function canTransitionTo(self $target): bool
+    {
+        return in_array($target, $this->allowedTransitions(), true);
+    }
+
+    /** Transition to the next state or throw. */
+    public function transitionTo(self $target): self
+    {
+        if (! $this->canTransitionTo($target)) {
+            throw new \LogicException(
+                "Cannot transition from {$this->value} to {$target->value}"
+            );
+        }
+
+        return $target;
+    }
+}
+
+// Usage
+$current = OrderStatus::Pending;
+$current->canTransitionTo(OrderStatus::Active);    // true
+$current->canTransitionTo(OrderStatus::Delivered); // false
+$current->transitionTo(OrderStatus::Active);       // OrderStatus::Active
+```
+
+### Pattern 2: Feature Flag with Scoping
+
+```php
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Attributes\{EnumLabel, EnumDescription};
+
+#[EnumLabel(labels: ['newDashboard' => 'New Dashboard UI', 'darkMode' => 'Dark Mode'])]
+#[EnumDescription(descriptions: ['newDashboard' => 'Enable the redesigned dashboard', 'darkMode' => 'Enable dark theme'])]
+enum FeatureFlag: string
+{
+    use HasEnumMetadata;
+
+    case NewDashboard = 'newDashboard';
+    case DarkMode     = 'darkMode';
+    case ApiV2        = 'apiV2';
+    case Notifications = 'notifications';
+
+    /** Check if at least one of the given flags is enabled. */
+    public static function anyEnabled(self ...$flags): bool
+    {
+        return count(array_filter($flags, fn (self $f): bool => self::isEnabled($f))) > 0;
+    }
+
+    /** Check if all given flags are enabled. */
+    public static function allEnabled(self ...$flags): bool
+    {
+        return count(array_filter($flags, fn (self $f): bool => self::isEnabled($f))) === count($flags);
+    }
+}
+```
+
+### Pattern 3: Badge / Status Component Generation
+
+```php
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Attributes\{EnumLabel, EnumColor, EnumIcon};
+
+#[EnumLabel(labels: ['info' => 'Info', 'warning' => 'Warning', 'error' => 'Error', 'success' => 'Success'])]
+#[EnumColor(success: ['success'], danger: ['error'], warning: ['warning'], info: ['info'])]
+#[EnumIcon(default: 'heroicon-o-information-circle')]
+enum AlertType: string
+{
+    use HasEnumMetadata;
+
+    case Info    = 'info';
+    case Warning = 'warning';
+    case Error   = 'error';
+    case Success = 'success';
+
+    /** Return a Tailwind CSS class map for badge styling. */
+    public function badgeClasses(): string
+    {
+        return match ($this->color()) {
+            'success' => 'bg-green-100 text-green-800',
+            'danger'  => 'bg-red-100 text-red-800',
+            'warning' => 'bg-yellow-100 text-yellow-800',
+            'info'    => 'bg-blue-100 text-blue-800',
+            default   => 'bg-gray-100 text-gray-800',
+        };
+    }
+
+    /** Return a Blade-compatible array for a badge component. */
+    public function toBadgeArray(): array
+    {
+        return [
+            'label'    => $this->label(),
+            'color'    => $this->color(),
+            'icon'     => $this->icon(),
+            'classes'  => $this->badgeClasses(),
+        ];
+    }
+}
+```
+
+### Pattern 4: Database-Backed Select with Persistent Cache
+
+```php
+// In a migration:
+// $table->enum('status', array_column(UserStatus::cases(), 'value'))->default('pending');
+
+// In a model:
+protected $casts = [
+    'status' => EnumCast::class,  // or just UserStatus::class in Laravel 13+
+];
+
+// In a controller:
+public function index(): JsonResponse
+{
+    // forSelect() returns [['value' => 'active', 'label' => 'Active User'], ...]
+    return response()->json([
+        'users'  => UserResource::collection(User::all()),
+        'statuses' => UserStatus::forSelect(),
+    ]);
+}
+```
+
+### Pattern 5: Enum as Event Type Discriminator
+
+```php
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\Attributes\{EnumLabel, EnumDescription};
+
+#[EnumLabel(labels: ['userCreated' => 'User Created', 'orderPlaced' => 'Order Placed'])]
+#[EnumDescription(descriptions: ['userCreated' => 'A new user registered', 'orderPlaced' => 'A new order was submitted'])]
+enum EventType: string
+{
+    use HasEnumMetadata;
+
+    case UserCreated  = 'userCreated';
+    case OrderPlaced  = 'orderPlaced';
+    case PaymentReceived = 'paymentReceived';
+
+    /** Dispatch a domain event based on this type. */
+    public function dispatch(array $payload): void
+    {
+        $handler = match ($this) {
+            self::UserCreated    => HandleUserCreated::class,
+            self::OrderPlaced    => HandleOrderPlaced::class,
+            self::PaymentReceived => HandlePaymentReceived::class,
+        };
+
+        event(new $handler($payload));
+    }
+}
+```
+
+### Pattern 6: Comparison Methods for Business Logic Guards
+
+```php
+enum InvoiceStatus: string
+{
+    use HasEnumMetadata;
+
+    case Draft     = 'draft';
+    case Sent      = 'sent';
+    case Paid      = 'paid';
+    case Overdue   = 'overdue';
+
+    public function canBeEdited(): bool
+    {
+        return $this->is(self::Draft);
+    }
+
+    public function canBeSent(): bool
+    {
+        return $this->is(self::Draft);
+    }
+
+    public function isTerminal(): bool
+    {
+        return $this->in([self::Paid, self::Overdue]);
+    }
+
+    public function isPastDue(): bool
+    {
+        return $this->isNot(self::Draft) && $this->isNot(self::Paid);
+    }
+}
 ```
 
 ## Troubleshooting
