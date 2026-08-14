@@ -28,7 +28,10 @@ use Illuminate\Support\Facades\Facade;
  * @method static list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}> forApi(string $enumClass) Generate full API metadata for an enum class.
  * @method static \UnitEnum|null tryFromLabel(string $enumClass, string $label) Resolve an enum case by its label (case-insensitive).
  * @method static \UnitEnum|null tryFromName(string $enumClass, string $name) Resolve an enum case by its name.
+ * @method static \UnitEnum fromName(string $enumClass, string $name) Resolve an enum case by its name (throws on failure).
  * @method static bool hasCase(string $enumClass, string $name) Check if a case name exists on the enum.
+ * @method static list<string|int> values(string $enumClass) Get all backed values or case names for an enum class.
+ * @method static list<string> labels(string $enumClass) Get all labels for every enum case.
  */
 final class Enum extends Facade
 {

@@ -151,7 +151,10 @@ Enum::forSelect(UserStatus::class);
 Enum::forApi(UserStatus::class);
 Enum::tryFromLabel(UserStatus::class, 'Active User');
 Enum::tryFromName(UserStatus::class, 'ACTIVE');
+Enum::fromName(UserStatus::class, 'ACTIVE');    // throws on failure
 Enum::hasCase(UserStatus::class, 'ACTIVE');
+Enum::values(UserStatus::class);                // ['active', 'inactive', ...]
+Enum::labels(UserStatus::class);                // ['Active User', 'Inactive', ...]
 
 // ── CLI ─────────────────────────────────────────────────────
 php artisan zeroboiler:enum-inspect "App\Enums\UserStatus"
@@ -822,7 +825,10 @@ Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
 | `Enum::forApi(string)` | Generate full API metadata |
 | `Enum::tryFromLabel(string, string)` | Resolve by label (case-insensitive) |
 | `Enum::tryFromName(string, string)` | Resolve by case name |
+| `Enum::fromName(string, string)` | Resolve by case name (throws `InvalidEnumException`) |
 | `Enum::hasCase(string, string)` | Check if a case name exists |
+| `Enum::values(string)` | Get all backed values or case names |
+| `Enum::labels(string)` | Get all human-readable labels |
 
 ### Exception Hierarchy
 
