@@ -128,6 +128,10 @@ it('supports notIn() group exclusion with string names', function () {
     expect({$shortName}::{$firstCase}->notIn(['{$firstCase}']))->toBeFalse();
 });
 
+it('supports notIn() with mixed instances and strings', function () {
+    expect({$shortName}::{$firstCase}->notIn([{$shortName}::{$secondCase}, '{$firstCase}']))->toBeFalse();
+});
+
 it('supports tryFromLabel reverse lookup', function () {
     \\\$case = {$shortName}::tryFromLabel({$shortName}::{$firstCase}->label());
     expect(\\\$case)->toBeInstanceOf({$shortName}::class);

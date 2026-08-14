@@ -328,6 +328,24 @@ Colors default to `'secondary'` and icons/descriptions default to `null` when no
 - **CLI tools** — `zeroboiler:enum-test`, `zeroboiler:enum-inspect`
 - **Singleton cache** — TTL-based metadata cache with flush/reset support
 
+## PHP 8.5 Features
+
+This package leverages modern PHP 8.5 features for maximum type safety and
+developer experience:
+
+| Feature | Where Used |
+|---|---|
+| `readonly` classes | `EnumManager`, `EnumRule` |
+| `readonly` promoted properties | All 8 attribute classes, `EnumCast`, `EnumRule` |
+| `#[\Override]` attribute | `EnumCast::get()`, `EnumCast::set()`, `EnumRule::validate()`, `InvalidEnumException::__toString()`, `EnumsServiceProvider::register()`, `EnumsServiceProvider::boot()`, `Enum` facade |
+| `never` return type | `EnumCache::__clone()`, `EnumCache::__wakeup()` |
+| Named arguments | `EnumRule::for()`, `EnumRule::nullable()` |
+| `match` expressions | `EnumMetadataResolver::buildMetadata()` |
+| `static` return types | `HasEnumMetadata::tryFromName()`, `HasEnumMetadata::fromName()` |
+| Constructor property promotion | All attribute classes, `EnumCast`, `EnumRule` |
+| `BackedEnum` / `UnitEnum` type checks | `HasEnumMetadata`, `EnumMetadataResolver`, `EnumRule` |
+| `get_debug_type()` | `EnumCast::set()`, `InvalidEnumException::value()` |
+
 ## Usage
 
 ### String-Backed Enum Example
