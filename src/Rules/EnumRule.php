@@ -81,9 +81,10 @@ final readonly class EnumRule implements ValidationRule
      *
      * @param  string  $attribute  The attribute name being validated
      * @param  mixed  $value  The value to validate (int|string for backed, string for pure enums)
-     * @param  Closure(string, string|null=): PotentiallyTranslatedString  $fail
+     * @param  \Closure(string, string|null=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      *
      * @throws \ReflectionException If the enum class does not exist or is not an enum
+     * @return void
      */
     #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void

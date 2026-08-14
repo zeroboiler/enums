@@ -76,6 +76,7 @@ final class EnumCast implements CastsAttributes
      * @param  string  $key  The attribute name being cast
      * @param  BackedEnum|int|string|null  $value  The enum instance or raw value to store
      * @param  array<string, mixed>  $attributes  All model attributes
+     * @return int|string|null The backed value, raw int/string, or null
      *
      * @throws \InvalidArgumentException If value is not a valid enum, string, or int
      */

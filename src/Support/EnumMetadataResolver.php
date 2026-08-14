@@ -86,6 +86,7 @@ final class EnumMetadataResolver
      * modification or in testing scenarios.
      *
      * @param  class-string<UnitEnum>  $enumClass
+     * @return void
      */
     public static function invalidate(string $enumClass): void
     {
@@ -96,6 +97,8 @@ final class EnumMetadataResolver
      * Invalidate all cached metadata for every enum class.
      *
      * Alias for {@see EnumCache::flush()}.
+     *
+     * @return void
      */
     public static function invalidateAll(): void
     {

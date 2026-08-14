@@ -135,6 +135,7 @@ final class EnumCache
      *     colors: array<int|string, string>,
      *     icons: array<int|string, string>
      * } $metadata
+     * @return void
      */
     public function set(string $enumClass, array $metadata): void
     {
@@ -146,9 +147,10 @@ final class EnumCache
      * Set the cache TTL (seconds). Useful for testing or long-running processes.
      *
      * A TTL of 0 or less disables caching entirely — entries are always
-     * considered stale. Negative values are normalized to 0.
+     * considered stale. Negative values are normalized to 0 via `max()`.
      *
-     * @param  int  $ttl  Cache time-to-live in seconds (0 = disabled)
+     * @param  int  $ttl  Cache time-to-live in seconds (0 = disabled, negative values clamped to 0)
+     * @return void
      */
     public function setTtl(int $ttl): void
     {
@@ -166,7 +168,9 @@ final class EnumCache
     }
 
     /**
-     * Clear all cached metadata entries.
+     * Clear all cached metadata entries and their timestamps.
+     *
+     * @return void
      */
     public function clear(): void
     {
@@ -178,6 +182,7 @@ final class EnumCache
      * Clear cached metadata for a specific enum class.
      *
      * @param  string  $enumClass  The fully-qualified enum class name
+     * @return void
      */
     public function clearClass(string $enumClass): void
     {
