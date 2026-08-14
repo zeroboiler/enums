@@ -3,8 +3,8 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 225](https://img.shields.io/badge/Tests-225-brightgreen)]()|
-|[![Version 1.0.16](https://img.shields.io/badge/Version-1.0.16-green)](https://github.com/zeroboiler/enums/releases)|
+|[![Tests: 224](https://img.shields.io/badge/Tests-224-brightgreen)]()|
+|[![Version 1.0.17](https://img.shields.io/badge/Version-1.0.17-green)](https://github.com/zeroboiler/enums/releases)|
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -190,7 +190,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 **Package Statistics:**
 |- 20 source files in `src/`
-|- 225 test files in `tests/` (28 fixtures)
+|- 224 test files in `tests/` (28 fixtures)
 - PHPStan Level 9 (`phpstan.neon`)
 - 100% `declare(strict_types=1)` coverage
 - Zero `mixed` return types in public API
@@ -1486,7 +1486,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **222 test files** (222 unit tests + 28 fixtures) covering:
+The test suite includes **224 test files** (224 unit tests + 28 fixtures) covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|
