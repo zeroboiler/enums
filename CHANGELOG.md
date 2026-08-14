@@ -2,6 +2,12 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [1.0.9] - 2026-08-14
+
+### Added
+- EnumCast serialization roundtrip contract tests (get/set/serialize type safety, int/string enum roundtrips, PHPStan L9 compliance)
+- Updated test count (240 → 241)
+
 ## [1.0.8] - 2026-08-14
 
 ### Changed
