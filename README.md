@@ -3,8 +3,8 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 222](https://img.shields.io/badge/Tests-222-brightgreen)]()|
-|[![Version 1.0.15](https://img.shields.io/badge/Version-1.0.15-green)](https://github.com/zeroboiler/enums/releases)|
+|[![Tests: 225](https://img.shields.io/badge/Tests-225-brightgreen)]()|
+|[![Version 1.0.16](https://img.shields.io/badge/Version-1.0.16-green)](https://github.com/zeroboiler/enums/releases)|
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -190,7 +190,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 **Package Statistics:**
 |- 20 source files in `src/`
-|- 222 test files in `tests/` (28 fixtures)
+|- 225 test files in `tests/` (28 fixtures)
 - PHPStan Level 9 (`phpstan.neon`)
 - 100% `declare(strict_types=1)` coverage
 - Zero `mixed` return types in public API
@@ -2260,3 +2260,57 @@ This package is production-ready. Every source file passes the following checks:
 | Cache lifecycle | ✅ | TTL-based expiration, class-level invalidation (`clearClass()`), full flush (`flush()`) |
 | Octane/Swoole safe | ✅ | Listens for `octane.terminate` and `laravel.flush` events to flush cache |
 | Laravel auto-discovery | ✅ | Service provider auto-registered, facade alias `Enum` auto-registered |
+
+## Error Handling Strategy
+
+ZeroBoiler Enums uses a consistent, predictable error handling approach:
+
+| Method | Error Behavior | Exception Type |
+|--------|---------------|----------------|
+| `tryFromLabel()` | Returns `null` on failure | — (no exception) |
+| `tryFromName()` | Returns `null` on failure | — (no exception) |
+| `fromName()` | Throws on invalid name | `InvalidEnumException` |
+| `EnumRule::validate()` | Calls `$fail()` callback | Laravel `ValidationException` (via validator) |
+| `EnumCast::get()` | Returns `null` for invalid values | — (silent, per Eloquent convention) |
+| `EnumCast::set()` | Throws on type mismatch | `InvalidArgumentException` |
+| `EnumCache::get()` | Throws on missing entry | `OutOfBoundsException` |
+| `EnumMetadataResolver::resolve()` | Throws on non-enum class | `LogicException` |
+
+**Design principle:** Methods prefixed with `try` never throw — they return `null`.
+All throwing methods have a `try`-prefixed safe alternative where applicable.
+
+### Exception Hierarchy
+
+```
+Exception
+└── InvalidEnumException          # Package-specific, final
+    ├── ::value($class, $value)   # Invalid backed value
+    └── ::forName($class, $name)  # Invalid case name
+```
+
+All other errors use standard PHP exceptions (`LogicException`, `InvalidArgumentException`,
+`OutOfBoundsException`, `RuntimeException`) — no custom exception proliferation.
+
+## Concurrency & Thread Safety
+
+| Component | Thread Safety | Notes |
+|-----------|--------------|-------|
+| `EnumCache` (singleton) | **Per-process** | Each PHP-FPM worker / Octane worker has its own instance. No cross-process sharing. |
+| `EnumMetadataResolver` | **Stateless** | Pure static methods — no mutable state. Thread-safe by design. |
+| `HasEnumMetadata` trait | **Stateless** | Reads from cache, no mutation. Thread-safe. |
+| `EnumManager` | **Stateless** | `final readonly` — delegates to trait statics. Thread-safe. |
+| `EnumRule` | **Stateless** | `final readonly` — no mutable state. Thread-safe. |
+| `EnumCast` | **Stateless** | `final readonly` — no mutable state. Thread-safe. |
+
+### Octane / Swoole / RoadRunner
+
+The service provider registers event listeners for long-lived processes:
+
+```php
+// Automatic cache flush at end of each request cycle
+$events->listen('octane.terminate', fn () => EnumCache::flush());
+$events->listen('laravel.flush', fn () => EnumCache::flush());
+```
+
+This prevents stale metadata and unbounded memory growth in persistent worker processes.
+No manual configuration needed — the service provider handles it automatically.

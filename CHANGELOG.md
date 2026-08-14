@@ -2,6 +2,17 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [1.0.16] - 2026-08-14
+
+### Added
+- `EnumProductionStructuralAndContractIntegrityTest`: comprehensive contract verification covering all public API methods, comparison/lookup contract, metadata resolution priority, auto-label generation, zero-backed int edge cases, empty string values, single-case enums, EnumRule validation contract, EnumManager delegation, EnumCache lifecycle, EnumMetadataResolver invalidation, InvalidEnumException factory, EnumCast edge cases, select uniqueness, and type system compliance (~80 test methods)
+
+### Changed
+- Added **Error Handling Strategy** section to README — comprehensive table of all method error behaviors, exception types, design principles
+- Added **Concurrency & Thread Safety** section to README — per-component thread safety matrix, Octane/Swoole/RoadRunner event listener documentation
+- Updated README test count badge (222 → 225) and Package Statistics
+- Version bump to 1.0.16
+
 ## [1.0.15] - 2026-08-14
 
 ### Changed
