@@ -17,7 +17,6 @@ declare(strict_types=1);
  */
 
 use ZeroBoiler\Enums\EnumCache;
-use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 use ZeroBoiler\Enums\Tests\Fixtures\IntBackedPriority;
 use ZeroBoiler\Enums\Tests\Fixtures\PaymentStatus;
