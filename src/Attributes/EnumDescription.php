@@ -19,6 +19,11 @@ use Attribute;
  * Per-case overrides always win over class-level definitions.
  * If neither is set, {@see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::description()} returns null.
  *
+ * Resolution order (later wins):
+ * 1. Class-level `#[EnumDescription]` — bulk description mapping
+ * 2. Per-case `#[Description('...')]` — individual case override
+ * 3. Default: `null`
+ *
  * Usage (class-level):
  *   #[EnumDescription(descriptions: ['active' => 'User is active and can login'])]
  *

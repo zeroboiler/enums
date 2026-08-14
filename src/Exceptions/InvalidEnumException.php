@@ -13,6 +13,10 @@ use Exception;
 /**
  * Exception thrown when an invalid enum value or case name is used.
  *
+ * Provides named constructors for common failure modes:
+ * - {@see value()} — when a backed value doesn't match any case
+ * - {@see forName()} — when a case name doesn't exist on the enum
+ *
  * Used by {@see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::fromName()}
  * when a case name does not exist on the target enum.
  *

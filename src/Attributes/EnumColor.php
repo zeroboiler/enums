@@ -17,6 +17,12 @@ use Attribute;
  * Per-case overrides are supported via the {@see Color} attribute.
  *
  * Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
+ * Colors default to `'secondary'` when not set via any attribute.
+ *
+ * Resolution order (later wins):
+ * 1. Class-level `#[EnumColor]` — bulk color mapping for multiple cases
+ * 2. Per-case `#[Color('success')]` — individual case override
+ * 3. Default: `'secondary'`
  *
  * Usage (class-level):
  *   #[EnumColor(success: ['active', 'paid'], danger: ['banned'])]
@@ -25,6 +31,9 @@ use Attribute;
  * Per-case override:
  *   #[Color('success')]
  *   case ACTIVE = 'active';
+ *
+ * @see Color For per-case color override
+ * @see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::color() For the color accessor
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_CLASS_CONSTANT)]
 final class EnumColor
