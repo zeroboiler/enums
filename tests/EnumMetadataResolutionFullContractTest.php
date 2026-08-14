@@ -16,7 +16,7 @@ use ZeroBoiler\Enums\Attributes\Icon;
 use ZeroBoiler\Enums\Attributes\Label;
 use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
 use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
-use ZeroBoiler\Enums\Support\EnumCache;
+use ZeroBoiler\Enums\EnumCache;
 use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 use ZeroBoiler\Enums\Tests\Fixtures\CamelCaseRole;
 use ZeroBoiler\Enums\Tests\Fixtures\IntBackedPriority;
