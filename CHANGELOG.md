@@ -2,6 +2,15 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [1.0.15] - 2026-08-14
+
+### Changed
+- Fixed README test count badge (250 → 222) to match actual test file count
+- Fixed README Package Statistics (250 → 222 tests)
+- Fixed README Test Coverage section (218 → 222)
+- Full production-ready audit of all 20 source files: verified `declare(strict_types=1)`, return type declarations, typed properties, PHPStan L9 compliance, complete docblocks
+- Version bump to 1.0.15
+
 ## [1.0.14] - 2026-08-14
 
 ### Added
