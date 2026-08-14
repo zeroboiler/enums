@@ -5,6 +5,14 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-08-14
+
+### Added
+- `EnumResolverInvalidationAndCacheBoundaryTest` — tests EnumMetadataResolver::invalidate/invalidateAll lifecycle, EnumCache TTL boundary conditions (zero, negative, persistence), InvalidEnumException factory methods, singleton reset, and label generation consistency
+
+### Fixed
+- Corrected README test count badge (214→191) to match actual test file count
+
 ## [1.0.6] - 2026-08-14
 
 ### Added
