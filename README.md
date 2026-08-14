@@ -1041,6 +1041,7 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 | 1.0.0 | 2025-08 | Initial release — HasEnumMetadata trait, EnumCache, EnumRule, EnumCast, CLI commands |
 | 1.0.1 | 2025-08 | Extended test suite, fixture-driven tests, PHPStan level 9 compliance |
 | 1.0.2 | 2025-08 | README enrichment, corrected test counts, production audit pass |
+| 1.0.3 | 2025-08 | Production readiness audit, test count alignment (185 files), README accuracy fix |
 
 ## Internal Components
 
@@ -1171,7 +1172,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **184 test files** covering:
+The test suite includes **185 test files** covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|
