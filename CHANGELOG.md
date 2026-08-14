@@ -5,6 +5,15 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2026-08-14
+
+### Added
+- `EnumAttributePropertyConsistencyTest` — verifies attribute property types, naming conventions, defaults, and readonly enforcement
+- `EnumMetadataResolverInvalidationBehaviorTest` — tests cache invalidation (invalidate/invalidateAll), TTL=0 behavior, clearClass, and flush
+
+### Changed
+- Updated README test count badge (211→213) to match actual test file count
+
 ## [1.0.5] - 2025-08-14
 
 ### Changed
