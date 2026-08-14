@@ -9,27 +9,36 @@ declare(strict_types=1);
 namespace ZeroBoiler\Enums;
 
 use UnitEnum;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
 
 /**
  * Runtime enum helper — accessible via `Enum` facade or injected.
  *
  * Provides runtime access to enum metadata without direct trait usage.
+ * All methods validate that the target enum uses {@see HasEnumMetadata}
+ * and throw {@see \BadMethodCallException} if not.
  *
  *   Enum::forSelect(UserStatus::class);
  *   Enum::forApi(UserStatus::class);
  *   Enum::tryFromLabel(UserStatus::class, 'Active User');
+ *   Enum::tryFromName(UserStatus::class, 'ACTIVE');
+ *   Enum::fromName(UserStatus::class, 'ACTIVE');
+ *   Enum::hasCase(UserStatus::class, 'ACTIVE');
+ *   Enum::values(UserStatus::class);
+ *   Enum::labels(UserStatus::class);
  *
  * @see \ZeroBoiler\Enums\Facades\Enum
+ * @see \ZeroBoiler\Enums\Concerns\HasEnumMetadata For the trait that provides the actual methods
  */
 final readonly class EnumManager
 {
     /**
      * Generate select options for an enum class.
      *
-     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @return list<array{value: int|string, label: string}>
      *
-     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ReflectionException If the enum class does not exist
      */
     public function forSelect(string $enumClass): array
@@ -48,10 +57,10 @@ final readonly class EnumManager
     /**
      * Generate full API metadata for an enum class.
      *
-     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @return list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}>
      *
-     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ReflectionException If the enum class does not exist
      */
     public function forApi(string $enumClass): array
@@ -70,11 +79,11 @@ final readonly class EnumManager
     /**
      * Resolve an enum case by its human-readable label (case-insensitive).
      *
-     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @param  string  $label  The label to search for (case-insensitive)
      * @return \UnitEnum|null The matching case, or null if no label matches
      *
-     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ReflectionException If the enum class does not exist
      */
     public function tryFromLabel(string $enumClass, string $label): ?\UnitEnum
@@ -92,11 +101,11 @@ final readonly class EnumManager
     /**
      * Resolve a case by its enum name (e.g. 'ACTIVE' → UserStatus::ACTIVE).
      *
-     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @param  string  $name  The case name (e.g. 'ACTIVE', 'PENDING')
      * @return \UnitEnum|null The enum case, or null if not found
      *
-     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ReflectionException If the enum class does not exist
      */
     public function tryFromName(string $enumClass, string $name): ?\UnitEnum
@@ -114,11 +123,11 @@ final readonly class EnumManager
     /**
      * Check if a case with the given name exists on the enum.
      *
-     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @param  string  $name  The case name (e.g. 'ACTIVE')
      * @return bool True if the case exists, false otherwise
      *
-     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ReflectionException If the enum class does not exist
      */
     public function hasCase(string $enumClass, string $name): bool
@@ -138,11 +147,11 @@ final readonly class EnumManager
      *
      * Delegates to {@see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::fromName()}.
      *
-     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @param  string  $name  The case name (e.g. 'ACTIVE', 'PENDING')
      * @return \UnitEnum The enum case
      *
-     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ZeroBoiler\Enums\Exceptions\InvalidEnumException If no case with the given name exists
      * @throws \ReflectionException If the enum class does not exist
      */
@@ -163,10 +172,10 @@ final readonly class EnumManager
      *
      * Delegates to {@see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::values()}.
      *
-     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @return list<string|int>
      *
-     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ReflectionException If the enum class does not exist
      */
     public function values(string $enumClass): array
@@ -186,10 +195,10 @@ final readonly class EnumManager
      *
      * Delegates to {@see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::labels()}.
      *
-     * @param  class-string<\UnitEnum>  $enumClass  Must use HasEnumMetadata trait
+     * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @return list<string>
      *
-     * @throws \BadMethodCallException If the enum does not use HasEnumMetadata
+     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ReflectionException If the enum class does not exist
      */
     public function labels(string $enumClass): array
