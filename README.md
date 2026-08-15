@@ -3,8 +3,8 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 242](https://img.shields.io/badge/Tests-242-brightgreen)]()
-|[![Version 1.0.28](https://img.shields.io/badge/Version-1.0.28-green)](https://github.com/zeroboiler/enums/releases)
+|[![Tests: 276](https://img.shields.io/badge/Tests-276-brightgreen)]()
+|[![Version 1.0.29](https://img.shields.io/badge/Version-1.0.29-green)](https://github.com/zeroboiler/enums/releases)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -190,7 +190,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 **Package Statistics:**
 |- 20 source files in `src/`
-|- 238 test files in `tests/` (30 fixtures)
+|- 276 test files in `tests/` (30 fixtures)
 - PHPStan Level 9 (`phpstan.neon`)
 - 100% `declare(strict_types=1)` coverage
 - Zero `mixed` return types in public API
@@ -2336,6 +2336,11 @@ This prevents stale metadata and unbounded memory growth in persistent worker pr
 No manual configuration needed — the service provider handles it automatically.
 
 ## Changelog
+
+### [1.0.29] - 2026-08-15
+
+- **Test**: Add V22 comprehensive edge-case tests — int-backed enum metadata, EnumCache TTL boundaries, EnumRule with pure enums, comparison operators, label generation edge cases, serialization prevention, singleton behavior
+- **Docs**: Fix README test count badge (242→276), package statistics (238→276), accurate file counts
 
 ### [1.0.28] - 2026-08-15
 
