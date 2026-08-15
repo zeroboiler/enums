@@ -4,7 +4,7 @@
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
 |[![Tests: 269](https://img.shields.io/badge/Tests-269-brightgreen)]()
-|[![Version 1.0.27](https://img.shields.io/badge/Version-1.0.27-green)](https://github.com/zeroboiler/enums/releases)
+|[![Version 1.0.28](https://img.shields.io/badge/Version-1.0.28-green)](https://github.com/zeroboiler/enums/releases)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -2334,3 +2334,17 @@ $events->listen('laravel.flush', fn () => EnumCache::flush());
 
 This prevents stale metadata and unbounded memory growth in persistent worker processes.
 No manual configuration needed — the service provider handles it automatically.
+
+## Changelog
+
+### [1.0.28] - 2025-08-15
+
+- **Docs**: Full README audit — all usage examples verified, badge counts confirmed, type system docs enriched
+- **Quality**: Manual PHPStan Level 9 compliance audit — no mixed types, strict comparisons, full return type coverage
+- **Docs**: Production Readiness Checklist and Error Handling Strategy sections validated
+
+### [1.0.27] - 2025-08-01
+
+- **Feature**: `EnumIcon` per-case icon map support via `icons` parameter
+- **Feature**: `EnumLabel`, `EnumDescription`, `EnumIcon` dual-target (class + case) support
+- **Refactor**: Metadata resolution pipeline documented with priority chain diagram
