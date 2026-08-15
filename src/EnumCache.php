@@ -15,6 +15,10 @@ namespace ZeroBoiler\Enums;
  * This is a singleton that caches metadata per enum class with TTL-based
  * expiration to handle long-running processes gracefully.
  *
+ * Not `readonly` because it holds mutable cache entries, TTL configuration,
+ * and static singleton state. Compare with {@see EnumManager} which IS
+ * `final readonly` because it is entirely stateless.
+ *
  * Thread safety: Not thread-safe. In multi-threaded Swoole/Octane environments,
  * each worker process has its own singleton instance.
  *

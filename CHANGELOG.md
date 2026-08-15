@@ -2,6 +2,11 @@
 
 All notable changes to the ZeroBoiler Enums package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- Fixed README test count badge (269 → 238) and package statistics to match actual test file count
+
 ## [1.0.18] - 2026-08-14
 
 ### Changed
