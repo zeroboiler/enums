@@ -63,6 +63,29 @@ final class EnumCache
     }
 
     /**
+     * Prevent serialization via serialize().
+     *
+     * PHP 8.1+ uses __serialize()/__unserialize() instead of __sleep()/__wakeup()
+     * when they are defined. Since this is a singleton, serialization must be blocked.
+     *
+     * @throws \RuntimeException Always
+     */
+    public function __serialize(): never
+    {
+        throw new \RuntimeException('EnumCache is a singleton and cannot be serialized.');
+    }
+
+    /**
+     * Prevent unserialization via unserialize().
+     *
+     * @throws \RuntimeException Always
+     */
+    public function __unserialize(array $data): never
+    {
+        throw new \RuntimeException('EnumCache is a singleton and cannot be unserialized.');
+    }
+
+    /**
      * Get the singleton cache instance.
      *
      * Thread safety: Each process (PHP-FPM worker, Octane worker) gets its own
