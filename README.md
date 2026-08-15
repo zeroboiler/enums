@@ -730,10 +730,10 @@ Return value
 |-------------|---------------|-------------------|---------------------|------------------|
 | **String** | `enum X: string` | `list<string>` | Backed value (string) | `tryFrom('active')` |
 | **Int** | `enum X: int` | `list<int>` | Backed value (int) | `tryFrom(1)` |
-| **None** (pure) | `enum X` | `list<string>` (case names) | Case name (string) | Not available |
+| **None** (pure) | `enum X` | `list<string>` (case names) | Case name (string) | N/A (use `tryFromName`) |
 
-> **Note:** Pure enums do not support `tryFrom()` or `tryFromLabel()` by backed value.
-> Use `tryFromName()` or `fromName()` instead.
+> **Note:** Pure enums do not support PHP's native `tryFrom()` (it requires a backed value).
+> Use `tryFromName()`, `fromName()`, or `tryFromLabel()` instead — all work with case names or labels.
 
 ### Color Values
 

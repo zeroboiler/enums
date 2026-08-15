@@ -198,6 +198,7 @@ PHP;
 declare(strict_types=1);
 
 use {$enumClass};
+use UnitEnum;
 use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 
 describe('{$shortName} enum', function () {
