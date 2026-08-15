@@ -1506,7 +1506,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **236 test files** (235 unit tests + 30 fixtures) covering:
+The test suite includes **236 test files** (234 unit tests + Pest.php + bootstrap.php) covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|
