@@ -157,7 +157,7 @@ describe('Enum V16 — Structural Safety And Cross-Type Contracts', function () 
 
             expect(OrderStatus::tryFromLabel(strtoupper($label)))->not->toBeNull();
             expect(OrderStatus::tryFromLabel(strtolower($label)))->not->toBeNull();
-            expect(OrderStatus::tryFromLabel(ucfirst(strtolower($label)))))->not->toBeNull();
+            expect(OrderStatus::tryFromLabel(ucfirst(strtolower($label))))->not->toBeNull();
         });
 
         it('tryFromName returns null for empty string', function () {
