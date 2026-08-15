@@ -132,6 +132,14 @@ it('supports notIn() with mixed instances and strings', function () {
     expect({$shortName}::{$firstCase}->notIn([{$shortName}::{$secondCase}, '{$firstCase}']))->toBeFalse();
 });
 
+it('notIn() returns true when case is absent from all given options', function () {
+    expect({$shortName}::{$firstCase}->notIn(['{$secondCase}']))->toBeTrue();
+});
+
+it('fromName() rejects case-insensitive name lookup', function () {
+    expect(fn () => {$shortName}::fromName(strtolower('{$firstCase}'))->toThrow(InvalidEnumException::class);
+});
+
 it('supports tryFromLabel reverse lookup', function () {
     \\\$case = {$shortName}::tryFromLabel({$shortName}::{$firstCase}->label());
     expect(\\\$case)->toBeInstanceOf({$shortName}::class);
