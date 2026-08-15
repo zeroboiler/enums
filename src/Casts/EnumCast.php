@@ -20,6 +20,9 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
  *       'status' => UserStatus::class,  // works automatically
  *   ];
  *
+ * @see \ZeroBoiler\Enums\EnumsServiceProvider For auto-detection setup
+ * @see \ZeroBoiler\Enums\Rules\EnumRule For validation-side enum enforcement
+ *
  * @template T of \\BackedEnum
  *
  * @implements CastsAttributes<T|null, int|string|null>

@@ -78,6 +78,11 @@ final class EnumCache
     /**
      * Prevent unserialization via unserialize().
      *
+     * The `$data` parameter is required by the PHP serialization protocol
+     * but intentionally unused — this method always throws.
+     *
+     * @param  array<string, mixed>  $data  Serialized data (ignored)
+     *
      * @throws \RuntimeException Always
      */
     public function __unserialize(array $data): never

@@ -50,7 +50,6 @@ final readonly class EnumManager
         }
 
         /** @var class-string<\UnitEnum> $enumClass */
-        /** @var list<array{value: int|string, label: string}> */
         return $enumClass::forSelect();
     }
 
@@ -72,7 +71,6 @@ final readonly class EnumManager
         }
 
         /** @var class-string<\UnitEnum> $enumClass */
-        /** @var list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}> */
         return $enumClass::forApi();
     }
 
