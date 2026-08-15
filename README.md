@@ -1352,19 +1352,19 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 
 | Version | Date | Highlights |
 |---------|------|------------|
-| 1.0.0 | 2025-08 | Initial release — HasEnumMetadata trait, EnumCache, EnumRule, EnumCast, CLI commands |
-| 1.0.1 | 2025-08 | Extended test suite, fixture-driven tests, PHPStan level 9 compliance |
-| 1.0.2 | 2025-08 | README enrichment, corrected test counts, production audit pass |
-| 1.0.4 | 2025-08-14 | Test count update (208 files), new facade contract tests, README accuracy fix |
-| 1.0.5 | 2025-08-14 | CHANGELOG.md added, README test count accuracy, full source audit — production ready |
-| 1.0.6 | 2025-08-14 | Test count update (224 files), badge accuracy, README documentation pass |
-| 1.0.8 | 2025-08-14 | Full metadata resolution contract tests (240 files), README accuracy |
-| 1.0.9 | 2025-08-14 | Test count badge fix, version bump, production readiness audit |
-| 1.0.10 | 2025-08-14 | EnumCache TTL/singleton edge-case tests, EnumRule type mismatch coverage |
-| 1.0.11 | 2025-08-14 | Test count badge fix, version bump |
-| 1.0.12 | 2025-08-14 | Production readiness V7 test (full attribute resolution, cache lifecycle, exception factory, attribute contracts, EnumRule), version bump |
-| 1.0.13-17 | 2025-08-14 | README documentation pass, edge-case tests, badge accuracy, structural compliance |
-| 1.0.18 | 2025-08-14 | Full source audit — all 20 source files verified production-ready (strict types, return types, docblocks, typed properties, PHPStan L9 compliance), version bump |
+| 1.0.0 | 2026-08 | Initial release — HasEnumMetadata trait, EnumCache, EnumRule, EnumCast, CLI commands |
+| 1.0.1 | 2026-08 | Extended test suite, fixture-driven tests, PHPStan level 9 compliance |
+| 1.0.2 | 2026-08 | README enrichment, corrected test counts, production audit pass |
+| 1.0.4 | 2026-08-14 | Test count update (208 files), new facade contract tests, README accuracy fix |
+| 1.0.5 | 2026-08-14 | CHANGELOG.md added, README test count accuracy, full source audit — production ready |
+| 1.0.6 | 2026-08-14 | Test count update (224 files), badge accuracy, README documentation pass |
+| 1.0.8 | 2026-08-14 | Full metadata resolution contract tests (240 files), README accuracy |
+| 1.0.9 | 2026-08-14 | Test count badge fix, version bump, production readiness audit |
+| 1.0.10 | 2026-08-14 | EnumCache TTL/singleton edge-case tests, EnumRule type mismatch coverage |
+| 1.0.11 | 2026-08-14 | Test count badge fix, version bump |
+| 1.0.12 | 2026-08-14 | Production readiness V7 test (full attribute resolution, cache lifecycle, exception factory, attribute contracts, EnumRule), version bump |
+| 1.0.13-17 | 2026-08-14 | README documentation pass, edge-case tests, badge accuracy, structural compliance |
+| 1.0.18 | 2026-08-14 | Full source audit — all 20 source files verified production-ready (strict types, return types, docblocks, typed properties, PHPStan L9 compliance), version bump |
 
 ## Internal Components
 
@@ -2337,13 +2337,13 @@ No manual configuration needed — the service provider handles it automatically
 
 ## Changelog
 
-### [1.0.28] - 2025-08-15
+### [1.0.28] - 2026-08-15
 
 - **Docs**: Full README audit — all usage examples verified, badge counts confirmed, type system docs enriched
 - **Quality**: Manual PHPStan Level 9 compliance audit — no mixed types, strict comparisons, full return type coverage
 - **Docs**: Production Readiness Checklist and Error Handling Strategy sections validated
 
-### [1.0.27] - 2025-08-01
+### [1.0.27] - 2026-08-01
 
 - **Feature**: `EnumIcon` per-case icon map support via `icons` parameter
 - **Feature**: `EnumLabel`, `EnumDescription`, `EnumIcon` dual-target (class + case) support
