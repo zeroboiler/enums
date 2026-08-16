@@ -3,8 +3,8 @@
 |[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 |[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 |[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 349](https://img.shields.io/badge/Tests-349-brightgreen)]()
-|[![Version 1.0.56](https://img.shields.io/badge/Version-1.0.56-green)](https://github.com/zeroboiler/enums/releases)
+|[![Tests: 269](https://img.shields.io/badge/Tests-269-brightgreen)]()
+|[![Version 1.0.57](https://img.shields.io/badge/Version-1.0.57-green)](https://github.com/zeroboiler/enums/releases)
 |[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -132,6 +132,9 @@ $status->in(['ACTIVE', 'INACTIVE']); // true
 // ── Group Exclusion ──────────────────────────────────
 $status->notIn(['BANNED', 'SUSPENDED']); // true
 
+// ── Value Access ────────────────────────────────────
+$status->toValue();           // 'active' (backed value) or 'ACTIVE' (pure enum name)
+
 // ── Lookup ────────────────────────────────────────────────
 UserStatus::tryFromLabel('Active User');  // UserStatus::ACTIVE
 UserStatus::tryFromName('ACTIVE');       // UserStatus::ACTIVE
@@ -190,7 +193,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 | Package Statistics: |
 | - 20 source files in `src/` |
-| - 298 test files in `tests/` (30 fixtures) |
+| - 269 test files in `tests/` (30 fixtures) |
 | - PHPStan Level 9 (`phpstan.neon`) |
 | - 100% `declare(strict_types=1)` coverage |
 | - Zero `mixed` return types in public API |

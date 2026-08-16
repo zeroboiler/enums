@@ -317,6 +317,26 @@ trait HasEnumMetadata
     }
 
     /**
+     * Get the backed value for backed enums, or the case name for pure enums.
+     *
+     * A convenience accessor that normalizes access across all three PHP enum types:
+     * - String-backed: returns the string value (e.g. 'active')
+     * - Int-backed: returns the int value (e.g. 1)
+     * - Pure enum: returns the case name (e.g. 'ACTIVE')
+     *
+     * Useful when you need the storable/serializable representation without
+     * checking instanceof BackedEnum first:
+     *
+     *   $value = $status->toValue();  // 'active' or 'ACTIVE' depending on backing
+     *
+     * @return int|string
+     */
+    public function toValue(): int|string
+    {
+        return $this instanceof BackedEnum ? $this->value : $this->name;
+    }
+
+    /**
      * SCREAMING_SNAKE_CASE → Title Case
      * camelCase → Title Case
      */

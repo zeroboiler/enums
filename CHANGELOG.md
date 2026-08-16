@@ -4,8 +4,12 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 
 ## [Unreleased]
 
+### Added
+- `HasEnumMetadata::toValue()` — convenience accessor that returns the backed value for backed enums or the case name for pure enums, normalizing access across all three PHP enum types without instanceof checks
+
 ### Changed
-- Bumped version to 1.0.52, updated README test count badge (266 → 267)
+- Updated README test count badge (349 → 269) to match actual test file count
+- Bumped version to 1.0.57
 
 ### Added
 - `EnumV37PhpStanLevel9StrictTypeSafetyAuditTest` — comprehensive PHPStan L9 strict type safety audit covering: return type strictness (label/color/icon/description/values/labels/forSelect/forApi), strict comparison semantics (is/isNot/in/notIn edge cases with empty arrays and negation), lookup type strictness (tryFromLabel/tryFromName/fromName/hasCase case sensitivity), EnumCache singleton behavior (setTtl clamping, debugInfo shape, serialization prevention), EnumRule type safety (nullable instance creation, non-existent enum class handling), EnumManager delegation type safety (structural equality, BadMethodCallException for non-enum), EnumCast type strictness (get/set/serialize return types, mismatched enum rejection), cross-type enum consistency (all fixture enums, zero-backed, single case), and metadata resolution priority (~70 test methods)
