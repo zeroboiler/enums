@@ -4,6 +4,10 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 
 ## [Unreleased]
 
+### Changed
+- Fixed README test count badge (295 → 266), version badge (1.0.49 → 1.0.50), and package statistics to match actual test file count
+- Bumped version to 1.0.50
+
 ### Added
 - `EnumCache::__debugInfo()` — structured debug output hiding internal cache state (shows TTL, class count only)
 - `EnumCache` public `__clone()` visibility fix (PHP magic methods require public visibility)
