@@ -49,11 +49,31 @@ final class EnumCache
     /**
      * Prevent cloning of the singleton instance.
      *
+     * Public visibility is required for PHP magic methods.
+     * The method always throws to enforce singleton semantics.
+     *
      * @throws \RuntimeException Always
      */
-    private function __clone(): never
+    public function __clone(): never
     {
         throw new \RuntimeException('EnumCache is a singleton and cannot be cloned.');
+    }
+
+    /**
+     * Get a human-readable debug output for var_dump/print_r.
+     *
+     * Hides internal cache state and shows only TTL and class count.
+     * Used by var_dump() and debuggers for cleaner output.
+     *
+     * @return array{ttl: int, cachedClasses: int, timestampCount: int}
+     */
+    public function __debugInfo(): array
+    {
+        return [
+            'ttl' => $this->ttl,
+            'cachedClasses' => count($this->cache),
+            'timestampCount' => count($this->cacheTimestamps),
+        ];
     }
 
     /**
