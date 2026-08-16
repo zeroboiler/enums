@@ -5,8 +5,16 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 ## [Unreleased]
 
 ### Changed
+- Bumped version to 1.0.52, updated README test count badge (266 → 267)
+
+### Added
+- `EnumV37PhpStanLevel9StrictTypeSafetyAuditTest` — comprehensive PHPStan L9 strict type safety audit covering: return type strictness (label/color/icon/description/values/labels/forSelect/forApi), strict comparison semantics (is/isNot/in/notIn edge cases with empty arrays and negation), lookup type strictness (tryFromLabel/tryFromName/fromName/hasCase case sensitivity), EnumCache singleton behavior (setTtl clamping, debugInfo shape, serialization prevention), EnumRule type safety (nullable instance creation, non-existent enum class handling), EnumManager delegation type safety (structural equality, BadMethodCallException for non-enum), EnumCast type strictness (get/set/serialize return types, mismatched enum rejection), cross-type enum consistency (all fixture enums, zero-backed, single case), and metadata resolution priority (~70 test methods)
+
+## [1.0.51] - 2026-08-15
+
+### Added
+- Type Safety Guarantees section in README
 - Fixed README test count badge (295 → 266), version badge (1.0.49 → 1.0.50), and package statistics to match actual test file count
-- Bumped version to 1.0.50
 
 ### Added
 - `EnumCache::__debugInfo()` — structured debug output hiding internal cache state (shows TTL, class count only)

@@ -3,7 +3,7 @@
     "description": "Zero-boilerplate smart enum system with attribute-based metadata, auto-casting, validation and serialization for Laravel",
     "type": "library",
     "license": "proprietary",
-    "version": "1.0.51",
+    "version": "1.0.52",
     "keywords": ["laravel", "enum", "php-enum", "metadata", "attributes", "validation", "eloquent", "zeroboiler"],
     "homepage": "https://github.com/zeroboiler/enums",
     "support": {
