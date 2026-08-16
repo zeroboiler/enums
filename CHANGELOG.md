@@ -5,15 +5,14 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 ## [Unreleased]
 
 ### Added
-- `EnumV25FinalProductionHardeningStructuralAuditTest`: comprehensive structural audit — source file strict_types verification, final class compliance, EnumManager/EnumRule readonly verification, attribute contract verification (per-case TARGET_CLASS_CONSTANT, class-level dual flags), InvalidEnumException factory contracts, EnumCache singleton lifecycle, EnumCast type safety, EnumRule validation contract, EnumsServiceProvider contract, HasEnumMetadata method completeness across 3 fixture types, cross-fixture label consistency, PHPStan L9 return type spot checks, metadata resolution priority verification, comparison method strict identity, int-backed/pure/single-case enum edge cases (~60 test methods)
+- `EnumV26ComprehensiveProductionAuditTest`: comprehensive production audit — cache lifecycle (singleton, TTL, flush, clearClass, set+get roundtrip), metadata resolver cross-class isolation and stability, HasEnumMetadata accessor consistency (all cases non-empty labels, string colors, nullable icons/descriptions, forSelect/forApi count/structure consistency, unique values), comparison methods strict identity verification (is/isNot exact negation, in/empty/notIn edge cases, mixed instances+strings), reverse lookup completeness (tryFromLabel case-insensitive, tryFromName case-sensitive, fromName exception message verification, hasCase), int-backed enum type safety (int values, forSelect/forApi int values), pure enum type safety (case names, all metadata accessors), EnumCast serialization contract (get null/value/invalid, set enum/raw/null/wrong-type/invalid, serialize enum/raw/null), EnumRule validation contract (string-backed, int-backed type checking, nullable/non-nullable null handling, pure enum case name validation, error message with allowed values), EnumManager delegation (all 8 methods), final/readonly verification, InvalidEnumException factory methods, class-level attribute override priority, EnumsServiceProvider structural contract (~100 test methods)
+- `DtoV26ComprehensiveProductionAuditTest`: comprehensive production audit — DTO hydration/serialization roundtrip (fromArray→toArray, with validation disabled, equals, isEmpty/isNotEmpty), serialization methods (toJson, jsonSerialize, toArray hidden exclusion, allValues inclusion, only/except field filtering), fromJson and partial methods (valid JSON, invalid JSON, sequential array rejection, fromPartialArray, with immutable), DtoCollection operations (make, push, append, first, last, map, filter, merge, toArray, jsonSerialize, clone protection, ArrayAccess CRUD, foreach iteration, pluck, items), DTOCast serialization (get null/JSON/invalid, set DTO/array/null/unsupported, serialize DTO/null), DTOManager delegation (make, rules, rulesFor, validate, fromPartialArray), metadata cache management, DTOException contract, interface compliance verification, final class and readonly verification, validation attribute contract completeness, metadata-only attribute verification (~100 test methods)
 
 ### Changed
-- Fixed README test count badge (246 → 276) and version (1.0.31 → 1.0.32)
-- Version bump to 1.0.32
-
-### Fixed
-- Fixed README version history dates (2025 → 2026) across changelog, version history table, and release notes
-- Full production audit: All 20 source files verified for `declare(strict_types=1)`, `final class`, complete return type declarations, comprehensive docblocks, typed properties, PHPStan Level 9 compliance, strict comparisons, `#[Override]` attributes on interface implementations
+- Fixed README test count badge (249 → 282) and version (1.0.33 → 1.0.34) [enums]
+- Fixed README test count badge (274 → 318) and version (1.1.31 → 1.1.32) [dto]
+- Version bump to 1.0.34 [enums]
+- Version bump to 1.1.32 [dto]
 
 ## [1.0.18] - 2026-08-14
 
