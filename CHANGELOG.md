@@ -4,6 +4,13 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 
 ## [Unreleased]
 
+### Added
+- `EnumV25FinalProductionHardeningStructuralAuditTest`: comprehensive structural audit — source file strict_types verification, final class compliance, EnumManager/EnumRule readonly verification, attribute contract verification (per-case TARGET_CLASS_CONSTANT, class-level dual flags), InvalidEnumException factory contracts, EnumCache singleton lifecycle, EnumCast type safety, EnumRule validation contract, EnumsServiceProvider contract, HasEnumMetadata method completeness across 3 fixture types, cross-fixture label consistency, PHPStan L9 return type spot checks, metadata resolution priority verification, comparison method strict identity, int-backed/pure/single-case enum edge cases (~60 test methods)
+
+### Changed
+- Fixed README test count badge (246 → 276) and version (1.0.31 → 1.0.32)
+- Version bump to 1.0.32
+
 ### Fixed
 - Fixed README version history dates (2025 → 2026) across changelog, version history table, and release notes
 - Full production audit: All 20 source files verified for `declare(strict_types=1)`, `final class`, complete return type declarations, comprehensive docblocks, typed properties, PHPStan Level 9 compliance, strict comparisons, `#[Override]` attributes on interface implementations
