@@ -4,7 +4,7 @@
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
 |[![Tests: 266](https://img.shields.io/badge/Tests-266-brightgreen)]()
-||||||||||[![Version 1.0.50](https://img.shields.io/badge/Version-1.0.50-green)](https://github.com/zeroboiler/enums/releases)
+||||||||||[![Version 1.0.51](https://img.shields.io/badge/Version-1.0.51-green)](https://github.com/zeroboiler/enums/releases)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -2339,7 +2339,58 @@ $events->listen('laravel.flush', fn () => EnumCache::flush());
 This prevents stale metadata and unbounded memory growth in persistent worker processes.
 No manual configuration needed — the service provider handles it automatically.
 
+## Type Safety Guarantees
+
+ZeroBoiler Enums provides compile-time and runtime type safety guarantees at every level:
+
+### Enum Type Safety
+
+| Guarantee | Mechanism | Example |
+|-----------|-----------|---------|
+| **Case existence** | `fromName()` throws on miss | `UserStatus::fromName('UNKNOWN')` → `InvalidEnumException` |
+| **Safe lookup** | `try`-prefixed methods return null | `UserStatus::tryFromName('UNKNOWN')` → `null` |
+| **Strict identity** | `===` comparison in `is()` | `$status->is(UserStatus::ACTIVE)` — never fuzzy |
+| **Backed value safety** | `BackedEnum::tryFrom()` with type check | `EnumRule` rejects string for int-backed enums |
+| **Label immutability** | Metadata cached, attribute-driven | Labels cannot be mutated at runtime |
+
+### Code-Level Guarantees
+
+| Guarantee | Enforcement |
+|-----------|-------------|
+| No `mixed` in public API | PHPStan Level 9 strict mode |
+| All methods return typed | `string`, `?string`, `array`, `bool`, `static`, `?static` |
+| All parameters typed | `class-string<UnitEnum>`, `self\|string`, `array<static\|string>` |
+| Strict comparisons | `===` throughout (never `==`) |
+| Singleton immutability | `__clone(): never`, `__wakeup(): never` |
+| Attribute finality | All 8 attribute classes are `final` |
+| Manager statelessness | `final readonly class EnumManager` — zero mutable state |
+
+### Runtime Validation Contract
+
+```php
+// ✅ Type-safe: compiler enforces correct usage
+UserStatus::ACTIVE->label();       // string (always)
+UserStatus::ACTIVE->color();      // string (always, defaults to 'secondary')
+UserStatus::ACTIVE->icon();       // ?string (nullable, may be null)
+UserStatus::ACTIVE->description(); // ?string (nullable, may be null)
+UserStatus::ACTIVE->is(UserStatus::BANNED);   // bool (always)
+UserStatus::ACTIVE->in(['ACTIVE', 'PENDING']); // bool (always)
+
+// ✅ Type-safe: strict types prevent accidental misuse
+$status = UserStatus::ACTIVE;
+$status->is('active');    // false — case-sensitive name comparison (not backed value)
+$status->is('ACTIVE');    // true  — exact case name match
+
+// ❌ Prevented at runtime:
+UserStatus::fromName('UNKNOWN');  // throws InvalidEnumException
+EnumCache::getInstance()->get('NonExistent'); // throws OutOfBoundsException
+```
+
 ## Changelog
+
+### [1.0.51] - 2026-08-16
+
+- **Docs**: Add Type Safety Guarantees section with enum type safety, code-level guarantees, and runtime validation contract examples
 
 ### [1.0.29] - 2026-08-15
 
