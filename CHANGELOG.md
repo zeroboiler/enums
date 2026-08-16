@@ -9,10 +9,8 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 - `DtoV27SourceCodeStructuralIntegrityAuditTest`: V27 structural integrity audit — source file count verification (55+ files), `declare(strict_types=1)` enforcement, newline consistency, class/interface structure (DataTransferObject abstract/4 interfaces, DtoCollection final/4 interfaces, DTOManager final readonly, DTOException final/named constructors, DTOCast/ServiceProvider final), return type declaration audit (DataTransferObject, DtoCollection, DTOManager all methods), attribute class structure (37 validation attributes implement ValidationAttribute, 5 metadata attributes final, Hidden no-constructor), docblock quality (@internal tags on DtoMetadataResolver/OpenApiSchemaGenerator, phpstan types), `#[\Override]` compliance (DTOCast get/set, DtoCollection 7 interface methods, DataTransferObject 5 interface methods, ServiceProvider register/boot, Facade getFacadeAccessor, DTOException __toString), type safety audit (no bare mixed returns in DTO/Manager public API), console command structure (final, handle returns int), composer.json consistency (PHP ^8.5, illuminate ^13.0, zeroboiler/value-objects ^1.0, version 1.1.33), contract interface completeness (FromRequestDTO, ValidatableDTO, ValidationAttribute) (~50 test methods)
 
 ### Changed
-- Fixed README test count badge (280 → 253) to match actual test file count
-- Version bump to 1.0.37 [enums]
-- Fixed README test count badge (316 → 277) to match actual test file count
-- Version bump to 1.1.35 [dto]
+- Updated README test count badge (253 → 285) and package statistics to match actual test file count
+- Version bump to 1.0.38 [enums]
 
 ## [1.0.18] - 2026-08-14
 
