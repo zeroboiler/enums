@@ -3,8 +3,8 @@
 |[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 |[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 |[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 298](https://img.shields.io/badge/Tests-298-brightgreen)]()
-|[![Version 1.0.55](https://img.shields.io/badge/Version-1.0.55-green)](https://github.com/zeroboiler/enums/releases)
+|[![Tests: 349](https://img.shields.io/badge/Tests-349-brightgreen)]()
+|[![Version 1.0.56](https://img.shields.io/badge/Version-1.0.56-green)](https://github.com/zeroboiler/enums/releases)
 |[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
