@@ -15,7 +15,19 @@ use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 /**
  * Smart enum trait — zero boilerplate metadata, serialization and helpers.
  *
+ * Provides a complete public API for enum metadata access, bulk generation,
+ * comparison, reverse lookup, and label generation. Works with all three
+ * PHP enum types: string-backed, int-backed, and pure enums.
+ *
  * @see EnumMetadataResolver For attribute resolution internals.
+ * @see \ZeroBoiler\Enums\Attributes\Label Per-case label override
+ * @see \ZeroBoiler\Enums\Attributes\Color Per-case color override
+ * @see \ZeroBoiler\Enums\Attributes\Icon Per-case icon override
+ * @see \ZeroBoiler\Enums\Attributes\Description Per-case description override
+ * @see \ZeroBoiler\Enums\Attributes\EnumLabel Class-level bulk label mapping
+ * @see \ZeroBoiler\Enums\Attributes\EnumColor Class-level bulk color mapping
+ * @see \ZeroBoiler\Enums\Attributes\EnumIcon Class-level default + per-value icon mapping
+ * @see \ZeroBoiler\Enums\Attributes\EnumDescription Class-level bulk description mapping
  */
 trait HasEnumMetadata
 {
@@ -142,6 +154,11 @@ trait HasEnumMetadata
      * Resolve an enum case by its human-readable label (case-insensitive).
      *
      * Iterates all cases and compares labels using strcasecmp.
+     * For backed enums, labels may differ from values (e.g. 'Active User' vs 'active').
+     * For pure enums, labels are auto-generated from case names unless overridden.
+     *
+     * @param  string  $label  The label to search for (case-insensitive)
+     * @return static|null The matching enum case, or null if no label matches
      */
     public static function tryFromLabel(string $label): ?static
     {
