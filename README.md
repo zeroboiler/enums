@@ -3,8 +3,8 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|||[![Tests: 291](https://img.shields.io/badge/Tests-291-brightgreen)]()
-||||[![Version 1.0.41](https://img.shields.io/badge/Version-1.0.41-green)](https://github.com/zeroboiler/enums/releases)
+|||[![Tests: 292](https://img.shields.io/badge/Tests-292-brightgreen)]()
+||||[![Version 1.0.42](https://img.shields.io/badge/Version-1.0.42-green)](https://github.com/zeroboiler/enums/releases)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -1368,6 +1368,7 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 | 1.0.38 | 2026-08-16 | README test count update (253 → 285), badge accuracy, version bump |
 | 1.0.39 | 2026-08-16 | Structural contract test, README test count accuracy (287 → 288), version bump |
 | 1.0.41 | 2026-08-16 | V29 full type safety & docblock audit test (attribute structure, service classes, return types, typed properties, cross-fixture consistency), README badge/stats update |
+| 1.0.42 | 2026-08-16 | V30 production behavior contract test (real-world enum scenarios: forSelect order, forApi shape, comparison consistency, int/pure/zero-backed enums, cache/EnumRule/EnumCast contracts, cross-fixture validation) |
 
 ## Internal Components
 
