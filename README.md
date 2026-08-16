@@ -1365,6 +1365,7 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 | 1.0.12 | 2026-08-14 | Production readiness V7 test (full attribute resolution, cache lifecycle, exception factory, attribute contracts, EnumRule), version bump |
 | 1.0.13-17 | 2026-08-14 | README documentation pass, edge-case tests, badge accuracy, structural compliance |
 | 1.0.18 | 2026-08-14 | Full source audit — all 20 source files verified production-ready (strict types, return types, docblocks, typed properties, PHPStan L9 compliance), version bump |
+| 1.0.38 | 2026-08-16 | README test count update (253 → 285), badge accuracy, version bump |
 
 ## Internal Components
 
