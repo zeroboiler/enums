@@ -3,8 +3,8 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|||[![Tests: 287](https://img.shields.io/badge/Tests-287-brightgreen)]()
-||||[![Version 1.0.39](https://img.shields.io/badge/Version-1.0.39-green)](https://github.com/zeroboiler/enums/releases)
+|||[![Tests: 290](https://img.shields.io/badge/Tests-290-brightgreen)]()
+||||[![Version 1.0.40](https://img.shields.io/badge/Version-1.0.40-green)](https://github.com/zeroboiler/enums/releases)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -190,7 +190,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 **Package Statistics:**
 |- 20 source files in `src/`
-|- 287 test files in `tests/` (30 fixtures)
+|- 290 test files in `tests/` (30 fixtures)
 |- PHPStan Level 9 (`phpstan.neon`)
 |- 100% `declare(strict_types=1)` coverage
 |- Zero `mixed` return types in public API
@@ -1366,6 +1366,8 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 | 1.0.13-17 | 2026-08-14 | README documentation pass, edge-case tests, badge accuracy, structural compliance |
 | 1.0.18 | 2026-08-14 | Full source audit — all 20 source files verified production-ready (strict types, return types, docblocks, typed properties, PHPStan L9 compliance), version bump |
 | 1.0.38 | 2026-08-16 | README test count update (253 → 285), badge accuracy, version bump |
+| 1.0.39 | 2026-08-16 | Structural contract test, README test count accuracy (287 → 288), version bump |
+| 1.0.40 | 2026-08-16 | V28 PHPStan L9 type safety audit + end-to-end metadata resolution tests (290 files), README accuracy |
 
 ## Internal Components
 
@@ -1507,7 +1509,7 @@ All checks must pass before merging. The package targets PHPStan level 9 with a 
 
 ### Test Coverage
 
-The test suite includes **255 test files** (253 unit tests + Pest.php + bootstrap.php) covering:
+The test suite includes **290 test files** covering:
 
 | Category | Tests | What's Covered |
 |----------|-------|----------------|

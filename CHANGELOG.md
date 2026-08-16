@@ -11,6 +11,10 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 ### Changed
 - Updated README test count badge (253 → 285) and package statistics to match actual test file count
 - Version bump to 1.0.38 [enums]
+- Updated README test count accuracy (287 → 288), version history entry, badge update
+- Version bump to 1.0.40 [enums]
+- Added EnumV28PHPStanL9StrictTypeSafetyAuditTest: strict_types enforcement, EnumManager final readonly + no mixed returns, EnumRule final readonly, EnumCache singleton enforcement, attribute class final/readonly verification, EnumCast/CastsAttributes override compliance, InvalidEnumException named constructors, HasEnumMetadata method completeness, EnumMetadataResolver static methods, composer.json consistency
+- Added EnumV28EndToEndMetadataResolutionContractTest: full metadata resolution priority (per-case → class-level → auto-generated), all accessor methods, bulk methods (forSelect/forApi/values/labels), comparison (is/isNot/in/notIn), lookup (tryFromLabel/tryFromName/fromName/hasCase), cache behavior, EnumRule validation, int-backed and pure enum support
 
 ## [1.0.18] - 2026-08-14
 
