@@ -5,8 +5,10 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 ## [Unreleased]
 
 ### Changed
-- Updated README test count badge (290 → 293), version badge (1.0.43 → 1.0.44), and package statistics to match actual test file count
-- Version bump to 1.0.44
+- Updated README test count badge (262 → 294), version badge (1.0.46 → 1.0.47), and package statistics to match actual test file count
+
+### Added
+- `EnumV33CacheSafetyAndSingletonContractTest`: V33 cache safety and singleton contract — serialization blocking (__clone/__wakeup/__serialize/__unserialize always throw RuntimeException), singleton identity (getInstance same instance, resetInstance creates fresh), cache round-trip preservation (set/get preserves structure), cache scoping (clearClass removes specific entry, flush clears all, clearClass preserves other entries), TTL boundary (TTL=0 disables caching, TTL expiry triggers re-resolution), EnumMetadataResolver cache consistency (resolve returns same reference when cached, invalidate followed by resolve produces fresh metadata), forSelect/forApi structural integrity across all 5 enum types (string-backed, int-backed, pure, single-case, zero-value), InvalidEnumException message format and Exception inheritance (~27 test methods)
 
 ### Added
 |- `EnumV30ProductionBehaviorContractTest`: V30 production behavior contract — string-backed enum real-world scenarios (forSelect order preservation, forApi metadata shape, comparison methods consistency, tryFromLabel case-insensitivity, fromName exception, hasCase case-sensitivity), int-backed enum scenarios (int values not strings, zero-valued enums, numeric string lookup), pure enum scenarios (case names as values, default color/icon/description fallbacks, single-case enum behavior), class-level attribute resolution priority (per-case overrides class-level, EnumColor/EnumIcon/EnumLabel defaults), EnumCache singleton behavior (getInstance identity, flush clears all, clearClass scoped), EnumRule validation (valid/invalid values, nullable, int-backed, type mismatch), EnumCast contract (get/set for string/int/null, serialize), cross-fixture consistency (all fixtures have label/color/forSelect/forApi, all backed enums have unique values) (~35 test methods)
