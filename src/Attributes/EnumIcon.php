@@ -27,6 +27,9 @@ use Attribute;
  * Per-case override (always wins over class-level):
  *   #[Icon('heroicon-o-check-circle')]
  *   case ACTIVE = 'active';
+ *
+ * @see Icon For per-case icon override
+ * @see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::icon() For the icon accessor
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_CLASS_CONSTANT)]
 final class EnumIcon
