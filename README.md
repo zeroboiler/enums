@@ -3,8 +3,8 @@
 |[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 |[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 |[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|![Tests: 273](https://img.shields.io/badge/Tests-273-brightgreen)]()
-[![Version 1.0.63](https://img.shields.io/badge/Version-1.0.63-green)](https://github.com/zeroboiler/enums/releases)|
+|![Tests: 275](https://img.shields.io/badge/Tests-275-brightgreen)]()
+[![Version 1.0.64](https://img.shields.io/badge/Version-1.0.64-green)](https://github.com/zeroboiler/enums/releases)|
 |[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -193,7 +193,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 | Package Statistics: |
 | - 20 source files in `src/` |
-| - 273 test files in `tests/` (30 fixtures) |
+| - 275 test files in `tests/` (30 fixtures) |
 | - PHPStan Level 9 (`phpstan.neon`) |
 | - 100% `declare(strict_types=1)` coverage |
 | - Zero `mixed` return types in public API |
@@ -2418,6 +2418,12 @@ EnumCache::getInstance()->get('NonExistent'); // throws OutOfBoundsException
 - **Docs**: Full README audit — all usage examples verified, badge counts confirmed, type system docs enriched
 - **Quality**: Manual PHPStan Level 9 compliance audit — no mixed types, strict comparisons, full return type coverage
 - **Docs**: Production Readiness Checklist and Error Handling Strategy sections validated
+
+### [1.0.64] - 2026-08-17
+
+- **Tests**: V43 production attribute contract & serialization audit (+1 test file)
+- **Fix**: DtoV42 ComprehensiveDTO fixture references (removed non-existent `isActive` property)
+- **Docs**: Fix test count badge (273→275), accurate file counts
 
 ### [1.0.27] - 2026-08-01
 
