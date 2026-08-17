@@ -1553,6 +1553,196 @@ The test suite includes **290 test files** covering:
 | **PHPStan** | `EnumPhpStanComplianceTest`, `EnumStrictComplianceTest` | No mixed types, strict comparisons |
 | **Fixtures** | `OrderStatus`, `Priority`, `UserStatus`, `TicketStatus`, etc. | Backed (string/int), pure, camelCase enums |
 
+## Real-World Integration Examples
+
+### Full Admin Dashboard Pattern
+
+```php
+// app/Enums/OrderStatus.php — Complete production enum
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Attributes\EnumDescription;
+use ZeroBoiler\Enums\Attributes\EnumIcon;
+use ZeroBoiler\Enums\Attributes\Color;
+use ZeroBoiler\Enums\Attributes\Icon;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
+#[EnumColor(
+    success: ['completed', 'delivered'],
+    warning: ['pending', 'processing', 'shipped'],
+    danger: ['cancelled', 'refunded'],
+    info: ['confirmed'],
+    secondary: ['draft'],
+)]
+#[EnumIcon(default: 'heroicon-o-shopping-bag')]
+enum OrderStatus: string
+{
+    use HasEnumMetadata;
+
+    #[Icon('heroicon-o-pencil')]
+    case DRAFT = 'draft';
+
+    #[Icon('heroicon-o-check-circle')]
+    case CONFIRMED = 'confirmed';
+
+    #[Icon('heroicon-o-clock')]
+    case PENDING = 'pending';
+
+    #[Icon('heroicon-o-arrow-path')]
+    case PROCESSING = 'processing';
+
+    #[Icon('heroicon-o-truck')]
+    case SHIPPED = 'shipped';
+
+    #[Color('success'), Icon('heroicon-o-circle-check')]
+    case DELIVERED = 'delivered';
+
+    #[Color('success'), Icon('heroicon-o-flag')]
+    case COMPLETED = 'completed';
+
+    #[Color('danger'), Icon('heroicon-o-x-circle')]
+    case CANCELLED = 'cancelled';
+
+    #[Color('danger'), Icon('heroicon-o-arrow-uturn-left')]
+    case REFUNDED = 'refunded';
+}
+
+// app/Http/Controllers/Admin/OrderController.php
+class OrderController extends Controller
+{
+    public function index(): JsonResponse
+    {
+        $orders = Order::with('user')->latest()->paginate(20);
+
+        return response()->json([
+            'orders' => OrderResource::collection($orders),
+            'status_options' => OrderStatus::forSelect(),     // for filter dropdowns
+            'status_metadata' => OrderStatus::forApi(),       // full metadata for badges
+        ]);
+    }
+
+    public function updateStatus(Request $request, Order $order): JsonResponse
+    {
+        $request->validate([
+            'status' => ['required', EnumRule::for(OrderStatus::class)],
+        ]);
+
+        $newStatus = OrderStatus::from($request->status);
+
+        // Business logic: prevent invalid transitions
+        if ($order->status === OrderStatus::CANCELLED && $newStatus->notIn([
+            OrderStatus::REFUNDED,
+        ])) {
+            return response()->json([
+                'error' => 'Cannot transition from cancelled status.',
+            ], 422);
+        }
+
+        $order->update(['status' => $newStatus]);
+
+        return response()->json([
+            'order' => $order,
+            'status_label' => $newStatus->label(),
+            'status_color' => $newStatus->color(),
+            'allowed_transitions' => OrderStatus::forSelect(),
+        ]);
+    }
+}
+
+// resources/js/components/StatusBadge.vue — Frontend usage via forApi()
+// Response: { value: 'completed', name: 'COMPLETED', label: 'Completed',
+//             color: 'success', icon: 'heroicon-o-flag', description: '...' }
+```
+
+### Feature Flags with Pure Enums
+
+```php
+// app/Enums/FeatureFlag.php — Pure enum for feature toggles
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
+enum FeatureFlag
+{
+    use HasEnumMetadata;
+
+    case NEW_DASHBOARD;
+    case BETA_API_V2;
+    case DARK_MODE;
+    case AI_SUGGESTIONS;
+}
+
+// app/Services/FeatureService.php
+class FeatureService
+{
+    public function isEnabled(FeatureFlag $flag, User $user): bool
+    {
+        $enabled = Cache::remember("feature:{$user->id}:{$flag->name}", 3600, function () use ($flag, $user) {
+            return $user->enabledFeatures()
+                ->where('flag', $flag->toValue()) // returns case name for pure enums
+                ->exists();
+        });
+
+        return $enabled;
+    }
+
+    public function getAllFlags(): array
+    {
+        // Pure enum: values() returns case names, forApi() returns full metadata
+        return FeatureFlag::forApi();
+        // [['value' => 'NEW_DASHBOARD', 'name' => 'NEW_DASHBOARD', 'label' => 'New Dashboard', ...], ...]
+    }
+}
+```
+
+### Int-Backed Priority with Auto-Generated Labels
+
+```php
+// app/Enums/TaskPriority.php
+use ZeroBoiler\Enums\Attributes\EnumColor;
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+
+#[EnumColor(
+    info: [1],
+    secondary: [2],
+    warning: [3],
+    danger: [4, 5],
+)]
+enum TaskPriority: int
+{
+    case LOW = 1;
+    case MEDIUM = 2;
+    case HIGH = 3;
+    case CRITICAL = 4;
+    case BLOCKER = 5;
+}
+
+// Usage — int-backed values() returns [1, 2, 3, 4, 5]
+TaskPriority::HIGH->label();          // 'High' (auto-generated)
+TaskPriority::HIGH->color();          // 'warning' (from EnumColor)
+TaskPriority::HIGH->toValue();        // 3 (backed int value)
+TaskPriority::forSelect();
+// [['value' => 1, 'label' => 'Low'], ['value' => 2, 'label' => 'Medium'], ...]
+
+// Comparison with int values
+$priority = TaskPriority::HIGH;
+$priority->is(TaskPriority::CRITICAL);     // false
+$priority->in([TaskPriority::HIGH, TaskPriority::CRITICAL, TaskPriority::BLOCKER]); // true
+```
+
+### Enum Facade in Blade/Inertia Contexts
+
+```php
+// In a controller — pass metadata to frontend
+public function create(): InertiaResponse
+{
+    return Inertia::render('Orders/Create', [
+        'statuses' => Enum::forApi(OrderStatus::class),
+        'priorities' => Enum::forSelect(TaskPriority::class),
+    ]);
+}
+
+// In Inertia/Vue — build a status filter dropdown
+// statuses = [{ value: 'draft', label: 'Draft', color: 'secondary', icon: '...' }, ...]
+```
+
 ## Contributing
 
 1. Fork the repository
@@ -1563,8 +1753,8 @@ The test suite includes **290 test files** covering:
 
 ### Code Standards
 
-- **PHP 8.5 syntax** — use the latest language features
-- **Strict types** — every file must have `declare(strict_types=1)`
+|- **PHP 8.5 syntax** — use the latest language features
+|- **Strict types** — every file must have `declare(strict_types=1)`
 - **PHPStan level 9** — zero errors, no baseline suppressions
 - **Docblocks** — all public methods and properties documented
 - **Typed properties** — no `mixed` types in source code
