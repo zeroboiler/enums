@@ -182,12 +182,12 @@ final readonly class EnumManager
     }
 
     /**
-     * Get all labels for every enum case.
+     * Get all labels for every enum case, in declaration order.
      *
      * Delegates to {@see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::labels()}.
      *
      * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
-     * @return list<string>
+     * @return list<string> Labels in enum case declaration order
      *
      * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      */

@@ -277,6 +277,7 @@ final class EnumCache
      *           Never call this in production code or middleware.
      * @see EnumCache::clear() For production-safe single-class cache clearing
      * @see EnumCache::flush() For production-safe full cache clearing
+     * @see EnumCache::clearClass() For production-safe per-class cache clearing
      */
     public static function resetInstance(): void
     {
