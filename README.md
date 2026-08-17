@@ -3,8 +3,8 @@
 |[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 |[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 |[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 317](https://img.shields.io/badge/Tests-317-brightgreen)](tests)|
-|[![Version 1.0.70](https://img.shields.io/badge/Version-1.0.70-green)](https://github.com/zeroboiler/enums/releases)|
+| [![Tests: 318](https://img.shields.io/badge/Tests-318-brightgreen)](tests)|
+| [![Version 1.0.71](https://img.shields.io/badge/Version-1.0.71-green)](https://github.com/zeroboiler/enums/releases) |
 |[![Source: 20 files](https://img.shields.io/badge/Source-20%20files-informational)](src)|
 |[![Fixtures: 33 enums](https://img.shields.io/badge/Fixtures-33%20enums-blue)](tests/Fixtures)|
 |[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
@@ -2602,6 +2602,11 @@ EnumCache::getInstance()->get('NonExistent'); // throws OutOfBoundsException
 ```
 
 ## Changelog
+
+### [1.0.71] - 2026-08-17
+
+- **Test**: V50 final production audit — comprehensive contract verification test covering all 20 source files, type system, comparison methods, reverse lookup, cache lifecycle, EnumRule validation, EnumCast serialization, metadata resolution priority, cross-enum consistency, EnumManager delegation, exception factory methods, and toValue() normalization (+1 test file)
+- **Quality**: Manual PHPStan Level 9 compliance verification — strict types, return types, docblocks, typed properties, no mixed types confirmed
 
 ### [1.0.69] - 2026-08-17
 
