@@ -3,8 +3,8 @@
 |[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 |[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 |[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|![Tests: 278](https://img.shields.io/badge/Tests-278-brightgreen)]()
-[![Version 1.0.64](https://img.shields.io/badge/Version-1.0.64-green)](https://github.com/zeroboiler/enums/releases)|
+![Tests: 309](https://img.shields.io/badge/Tests-309-brightgreen)]()
+[![Version 1.0.65](https://img.shields.io/badge/Version-1.0.65-green)](https://github.com/zeroboiler/enums/releases)]|
 |[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -193,7 +193,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 | Package Statistics: |
 | - 20 source files in `src/` |
-| - 276 test files in `tests/` (30 fixtures) |
+| - 309 test files in `tests/` (32 fixtures) |
 | - PHPStan Level 9 (`phpstan.neon`) |
 | - 100% `declare(strict_types=1)` coverage |
 | - Zero `mixed` return types in public API |
@@ -2398,6 +2398,12 @@ EnumCache::getInstance()->get('NonExistent'); // throws OutOfBoundsException
 ```
 
 ## Changelog
+
+### [1.0.65] - 2026-08-17
+
+- **Test**: V46 label generation edge case tests — unusual case names, single-letter, underscore-heavy, camelCase auto-generation, cache TTL=0, lookup edge cases (+1 test file, +1 fixture)
+- **Fixture**: `EdgeCaseNamingEnum` — tests generateLabel() with boundary inputs (X, AB, A1, UNDER_SCORE__, TRIPLE___WORD, NUMBER_2, SINGLE, LOWER)
+- **Docs**: Fix test count badge (276→309), fixture count (30→32), version bump
 
 ### [1.0.54] - 2026-08-16
 
