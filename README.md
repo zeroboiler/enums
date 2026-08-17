@@ -3,8 +3,10 @@
 |[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 |[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 |[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 315](https://img.shields.io/badge/Tests-315-brightgreen)]()|
-|[![Version 1.0.68](https://img.shields.io/badge/Version-1.0.68-green)](https://github.com/zeroboiler/enums/releases)|
+|[![Tests: 315](https://img.shields.io/badge/Tests-315-brightgreen)](tests)|
+|[![Version 1.0.69](https://img.shields.io/badge/Version-1.0.69-green)](https://github.com/zeroboiler/enums/releases)|
+|[![Source: 20 files](https://img.shields.io/badge/Source-20%20files-informational)](src)|
+|[![Fixtures: 33 enums](https://img.shields.io/badge/Fixtures-33%20enums-blue)](tests/Fixtures)|
 |[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -1462,33 +1464,44 @@ src/
 
 ## Test Fixtures
 
-The test suite uses a set of representative enum fixtures covering all supported
+The test suite uses 33 representative enum fixtures covering all supported
 enum types and attribute combinations:
 
-| Fixture | Backing | Attributes | Tests |
-|---------|---------|------------|-------|
+| Fixture | Backing | Attributes | Purpose |
+|---------|---------|------------|---------|
 | `UserStatus` | `string` | `EnumColor`, `Label`, `Color`, `Icon`, `Description` | Full per-case + class-level attribute resolution |
 | `TicketStatus` | `string` | `EnumLabel`, `EnumDescription`, `EnumIcon` | Class-level bulk metadata (all three) |
 | `Priority` | `int` | None | Int-backed enum with auto-generated labels |
 | `IntStatusWithColor` | `int` | `EnumColor`, `Color` | Int-backed with color mapping and per-case overrides |
 | `PureFeatureFlag` | none (pure) | `Icon` (per-case) | Pure enum — values/forSelect return case names |
+| `PureSystemState` | none (pure) | None | Pure enum without any metadata attributes |
 | `CamelCaseRole` | `string` | None | camelCase → "Title Case" auto-label generation |
 | `AllClassLevelEnum` | `string` | All class-level attributes | Every class-level attribute applied at once |
 | `SingleCaseEnum` | `string` | None | Edge case: single-case enum |
+| `SingleCaseToggle` | `string` | None | Single-case toggle enum edge case |
 | `ZeroPriority` | `int` | None | Edge case: zero as a valid backed value |
+| `ZeroBackedPriority` | `int` | None | Edge case: zero as valid int-backed value (duplicate guard) |
 | `MixedAttributeStatus` | `string` | Mixed per-case attributes | Mixed attribute combinations on a single enum |
+| `MixedTicketType` | `string` | Mixed attributes | Mixed attribute patterns for ticket types |
 | `RequestState` | `string` | Various | Request lifecycle state machine pattern |
 | `OrderStatus` | `string` | `EnumLabel`, `EnumColor` | Order lifecycle with label and color metadata |
+| `OrderWorkflowStatus` | `string` | `EnumLabel`, `EnumDescription` | Workflow state transitions |
 | `PaymentStatus` | `string` | `EnumDescription`, `EnumIcon` | Payment flow with description and icon |
 | `SystemStatus` | `int` | `EnumIcon` with default | Int-backed with default icon for all cases |
 | `DetailedTicketStatus` | `string` | `Label`, `Color`, `Description`, `Icon` | Full per-case attribute coverage |
 | `IntBackedPriority` | `int` | `EnumLabel` | Int-backed with class-level label mapping |
+| `IntPriority` | `int` | None | Int-backed without metadata (label auto-gen) |
+| `NumericStatusCode` | `int` | None | Int-backed numeric code pattern |
 | `LabelMapEnum` | `string` | `EnumLabel` | Class-level label map testing |
-| `OrderWorkflowStatus` | `string` | `EnumLabel`, `EnumDescription` | Workflow state transitions |
 | `DefaultIconFeature` | `string` | `EnumIcon` with default | Default icon for all cases pattern |
 | `OverriddenIconRole` | `string` | `EnumIcon`, `Icon` per-case | Default + per-case icon override |
-| `SingleCaseToggle` | `string` | None | Single-case toggle enum edge case |
-| `ZeroBackedPriority` | `int` | None | Edge case: zero as valid int-backed value |
+| `EdgeCaseNamingEnum` | `string` | None | Unusual case names (X, AB, A1, UNDER_SCORE__) |
+| `PlainTestEnum` | `string` | None | Minimal test enum without attributes |
+| `EmptyDefaultsStatus` | `string` | Empty defaults | Class-level attributes with empty/null defaults |
+| `InventoryStatus` | `string` | Various | Inventory management status pattern |
+| `WorkflowState` | `string` | All attribute types | Comprehensive fixture with label/color/icon/description |
+| `CamelCasePriority` | `string` | None | camelCase naming in priority context |
+| `SingletonMode` | `string` | None | Singleton-style single-case enum |
 
 ```php
 // Each fixture is used in multiple test files. Example:
@@ -2399,6 +2412,12 @@ EnumCache::getInstance()->get('NonExistent'); // throws OutOfBoundsException
 ```
 
 ## Changelog
+
+### [1.0.69] - 2026-08-17
+
+- **Docs**: Enrich README — add Source/Fixtures badges, complete fixture catalog (all 33 enums documented)
+- **Docs**: Fix badge links (Tests, Source, Fixtures now point to actual directories)
+- **Quality**: Manual PHPStan Level 9 compliance audit — all 20 source files verified (strict types, return types, docblocks, typed properties, no mixed)
 
 ### [1.0.66] - 2026-08-17
 
