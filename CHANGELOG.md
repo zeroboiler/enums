@@ -5,9 +5,12 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 ## [Unreleased]
 
 ### Changed
-- Updated README test count badge (285 tests), version badge (1.0.71 → 1.0.72), and package statistics
+- Updated README test count badge (318 tests), version badge (1.0.72 → 1.0.73), and package statistics
 - Full source code audit — verified 100% `declare(strict_types=1)`, PHPStan Level 9 compliance, complete docblocks, typed properties across all 20 source files
 - Confirmed production readiness: all attributes are `final` with `readonly` promoted properties, `EnumManager`/`EnumRule` are `final readonly`, `EnumCache` singleton properly guards against clone/serialize/wakeup
+
+### Added
+- `Php85TypeSafetyAndProductionContractAuditV51Test` — comprehensive PHP 8.5 type safety audit: attribute final class verification, infrastructure class readonly checks, strict types declaration scan, return type completeness, EnumCache singleton safety (never-return on clone/wakeup/serialize), attribute target verification (per-case vs class-level), attribute readonly property verification, InvalidEnumException contract, EnumCast/EnumRule interface contracts, pure enum values/forSelect, int-backed enum values, single case enum edge cases, cross-fixture label uniqueness, toValue() normalization, EnumManager trait guard (~35 test methods)
 
 ### Added
 - Comprehensive README with per-class usage examples, type system documentation, architecture diagrams, full-stack integration patterns, and cross-package DTO examples
