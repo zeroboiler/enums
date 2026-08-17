@@ -5,10 +5,9 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 ## [Unreleased]
 
 ### Fixed
-- Corrected README test count badges (304 → 273 for enums, 339 → 297 for dto) to match actual test file counts
-
-### Changed
-- Bumped version to 1.0.63
+- Fixed README badge markdown table alignment (Tests and Version badges were misaligned causing rendering issues)
+- Corrected test count badges to match actual file counts (277 → 278 for enums, 301 → 302 for dto)
+- Bumped version to 1.0.67
 - `EnumV40AdvancedEdgeCaseAndAttributeContractTest` — comprehensive test suite covering: per-case vs class-level attribute override priority (Label/Color/Icon/Description), int-backed enum resolution, pure enum label auto-generation, comparison methods (is/isNot/in/notIn with mixed types), reverse lookups (tryFromLabel case-insensitivity, tryFromName, fromName exception, hasCase), bulk methods (forSelect/forApi/value uniqueness), EnumCache TTL/clamping/clear/flush/singleton/debugInfo, EnumMetadataResolver invalidation, EnumRule validation (nullable, backed, pure, type-mismatch), EnumCast get/set/serialize type safety, InvalidEnumException named constructors, label generation from SCREAMING_SNAKE_CASE (~60 test methods)
 
 ### Fixed
