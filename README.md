@@ -3,8 +3,8 @@
 |[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 |[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 |[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-| [![Tests: 318](https://img.shields.io/badge/Tests-318-brightgreen)](tests)|
-| [![Version 1.0.71](https://img.shields.io/badge/Version-1.0.71-green)](https://github.com/zeroboiler/enums/releases) |
+| [![Tests: 285](https://img.shields.io/badge/Tests-285-brightgreen)](tests)|
+| [![Version 1.0.72](https://img.shields.io/badge/Version-1.0.72-green)](https://github.com/zeroboiler/enums/releases) |
 |[![Source: 20 files](https://img.shields.io/badge/Source-20%20files-informational)](src)|
 |[![Fixtures: 33 enums](https://img.shields.io/badge/Fixtures-33%20enums-blue)](tests/Fixtures)|
 |[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
@@ -195,7 +195,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 | Package Statistics: |
 | - 20 source files in `src/` |
-| - 317 test files in `tests/` (33 fixtures) |
+| - 285 test files in `tests/` (33 fixtures) |
 | - PHPStan Level 9 (`phpstan.neon`) |
 | - 100% `declare(strict_types=1)` coverage |
 | - Zero `mixed` return types in public API |

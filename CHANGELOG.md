@@ -4,10 +4,13 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 
 ## [Unreleased]
 
-### Fixed
-- Fixed README badge markdown table alignment (Tests and Version badges were misaligned causing rendering issues)
-- Corrected test count badges to match actual file counts (277 → 278 for enums, 301 → 302 for dto)
-- Bumped version to 1.0.67
+### Changed
+- Updated README test count badge (285 tests), version badge (1.0.71 → 1.0.72), and package statistics
+- Full source code audit — verified 100% `declare(strict_types=1)`, PHPStan Level 9 compliance, complete docblocks, typed properties across all 20 source files
+- Confirmed production readiness: all attributes are `final` with `readonly` promoted properties, `EnumManager`/`EnumRule` are `final readonly`, `EnumCache` singleton properly guards against clone/serialize/wakeup
+
+### Added
+- Comprehensive README with per-class usage examples, type system documentation, architecture diagrams, full-stack integration patterns, and cross-package DTO examples
 - `EnumV40AdvancedEdgeCaseAndAttributeContractTest` — comprehensive test suite covering: per-case vs class-level attribute override priority (Label/Color/Icon/Description), int-backed enum resolution, pure enum label auto-generation, comparison methods (is/isNot/in/notIn with mixed types), reverse lookups (tryFromLabel case-insensitivity, tryFromName, fromName exception, hasCase), bulk methods (forSelect/forApi/value uniqueness), EnumCache TTL/clamping/clear/flush/singleton/debugInfo, EnumMetadataResolver invalidation, EnumRule validation (nullable, backed, pure, type-mismatch), EnumCast get/set/serialize type safety, InvalidEnumException named constructors, label generation from SCREAMING_SNAKE_CASE (~60 test methods)
 
 ### Fixed
