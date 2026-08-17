@@ -3,7 +3,7 @@
 |[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 |[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 |[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|![Tests: 275](https://img.shields.io/badge/Tests-275-brightgreen)]()
+|![Tests: 276](https://img.shields.io/badge/Tests-276-brightgreen)]()
 [![Version 1.0.64](https://img.shields.io/badge/Version-1.0.64-green)](https://github.com/zeroboiler/enums/releases)|
 |[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
@@ -193,7 +193,7 @@ The package auto-registers via Laravel's package discovery. No manual configurat
 
 | Package Statistics: |
 | - 20 source files in `src/` |
-| - 275 test files in `tests/` (30 fixtures) |
+| - 276 test files in `tests/` (30 fixtures) |
 | - PHPStan Level 9 (`phpstan.neon`) |
 | - 100% `declare(strict_types=1)` coverage |
 | - Zero `mixed` return types in public API |
@@ -2423,7 +2423,7 @@ EnumCache::getInstance()->get('NonExistent'); // throws OutOfBoundsException
 
 - **Tests**: V43 production attribute contract & serialization audit (+1 test file)
 - **Fix**: DtoV42 ComprehensiveDTO fixture references (removed non-existent `isActive` property)
-- **Docs**: Fix test count badge (273→275), accurate file counts
+- **Docs**: Fix test count badge (273→276), accurate file counts
 
 ### [1.0.27] - 2026-08-01
 
