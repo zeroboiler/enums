@@ -3,8 +3,8 @@
 |[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 |[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 |[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-![Tests: 308](https://img.shields.io/badge/Tests-308-brightgreen)]()
-|[![Version 1.0.65](https://img.shields.io/badge/Version-1.0.65-green)](https://github.com/zeroboiler/enums/releases)]|
+![Tests: 277](https://img.shields.io/badge/Tests-277-brightgreen)]()
+|[![Version 1.0.66](https://img.shields.io/badge/Version-1.0.66-green)](https://github.com/zeroboiler/enums/releases)]|
 |[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
 Zero-boilerplate smart enum system for Laravel — attribute-based metadata,
@@ -887,6 +887,7 @@ Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
 | `->isNot(self|string)` | `bool` | Check if this case does NOT match another |
 | `->in(array<self|string>)` | `bool` | Check if this case is in a list of cases |
 | `->notIn(array<self|string>)` | `bool` | Check if this case is NOT any of the given cases (negation of `in()`) |
+| `->toValue()` | `int|string` | Get backed value (string/int) or case name (pure enum) |
 | `::values()` | `list<string|int>` | All backed values or case names |
 | `::labels()` | `list<string>` | All labels in declaration order |
 
@@ -2398,6 +2399,12 @@ EnumCache::getInstance()->get('NonExistent'); // throws OutOfBoundsException
 ```
 
 ## Changelog
+
+### [1.0.66] - 2026-08-17
+
+- **Docs**: Fix test count badge (308→277), accurate test/fixture counts
+- **Docs**: Add `toValue()` to API Quick Reference table
+- **Docs**: Production readiness audit — all source files verified for PHP 8.5 strict types, return type declarations, docblocks, PHPStan Level 9
 
 ### [1.0.65] - 2026-08-17
 
