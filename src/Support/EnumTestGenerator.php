@@ -263,7 +263,7 @@ describe('{$shortName} enum', function () {
     });
 
     it('fromName() throws InvalidEnumException for non-existent name', function () {
-        expect(fn () => {$shortName}::fromName('NON_EXISTENT'))->toThrow(InvalidEnumException::class);
+        expect(fn () => {$shortName}::fromName('NON_EXISTENT'))->toThrow(\InvalidEnumException::class);
     });
 
     it('supports hasCase check', function () {
