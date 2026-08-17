@@ -65,13 +65,13 @@ it('has a string color for case {$caseName}', function () {
 });
 
 it('returns a string or null icon for case {$caseName}', function () {
-    \\\$icon = {$shortName}::{$caseName}->icon();
-    expect(\\\$icon)->toBeNull()->or()->toBeString();
+    \$icon = {$shortName}::{$caseName}->icon();
+    expect(\$icon)->toBeNull()->or()->toBeString();
 });
 
 it('returns a string or null description for case {$caseName}', function () {
-    \\\$desc = {$shortName}::{$caseName}->description();
-    expect(\\\$desc)->toBeNull()->or()->toBeString();
+    \$desc = {$shortName}::{$caseName}->description();
+    expect(\$desc)->toBeNull()->or()->toBeString();
 });
 
 PHP;
@@ -141,9 +141,9 @@ it('fromName() rejects case-insensitive name lookup', function () {
 });
 
 it('supports tryFromLabel reverse lookup', function () {
-    \\\$case = {$shortName}::tryFromLabel({$shortName}::{$firstCase}->label());
-    expect(\\\$case)->toBeInstanceOf({$shortName}::class);
-    expect(\\\$case?->name)->toBe('{$firstCase}');
+    \$case = {$shortName}::tryFromLabel({$shortName}::{$firstCase}->label());
+    expect(\$case)->toBeInstanceOf({$shortName}::class);
+    expect(\$case?->name)->toBe('{$firstCase}');
 });
 
 it('returns null for non-existent label in tryFromLabel', function () {
@@ -151,8 +151,8 @@ it('returns null for non-existent label in tryFromLabel', function () {
 });
 
 it('tryFromLabel lookup is case-insensitive', function () {
-    \\\$label = {$shortName}::{$firstCase}->label();
-    expect({$shortName}::tryFromLabel(strtolower(\\\$label)))->toBeInstanceOf({$shortName}::class);
+    \$label = {$shortName}::{$firstCase}->label();
+    expect({$shortName}::tryFromLabel(strtolower(\$label)))->toBeInstanceOf({$shortName}::class);
 });
 
 PHP;
@@ -164,8 +164,8 @@ PHP;
             $backingTests = <<<PHP
 
 it('values() returns int backed values', function () {
-    \\\$values = {$shortName}::values();
-    expect(\\\$values)->each->toBeInt();
+    \$values = {$shortName}::values();
+    expect(\$values)->each->toBeInt();
 });
 
 PHP;
@@ -173,8 +173,8 @@ PHP;
             $backingTests = <<<PHP
 
 it('values() returns string backed values', function () {
-    \\\$values = {$shortName}::values();
-    expect(\\\$values)->each->toBeString();
+    \$values = {$shortName}::values();
+    expect(\$values)->each->toBeString();
 });
 
 PHP;
@@ -182,8 +182,8 @@ PHP;
             $backingTests = <<<PHP
 
 it('values() returns case names for pure enum', function () {
-    \\\$values = {$shortName}::values();
-    expect(\\\$values)->toBe(array_map(fn (\\UnitEnum \\\$c): string => \\\$c->name, {$shortName}::cases()));
+    \$values = {$shortName}::values();
+    expect(\$values)->toBe(array_map(fn (\\UnitEnum \$c): string => \$c->name, {$shortName}::cases()));
 });
 
 PHP;
@@ -211,35 +211,35 @@ describe('{$shortName} enum', function () {
     });
 
     it('can generate select options', function () {
-        \\\$options = {$shortName}::forSelect();
-        expect(\\\$options)->toBeArray();
-        expect(\\\$options)->toHaveCount({$caseCount});
-        expect(\\\$options[0])->toHaveKeys(['value', 'label']);
+        \$options = {$shortName}::forSelect();
+        expect(\$options)->toBeArray();
+        expect(\$options)->toHaveCount({$caseCount});
+        expect(\$options[0])->toHaveKeys(['value', 'label']);
     });
 
     it('select option values are unique', function () {
-        \\\$values = array_column({$shortName}::forSelect(), 'value');
-        expect(\\\$values)->each->toBeUnique();
+        \$values = array_column({$shortName}::forSelect(), 'value');
+        expect(\$values)->each->toBeUnique();
     });
 
     it('select option labels are non-empty strings', function () {
-        \\\$options = {$shortName}::forSelect();
-        foreach (\\\$options as \\\$option) {
-            expect(\\\$option['label'])->toBeString()->not->toBeEmpty();
+        \$options = {$shortName}::forSelect();
+        foreach (\$options as \$option) {
+            expect(\$option['label'])->toBeString()->not->toBeEmpty();
         }
     });
 
     it('can generate API response array', function () {
-        \\\$api = {$shortName}::forApi();
-        expect(\\\$api)->toBeArray();
-        expect(\\\$api)->toHaveCount({$caseCount});
-        expect(\\\$api[0])->toHaveKeys(['value', 'name', 'label', 'description', 'color', 'icon']);
+        \$api = {$shortName}::forApi();
+        expect(\$api)->toBeArray();
+        expect(\$api)->toHaveCount({$caseCount});
+        expect(\$api[0])->toHaveKeys(['value', 'name', 'label', 'description', 'color', 'icon']);
     });
 
     it('API response color is always a string', function () {
-        \\\$api = {$shortName}::forApi();
-        foreach (\\\$api as \\\$item) {
-            expect(\\\$item['color'])->toBeString()->not->toBeEmpty();
+        \$api = {$shortName}::forApi();
+        foreach (\$api as \$item) {
+            expect(\$item['color'])->toBeString()->not->toBeEmpty();
         }
     });
 
@@ -248,9 +248,9 @@ describe('{$shortName} enum', function () {
     });
 
     it('labels() returns correct count and non-empty strings', function () {
-        \\\$labels = {$shortName}::labels();
-        expect(\\\$labels)->toHaveCount({$caseCount});
-        expect(\\\$labels)->each->toBeString()->not->toBeEmpty();
+        \$labels = {$shortName}::labels();
+        expect(\$labels)->toHaveCount({$caseCount});
+        expect(\$labels)->each->toBeString()->not->toBeEmpty();
     });
 
     it('supports tryFromName lookup', function () {
