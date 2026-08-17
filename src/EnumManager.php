@@ -39,7 +39,6 @@ final readonly class EnumManager
      * @return list<array{value: int|string, label: string}>
      *
      * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
-     * @throws \ReflectionException If the enum class does not exist
      */
     public function forSelect(string $enumClass): array
     {
@@ -60,7 +59,6 @@ final readonly class EnumManager
      * @return list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}>
      *
      * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
-     * @throws \ReflectionException If the enum class does not exist
      */
     public function forApi(string $enumClass): array
     {
@@ -82,7 +80,6 @@ final readonly class EnumManager
      * @return \UnitEnum|null The matching case, or null if no label matches
      *
      * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
-     * @throws \ReflectionException If the enum class does not exist
      */
     public function tryFromLabel(string $enumClass, string $label): ?\UnitEnum
     {
@@ -104,7 +101,6 @@ final readonly class EnumManager
      * @return \UnitEnum|null The enum case, or null if not found
      *
      * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
-     * @throws \ReflectionException If the enum class does not exist
      */
     public function tryFromName(string $enumClass, string $name): ?\UnitEnum
     {
@@ -126,7 +122,6 @@ final readonly class EnumManager
      * @return bool True if the case exists, false otherwise
      *
      * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
-     * @throws \ReflectionException If the enum class does not exist
      */
     public function hasCase(string $enumClass, string $name): bool
     {
@@ -151,7 +146,6 @@ final readonly class EnumManager
      *
      * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ZeroBoiler\Enums\Exceptions\InvalidEnumException If no case with the given name exists
-     * @throws \ReflectionException If the enum class does not exist
      */
     public function fromName(string $enumClass, string $name): \UnitEnum
     {
@@ -174,7 +168,6 @@ final readonly class EnumManager
      * @return list<string|int>
      *
      * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
-     * @throws \ReflectionException If the enum class does not exist
      */
     public function values(string $enumClass): array
     {
@@ -197,7 +190,6 @@ final readonly class EnumManager
      * @return list<string>
      *
      * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
-     * @throws \ReflectionException If the enum class does not exist
      */
     public function labels(string $enumClass): array
     {
