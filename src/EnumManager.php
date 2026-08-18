@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace ZeroBoiler\Enums;
 
+use BadMethodCallException;
 use UnitEnum;
 use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
 
@@ -16,7 +17,7 @@ use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
  *
  * Provides runtime access to enum metadata without direct trait usage.
  * All methods validate that the target enum uses {@see HasEnumMetadata}
- * and throw {@see \BadMethodCallException} if not.
+ * and throw {@see BadMethodCallException} if not.
  *
  *   Enum::forSelect(UserStatus::class);
  *   Enum::forApi(UserStatus::class);
@@ -38,12 +39,12 @@ final readonly class EnumManager
      * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @return list<array{value: int|string, label: string}>
      *
-     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
+     * @throws BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      */
     public function forSelect(string $enumClass): array
     {
         if (! method_exists($enumClass, 'forSelect')) {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
         }
@@ -58,12 +59,12 @@ final readonly class EnumManager
      * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @return list<array{value: int|string, name: string, label: string, description: ?string, color: string, icon: ?string}>
      *
-     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
+     * @throws BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      */
     public function forApi(string $enumClass): array
     {
         if (! method_exists($enumClass, 'forApi')) {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
         }
@@ -77,14 +78,14 @@ final readonly class EnumManager
      *
      * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @param  string  $label  The label to search for (case-insensitive)
-     * @return \UnitEnum|null The matching case, or null if no label matches
+     * @return UnitEnum|null The matching case, or null if no label matches
      *
-     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
+     * @throws BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      */
-    public function tryFromLabel(string $enumClass, string $label): ?\UnitEnum
+    public function tryFromLabel(string $enumClass, string $label): ?UnitEnum
     {
         if (! method_exists($enumClass, 'tryFromLabel')) {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
         }
@@ -98,14 +99,14 @@ final readonly class EnumManager
      *
      * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @param  string  $name  The case name (e.g. 'ACTIVE', 'PENDING')
-     * @return \UnitEnum|null The enum case, or null if not found
+     * @return UnitEnum|null The enum case, or null if not found
      *
-     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
+     * @throws BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      */
-    public function tryFromName(string $enumClass, string $name): ?\UnitEnum
+    public function tryFromName(string $enumClass, string $name): ?UnitEnum
     {
         if (! method_exists($enumClass, 'tryFromName')) {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
         }
@@ -121,12 +122,12 @@ final readonly class EnumManager
      * @param  string  $name  The case name (e.g. 'ACTIVE')
      * @return bool True if the case exists, false otherwise
      *
-     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
+     * @throws BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      */
     public function hasCase(string $enumClass, string $name): bool
     {
         if (! method_exists($enumClass, 'hasCase')) {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
         }
@@ -142,15 +143,15 @@ final readonly class EnumManager
      *
      * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @param  string  $name  The case name (e.g. 'ACTIVE', 'PENDING')
-     * @return \UnitEnum The enum case
+     * @return UnitEnum The enum case
      *
-     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
+     * @throws BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      * @throws \ZeroBoiler\Enums\Exceptions\InvalidEnumException If no case with the given name exists
      */
-    public function fromName(string $enumClass, string $name): \UnitEnum
+    public function fromName(string $enumClass, string $name): UnitEnum
     {
         if (! method_exists($enumClass, 'fromName')) {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
         }
@@ -167,12 +168,12 @@ final readonly class EnumManager
      * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @return list<string|int>
      *
-     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
+     * @throws BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      */
     public function values(string $enumClass): array
     {
         if (! method_exists($enumClass, 'values')) {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
         }
@@ -189,12 +190,12 @@ final readonly class EnumManager
      * @param  class-string<\UnitEnum>  $enumClass  Must use {@see HasEnumMetadata} trait
      * @return list<string> Labels in enum case declaration order
      *
-     * @throws \BadMethodCallException If the enum does not use {@see HasEnumMetadata}
+     * @throws BadMethodCallException If the enum does not use {@see HasEnumMetadata}
      */
     public function labels(string $enumClass): array
     {
         if (! method_exists($enumClass, 'labels')) {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 "[{$enumClass}] does not use HasEnumMetadata trait."
             );
         }
