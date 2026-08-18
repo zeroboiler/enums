@@ -212,7 +212,11 @@ trait HasEnumMetadata
     /**
      * Check if a case with the given name exists on this enum.
      *
+     *   UserStatus::hasCase('ACTIVE');  // true
+     *   UserStatus::hasCase('UNKNOWN'); // false
+     *
      * @param  string  $name  The case name (e.g. 'ACTIVE')
+     * @return bool True if the case exists, false otherwise
      */
     public static function hasCase(string $name): bool
     {

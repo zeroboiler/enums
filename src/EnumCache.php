@@ -224,6 +224,8 @@ final class EnumCache
      * Get the current cache TTL in seconds.
      *
      * Returns 0 when caching is disabled.
+     *
+     * @return int Current TTL in seconds (0 = disabled)
      */
     public function getTtl(): int
     {
