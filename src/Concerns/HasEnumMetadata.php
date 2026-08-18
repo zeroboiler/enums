@@ -341,8 +341,16 @@ trait HasEnumMetadata
     }
 
     /**
-     * SCREAMING_SNAKE_CASE → Title Case
-     * camelCase → Title Case
+     * Generate a human-readable label from the case name.
+     *
+     * Conversion rules:
+     * - SCREAMING_SNAKE_CASE → "Title Case" (e.g. USER_STATUS → "User Status")
+     * - camelCase → "Title Case" (e.g. activeUser → "Active User")
+     *
+     * This is the final fallback when neither per-case #[Label] nor
+     * class-level #[EnumLabel] provides a label for this case.
+     *
+     * @return string Human-readable label in Title Case
      */
     private function generateLabel(): string
     {
