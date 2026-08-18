@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
 use ZeroBoiler\Enums\EnumCache;
 use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
 use ZeroBoiler\Enums\Support\EnumMetadataResolver;
