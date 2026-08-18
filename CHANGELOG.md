@@ -4,8 +4,11 @@ All notable changes to the ZeroBoiler Enums package will be documented in this f
 
 ## [Unreleased]
 
+### Added
+- `EnumV52ProductionHardeningAndEdgeCaseAuditTest` — comprehensive production hardening: EnumCache TTL boundary precision (0, negative clamping), metadata resolver cache coherency after invalidate/invalidateAll, WorkflowState full attribute coverage (class-level + per-case overrides for label/color/icon/description), InventoryStatus multi-word SCREAMING_SNAKE_CASE label generation, EdgeCaseNamingEnum edge cases (single-letter, numeric, triple underscore, camelCase), IntPriority int-backed forApi/forSelect/toValue type verification, PureFeatureFlag pure enum toValue, SingleCaseToggle single-case bulk methods, EnumCast serialize() edge cases (null/string/int/unsupported), EnumRule backing type mismatch rejection (string→int, int→string), EnumCache singleton lifecycle (resetInstance, clearClass), Enum facade accessor, EnumRule nullable/non-nullable behavior, EnumManager non-enum class rejection, InvalidEnumException named constructors and __toString, EnumCache __debugInfo structure, EnumsServiceProvider structure verification, cross-method label consistency (~50 test methods)
+
 ### Changed
-- Updated README test count badge (318 tests), version badge (1.0.72 → 1.0.73), and package statistics
+- Updated README test count badge (322 tests), version badge (1.0.73 → 1.0.74)
 - Full source code audit — verified 100% `declare(strict_types=1)`, PHPStan Level 9 compliance, complete docblocks, typed properties across all 20 source files
 - Confirmed production readiness: all attributes are `final` with `readonly` promoted properties, `EnumManager`/`EnumRule` are `final readonly`, `EnumCache` singleton properly guards against clone/serialize/wakeup
 
