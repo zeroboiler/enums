@@ -137,7 +137,7 @@ it('notIn() returns true when case is absent from all given options', function (
 });
 
 it('fromName() rejects case-insensitive name lookup', function () {
-    expect(fn () => {$shortName}::fromName(strtolower('{$firstCase}'))->toThrow(\InvalidEnumException::class);
+    expect(fn () => {$shortName}::fromName(strtolower('{$firstCase}'))->toThrow(InvalidEnumException::class);
 });
 
 it('supports tryFromLabel reverse lookup', function () {
@@ -263,7 +263,7 @@ describe('{$shortName} enum', function () {
     });
 
     it('fromName() throws InvalidEnumException for non-existent name', function () {
-        expect(fn () => {$shortName}::fromName('NON_EXISTENT'))->toThrow(\InvalidEnumException::class);
+        expect(fn () => {$shortName}::fromName('NON_EXISTENT'))->toThrow(InvalidEnumException::class);
     });
 
     it('supports hasCase check', function () {
