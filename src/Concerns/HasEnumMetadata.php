@@ -301,6 +301,8 @@ trait HasEnumMetadata
      * For pure enums returns the case names (string).
      *
      * @return list<string|int>
+     *
+     * @see toValue() For the instance method that returns a single value
      */
     public static function values(): array
     {
@@ -334,6 +336,8 @@ trait HasEnumMetadata
      *   $value = $status->toValue();  // 'active' or 'ACTIVE' depending on backing
      *
      * @return int|string
+     *
+     * @see values() For the static method that returns all values/case names
      */
     public function toValue(): int|string
     {
