@@ -19,9 +19,9 @@ use Attribute;
  * Valid colors: `success`, `danger`, `warning`, `info`, `secondary`.
  * Colors default to `'secondary'` when not set via any attribute.
  *
- * Resolution order (later wins):
- * 1. Class-level `#[EnumColor]` — bulk color mapping for multiple cases
- * 2. Per-case `#[Color('success')]` — individual case override
+ * Resolution priority (highest wins):
+ * 1. Per-case `#[Color('success')]` — individual case override
+ * 2. Class-level `#[EnumColor]` — bulk color mapping for multiple cases
  * 3. Default: `'secondary'`
  *
  * Usage (class-level):
