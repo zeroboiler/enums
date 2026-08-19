@@ -50,6 +50,7 @@ Works with all three PHP 8.5+ enum types:
 - [Artisan Commands](#artisan-commands)
 - [Advanced Usage](#advanced-usage)
 - [Troubleshooting](#troubleshooting)
+- [Performance & Caching](#performance--caching)
 - [Source Code Structure](#source-code-structure)
 - [Changelog](#changelog)
 - [License](#license)
@@ -875,6 +876,71 @@ A: Yes. Since enums are first-class objects in PHP, you can use them directly:
 
 **Q: How does caching work in Octane/Swoole?**
 A: The service provider automatically registers event listeners for `octane.terminate` and `laravel.flush` to clear the cache between requests. No manual configuration needed.
+
+---
+
+## Performance & Caching
+
+### How Caching Works
+
+Enum metadata resolution uses reflection, which is expensive. To avoid repeated
+reflection on every property access, `EnumMetadataResolver` caches results in
+`EnumCache` (a process-wide singleton).
+
+```
+First access:  EnumMetadataResolver::resolve() → reflection → build metadata → cache
+Subsequent:   EnumCache::has() → TTL check → cache hit → return cached data
+```
+
+### TTL Behavior
+
+| Environment | TTL | Behavior |
+|------------|-----|----------|
+| **Production** | 300s (5 min) | Metadata cached for 5 minutes. Flush via `EnumCache::flush()` on deploy. |
+| **Local** | 2s | Auto-set by service provider. Code changes detected on next request. |
+| **Testing** | 2s | Auto-set by service provider. Fresh metadata between test cases. |
+| **Custom** | 0 (disabled) | `EnumCache::getInstance()->setTtl(0)` — every call re-resolves. |
+
+### When to Worry About Cache
+
+- **Long-running processes** (Octane, Swoole, RoadRunner): The service provider
+  automatically listens for `octane.terminate` and `laravel.flush` events to
+  clear the cache between requests. No manual configuration needed.
+- **Deployment**: If you use zero-downtime deployments with rolling restarts,
+  cached metadata from the old code version may serve for up to 300s. Call
+  `EnumCache::flush()` in a deployment hook or use the 2s TTL in production.
+- **Memory**: Each cached enum class stores ~4 arrays (labels, descriptions, colors,
+  icons). For an app with 100 enum classes averaging 10 cases each, the cache
+  uses ~50KB — negligible.
+
+### Thread Safety
+
+| Component | Thread Safety | Notes |
+|-----------|--------------|-------|
+| `EnumCache` | **Per-process** | Static singleton. Each PHP-FPM/Octane worker has its own instance. |
+| `EnumMetadataResolver` | **Stateless** | Pure static methods. No mutable instance state. Thread-safe. |
+| `EnumManager` | **Stateless** | `final readonly` — zero mutable state. Thread-safe. |
+| `HasEnumMetadata` (trait) | **Stateless** | All methods delegate to `EnumMetadataResolver`. Thread-safe. |
+| `EnumRule` | **Stateless** | `final readonly` — no mutable state. Thread-safe. |
+| `EnumCast` | **Stateless** | `final` with `readonly` property. Thread-safe. |
+
+### Performance Tips
+
+1. **Use class-level attributes** (`#[EnumLabel]`, `#[EnumColor]`) instead of
+   per-case attributes when multiple cases share the same metadata. This reduces
+   the number of reflection attribute lookups during `buildMetadata()`.
+
+2. **Don't call `resetInstance()` in production.** It destroys the cache,
+   forcing re-resolution on next access. Only use in test teardown.
+
+3. **`forApi()` vs individual calls:** If you need multiple pieces of metadata
+   for all cases (e.g. in an API response), use `forApi()` once rather than
+   calling `label()`, `color()`, `icon()` on each case individually. `forApi()`
+   benefits from a single cache lookup.
+
+4. **`tryFromLabel()` is O(n):** It iterates all cases and compares labels.
+   For enums with hundreds of cases, consider building a reverse lookup map
+   at application boot time if this is a hot path.
 
 ---
 
