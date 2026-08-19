@@ -30,6 +30,21 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 final class EnumCast implements CastsAttributes
 {
     /**
+     * Named constructor — creates an EnumCast for the given backed enum.
+     *
+     *   protected $casts = [
+     *       'status' => EnumCast::of(UserStatus::class),
+     *   ];
+     *
+     * @param  class-string<T>  $enumClass  The backed enum class to cast to/from
+     * @return self<T> A new EnumCast instance for the given enum
+     */
+    public static function of(string $enumClass): self
+    {
+        return new self($enumClass);
+    }
+
+    /**
      * @param  class-string<T>  $enumClass
      */
     public function __construct(
