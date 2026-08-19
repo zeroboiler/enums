@@ -49,6 +49,7 @@ Works with all three PHP 8.5+ enum types:
 - [API Reference](#api-reference)
 - [Artisan Commands](#artisan-commands)
 - [Advanced Usage](#advanced-usage)
+- [Troubleshooting](#troubleshooting)
 - [Source Code Structure](#source-code-structure)
 - [Changelog](#changelog)
 - [License](#license)
@@ -820,6 +821,60 @@ src/
 ├── EnumManager.php            # Stateless proxy (DI/facade backing)
 └── EnumsServiceProvider.php   # Laravel service provider
 ```
+
+---
+
+## Troubleshooting
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| `label()` returns 'User Status' instead of custom label | Attribute not resolving | Ensure the attribute is imported: `use ZeroBoiler\Enums\Attributes\Label;` |
+| `forSelect()` returns case names instead of backed values | Pure enum (no backing type) | This is expected — pure enums use case names as values |
+| `tryFromLabel()` returns null for an existing label | Case sensitivity or whitespace | `tryFromLabel()` is case-insensitive but whitespace-sensitive |
+| `fromName('active')` throws `InvalidEnumException` | Case name, not value | `fromName()` matches case **names** (e.g. 'ACTIVE'), not backed values |
+| `toValue()` returns the case name for a backed enum | Trait not applied | Ensure the enum has `use HasEnumMetadata;` |
+| `Enum::forSelect(UserStatus::class)` throws `BadMethodCallException` | Trait not on enum | The target enum must use `HasEnumMetadata` trait |
+| `EnumCast::of()` returns null for valid value | Wrong enum type passed | `EnumCast` only works with **backed** enums (not pure enums) |
+| `zeroboiler:enum-inspect` shows '—' for all metadata | Missing trait | The enum must use `use HasEnumMetadata;` to resolve metadata |
+| Metadata is stale after code change | Cache TTL | In production, TTL is 300s. Use `EnumCache::flush()` or restart the process |
+| `EnumRule` rejects valid int for int-backed enum | Type mismatch | The rule validates the PHP type matches the backing type (string→string, int→int) |
+
+### FAQ
+
+**Q: Can I use this package without Laravel?**
+A: The core trait (`HasEnumMetadata`), attributes, and cache work without Laravel. However, `EnumCast`, `EnumRule`, `EnumManager`, the facade, and console commands require Laravel.
+
+**Q: Does it work with PHP 8.1+?**
+A: The package targets PHP 8.5+ and uses `#[\Override]` and `readonly` classes, which require PHP 8.3+ and PHP 8.2+ respectively. It will not work on PHP 8.1.
+
+**Q: Can I use multiple attributes on the same case?**
+A: Yes. You can stack any combination of `#[Label]`, `#[Color]`, `#[Icon]`, `#[Description]` on the same case:
+
+```php
+#[Label('Active User')]
+#[Color('success')]
+#[Icon('heroicon-o-check-circle')]
+#[Description('User can fully access the system')]
+case ACTIVE = 'active';
+```
+
+**Q: How do class-level and per-case attributes interact?**
+A: Per-case attributes always win. The resolution order is:
+1. Per-case `#[Label('...')]` (highest priority)
+2. Class-level `#[EnumLabel(labels: [...])]`
+3. Auto-generated from case name (lowest priority)
+
+**Q: Can I use enum metadata in Blade views?**
+A: Yes. Since enums are first-class objects in PHP, you can use them directly:
+
+```blade
+<span class="badge-{{ $user->status->color() }}">
+    {{ $user->status->label() }}
+</span>
+```
+
+**Q: How does caching work in Octane/Swoole?**
+A: The service provider automatically registers event listeners for `octane.terminate` and `laravel.flush` to clear the cache between requests. No manual configuration needed.
 
 ---
 
