@@ -7,17 +7,16 @@
 declare(strict_types=1);
 
 use ZeroBoiler\Enums\Casts\EnumCast;
-use ZeroBoiler\Enums\Tests\Fixtures\IntBackedPriority;
 use ZeroBoiler\Enums\Tests\Fixtures\NumericStatusCode;
 use ZeroBoiler\Enums\Tests\Fixtures\OrderStatus;
-use ZeroBoiler\Enums\Tests\Fixtures\PureFeatureFlag;
 use ZeroBoiler\Enums\Tests\Fixtures\UserStatus;
+use ZeroBoiler\Enums\Tests\Fixtures\ZeroPriority;
 use ZeroBoiler\Enums\Rules\EnumRule;
 
 /*
  * Edge-case tests for EnumCast and EnumRule — real-world production scenarios.
  *
- * Covers: zero values, numeric strings, null handling, wrong enum type rejection,
+ * Covers: zero values, null handling, wrong enum type rejection,
  * nullable rule behavior, and boundary conditions that arise in database
  * round-trips and form validation.
  */
@@ -30,9 +29,16 @@ describe('EnumCast edge cases — production scenarios', function (): void {
         expect($result)->toBeNull();
     });
 
-    it('returns null for null database value on int-backed enum', function (): void {
+    it('returns null for null database value on string-backed numeric enum', function (): void {
         $cast = EnumCast::of(NumericStatusCode::class);
         $result = $cast->get(new stdClass, 'code', null, []);
+
+        expect($result)->toBeNull();
+    });
+
+    it('returns null for null database value on int-backed enum', function (): void {
+        $cast = EnumCast::of(ZeroPriority::class);
+        $result = $cast->get(new stdClass, 'priority', null, []);
 
         expect($result)->toBeNull();
     });
@@ -46,11 +52,11 @@ describe('EnumCast edge cases — production scenarios', function (): void {
     });
 
     it('casts int-backed value correctly', function (): void {
-        $cast = EnumCast::of(NumericStatusCode::class);
-        $result = $cast->get(new stdClass, 'code', 200, []);
+        $cast = EnumCast::of(ZeroPriority::class);
+        $result = $cast->get(new stdClass, 'priority', 1, []);
 
-        expect($result)->toBeInstanceOf(NumericStatusCode::class);
-        expect($result->value)->toBe(200);
+        expect($result)->toBeInstanceOf(ZeroPriority::class);
+        expect($result->value)->toBe(1);
     });
 
     it('returns null for invalid string-backed value (silent null)', function (): void {
@@ -61,20 +67,28 @@ describe('EnumCast edge cases — production scenarios', function (): void {
     });
 
     it('returns null for invalid int-backed value (silent null)', function (): void {
-        $cast = EnumCast::of(NumericStatusCode::class);
-        $result = $cast->get(new stdClass, 'code', 9999, []);
+        $cast = EnumCast::of(ZeroPriority::class);
+        $result = $cast->get(new stdClass, 'priority', 999, []);
 
         expect($result)->toBeNull();
     });
 
     it('handles zero value correctly on int-backed enum', function (): void {
-        // IntBackedPriority has LOW = 0
-        $cast = EnumCast::of(IntBackedPriority::class);
+        $cast = EnumCast::of(ZeroPriority::class);
         $result = $cast->get(new stdClass, 'priority', 0, []);
 
-        expect($result)->toBeInstanceOf(IntBackedPriority::class);
+        expect($result)->toBeInstanceOf(ZeroPriority::class);
         expect($result->value)->toBe(0);
-        expect($result->name)->toBe('LOW');
+        expect($result->name)->toBe('NONE');
+    });
+
+    it('handles zero-string value correctly on string-backed enum', function (): void {
+        $cast = EnumCast::of(NumericStatusCode::class);
+        $result = $cast->get(new stdClass, 'code', '0', []);
+
+        expect($result)->toBeInstanceOf(NumericStatusCode::class);
+        expect($result->value)->toBe('0');
+        expect($result->name)->toBe('ZERO');
     });
 
     it('serializes enum instance to backed value', function (): void {
@@ -85,10 +99,10 @@ describe('EnumCast edge cases — production scenarios', function (): void {
     });
 
     it('serializes int-backed enum to int value', function (): void {
-        $cast = EnumCast::of(NumericStatusCode::class);
-        $result = $cast->serialize(new stdClass, 'code', NumericStatusCode::CREATED, []);
+        $cast = EnumCast::of(ZeroPriority::class);
+        $result = $cast->serialize(new stdClass, 'priority', ZeroPriority::HIGH, []);
 
-        expect($result)->toBe(201);
+        expect($result)->toBe(2);
     });
 
     it('serializes raw string value as passthrough', function (): void {
@@ -99,10 +113,10 @@ describe('EnumCast edge cases — production scenarios', function (): void {
     });
 
     it('serializes raw int value as passthrough', function (): void {
-        $cast = EnumCast::of(NumericStatusCode::class);
-        $result = $cast->serialize(new stdClass, 'code', 200, []);
+        $cast = EnumCast::of(ZeroPriority::class);
+        $result = $cast->serialize(new stdClass, 'priority', 1, []);
 
-        expect($result)->toBe(200);
+        expect($result)->toBe(1);
     });
 
     it('serializes null to null', function (): void {
@@ -127,9 +141,9 @@ describe('EnumCast edge cases — production scenarios', function (): void {
     });
 
     it('set() throws on invalid raw int value', function (): void {
-        $cast = EnumCast::of(NumericStatusCode::class);
+        $cast = EnumCast::of(ZeroPriority::class);
 
-        expect(fn () => $cast->set(new stdClass, 'code', 9999, []))
+        expect(fn () => $cast->set(new stdClass, 'priority', 999, []))
             ->toThrow(InvalidArgumentException::class);
     });
 
@@ -155,14 +169,14 @@ describe('EnumCast edge cases — production scenarios', function (): void {
     });
 
     it('set() returns raw value for valid int value', function (): void {
-        $cast = EnumCast::of(NumericStatusCode::class);
-        $result = $cast->set(new stdClass, 'code', 200, []);
+        $cast = EnumCast::of(ZeroPriority::class);
+        $result = $cast->set(new stdClass, 'priority', 1, []);
 
-        expect($result)->toBe(200);
+        expect($result)->toBe(1);
     });
 
     it('set() handles zero value correctly', function (): void {
-        $cast = EnumCast::of(IntBackedPriority::class);
+        $cast = EnumCast::of(ZeroPriority::class);
         $result = $cast->set(new stdClass, 'priority', 0, []);
 
         expect($result)->toBe(0);
@@ -170,7 +184,7 @@ describe('EnumCast edge cases — production scenarios', function (): void {
 
     it('of() creates cast instances independently', function (): void {
         $cast1 = EnumCast::of(OrderStatus::class);
-        $cast2 = EnumCast::of(NumericStatusCode::class);
+        $cast2 = EnumCast::of(ZeroPriority::class);
 
         expect($cast1)->not->toBe($cast2);
     });
@@ -195,18 +209,27 @@ describe('EnumRule edge cases — production scenarios', function (): void {
     });
 
     it('passes valid int-backed value', function (): void {
-        $rule = EnumRule::for(NumericStatusCode::class);
+        $rule = EnumRule::for(ZeroPriority::class);
         $fail = fn (string $msg): string => throw new \RuntimeException($msg);
 
-        $rule->validate('code', 200, $fail);
+        $rule->validate('priority', 1, $fail);
+        expect(true)->toBeTrue();
+    });
+
+    it('passes zero value for int-backed enum', function (): void {
+        $rule = EnumRule::for(ZeroPriority::class);
+        $fail = fn (string $msg): string => throw new \RuntimeException($msg);
+
+        $rule->validate('priority', 0, $fail);
         expect(true)->toBeTrue();
     });
 
     it('fails type mismatch (string for int-backed enum)', function (): void {
-        $rule = EnumRule::for(NumericStatusCode::class);
+        $rule = EnumRule::for(ZeroPriority::class);
         $fail = fn (string $msg): string => throw new \RuntimeException($msg);
 
-        expect(fn () => $rule->validate('code', '200', $fail))
+        // '1' is a string, but ZeroPriority is int-backed — type mismatch
+        expect(fn () => $rule->validate('priority', '1', $fail))
             ->throw(\RuntimeException::class);
     });
 
@@ -214,6 +237,7 @@ describe('EnumRule edge cases — production scenarios', function (): void {
         $rule = EnumRule::for(OrderStatus::class);
         $fail = fn (string $msg): string => throw new \RuntimeException($msg);
 
+        // 0 is an int, but OrderStatus is string-backed — type mismatch
         expect(fn () => $rule->validate('status', 0, $fail))
             ->throw(\RuntimeException::class);
     });
@@ -232,14 +256,6 @@ describe('EnumRule edge cases — production scenarios', function (): void {
 
         expect(fn () => $rule->validate('status', null, $fail))
             ->throw(\RuntimeException::class);
-    });
-
-    it('passes zero value for int-backed enum', function (): void {
-        $rule = EnumRule::for(IntBackedPriority::class);
-        $fail = fn (string $msg): string => throw new \RuntimeException($msg);
-
-        $rule->validate('priority', 0, $fail);
-        expect(true)->toBeTrue();
     });
 
     it('nullable() returns a new instance', function (): void {
