@@ -1,5 +1,13 @@
 # ZeroBoiler Enums
 
+[![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
+[![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
+[![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
+[![Tests: 331 files](https://img.shields.io/badge/Tests-331%20files-brightgreen)](tests)
+[![Version 1.0.77](https://img.shields.io/badge/Version-1.0.77-green)](https://github.com/zeroboiler/enums/releases)
+[![Source: 20 files](https://img.shields.io/badge/Source-20%20files-informational)](src)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
+
 Zero-boilerplate enum metadata, serialization, and helper traits for Laravel.
 
 Works with all three PHP 8.5+ enum types:
@@ -10,6 +18,43 @@ Works with all three PHP 8.5+ enum types:
 
 ---
 
+## Why ZeroBoiler Enums?
+
+| Problem | ZeroBoiler Solution |
+|---------|-------------------|
+| Manual label/color/icon mapping for each case | **Attribute-driven metadata** — `#[Label('...')]`, `#[Color('...')]`, `#[Icon('...')]` directly on cases |
+| Repetitive `match()` blocks for human-readable names | **`label()` auto-generation** — SCREAMING_SNAKE_CASE → "Title Case" out of the box |
+| No easy way to generate `<select>` options from enums | **`forSelect()`** — returns `[{value, label}]` pairs in one call |
+| No full metadata API response for frontends | **`forApi()`** — returns value, name, label, description, color, icon for every case |
+| Manual `in_array()` / `===` checks for enum states | **`is()`, `isNot()`, `in()`, `notIn()`** — fluent comparison with instances or strings |
+| No reverse lookup by label | **`tryFromLabel()`** — case-insensitive label → enum case resolution |
+| No per-class bulk metadata definition | **Class-level attributes** — `#[EnumLabel(...)]`, `#[EnumColor(...)]` map all cases at once |
+| Enum metadata not cached in long-running processes | **`EnumCache`** — TTL-based singleton cache, auto-flushed on Octane/Swoole terminate |
+| No CLI tool for inspecting enum metadata | **`zeroboiler:enum-inspect`** — table output of all metadata per case |
+| Writing enum tests manually every time | **`zeroboiler:enum-test`** — generates comprehensive Pest tests automatically |
+| No Eloquent cast with extended validation | **`EnumCast`** — validates stored values, null-safe get/set |
+| No custom validation rule for form requests | **`EnumRule`** — works with backed AND pure enums, better error messages |
+
+**Zero ceremony. Zero boilerplate. Production-grade from day one.**
+
+---
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Why ZeroBoiler Enums?](#why-zeroboiler-enums)
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)
+- [Attributes Reference](#attributes-reference)
+- [API Reference](#api-reference)
+- [Artisan Commands](#artisan-commands)
+- [Advanced Usage](#advanced-usage)
+- [Source Code Structure](#source-code-structure)
+- [Changelog](#changelog)
+- [License](#license)
+
+---
+
 ## Installation
 
 ```bash
@@ -17,6 +62,17 @@ composer require zeroboiler/enums
 ```
 
 The service provider is auto-discovered via Laravel's package discovery.
+
+**Requirements:**
+- PHP 8.5+
+- Laravel 13+
+
+**Package Statistics:**
+- 20 source files in `src/` (8 attributes, 1 trait, 4 infrastructure, 2 console commands, 1 cast, 1 rule, 1 exception, 1 facade, 1 service provider)
+- 331 test files in `tests/`
+- PHPStan Level 9 (`phpstan.neon`)
+- 100% `declare(strict_types=1)` coverage
+- Zero `mixed` return types in public API
 
 ---
 
@@ -699,6 +755,71 @@ $cache->clearClass(UserStatus::class);  // Clear one enum
 > **Note:** In `local` and `testing` environments, the service provider
 > automatically sets TTL to 2 seconds so code changes are picked up
 > immediately. In production, the default 300s TTL is used.
+
+---
+
+## Design Principles
+
+- **Attribute-driven** — Metadata defined declaratively via PHP 8 attributes, not match() blocks
+- **Convention over configuration** — Auto-generates labels from case names, defaults to 'secondary' color
+- **Three-level resolution** — Per-case attribute > class-level attribute > auto-generated default
+- **Type-safe** — PHPStan Level 9, `declare(strict_types=1)`, no `mixed` in public API
+- **Zero state** — `EnumManager` is `final readonly` (stateless); `EnumCache` is the only stateful component
+- **Laravel-native** — Facade, service provider, Eloquent cast, validation rule, artisan commands
+- **All enum types** — String-backed, int-backed, and pure enums supported identically
+
+---
+
+## PHP 8.5 Features
+
+| Feature | Where Used |
+|---|---|
+| `readonly` classes | `EnumManager` |
+| `readonly` promoted properties | All 8 attribute classes, `EnumCast`, `EnumRule` |
+| `#[\Override]` attribute | `InvalidEnumException::__toString()`, `Enum` facade |
+| `never` return type | `EnumCache::__clone()`, `EnumCache::__wakeup()`, `EnumCache::__serialize()`, `EnumCache::__unserialize()` |
+| Named arguments | `EnumLabel`, `EnumColor`, `EnumIcon`, `EnumDescription` constructors |
+| `match` expressions | `EnumMetadataResolver::buildMetadata()` (color map iteration) |
+| `static` return types | `HasEnumMetadata::fromName()`, `tryFromLabel()`, `tryFromName()`, `forSelect()`, `forApi()` |
+| `get_debug_type()` | `EnumCast::set()`, `EnumCast::serialize()` |
+| Singleton pattern | `EnumCache` (private constructor, `getInstance()`) |
+
+---
+
+## Source Code Structure
+
+```
+src/
+├── Attributes/
+│   ├── Color.php              # Per-case color override
+│   ├── Description.php        # Per-case description override
+│   ├── Icon.php               # Per-case icon override
+│   ├── Label.php              # Per-case label override
+│   ├── EnumColor.php          # Class-level color mapping
+│   ├── EnumDescription.php    # Class-level description mapping
+│   ├── EnumIcon.php           # Class-level icon mapping + default
+│   └── EnumLabel.php          # Class-level label mapping
+├── Concerns/
+│   └── HasEnumMetadata.php    # Core trait — all public API methods
+├── Casts/
+│   └── EnumCast.php           # Eloquent cast for backed enums
+├── Console/
+│   └── Commands/
+│       ├── InspectEnumCommand.php    # zeroboiler:enum-inspect
+│       └── MakeEnumTestCommand.php   # zeroboiler:enum-test
+├── Exceptions/
+│   └── InvalidEnumException.php  # Thrown on invalid case/value lookup
+├── Facades/
+│   └── Enum.php               # Laravel facade for EnumManager
+├── Rules/
+│   └── EnumRule.php           # Validation rule for backed + pure enums
+├── Support/
+│   ├── EnumMetadataResolver.php  # Reflection-based attribute resolver
+│   └── EnumTestGenerator.php     # Pest test code generator
+├── EnumCache.php              # TTL-based singleton metadata cache
+├── EnumManager.php            # Stateless proxy (DI/facade backing)
+└── EnumsServiceProvider.php   # Laravel service provider
+```
 
 ---
 
