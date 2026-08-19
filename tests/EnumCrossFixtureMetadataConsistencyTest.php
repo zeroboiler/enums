@@ -103,7 +103,7 @@ describe('Cross-fixture metadata consistency', function (): void {
         foreach ($fixtures as $fixtureClass) {
             $metadata = EnumMetadataResolver::resolve($fixtureClass);
 
-n            expect(array_keys($metadata))->toEqual(
+            expect(array_keys($metadata))->toEqual(
                 ['labels', 'descriptions', 'colors', 'icons'],
                 "{$fixtureClass} metadata must have exactly 4 keys: labels, descriptions, colors, icons"
             );
@@ -153,7 +153,7 @@ n            expect(array_keys($metadata))->toEqual(
             $select = $fixtureClass::forSelect();
             $caseCount = count($fixtureClass::cases());
 
-n            expect($select)->toHaveCount(
+            expect($select)->toHaveCount(
                 $caseCount,
                 "{$fixtureClass}::forSelect() must have {$caseCount} entries"
             );
