@@ -3,8 +3,8 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-|[![Tests: 299 files](https://img.shields.io/badge/Tests-299%20files-brightgreen)](tests)|
-|[![Version 1.0.78](https://img.shields.io/badge/Version-1.0.78-green)](https://github.com/zeroboiler/enums/releases)|
+[![Tests: 299 files](https://img.shields.io/badge/Tests-299%20files-brightgreen)](tests)
+[![Version 1.0.78](https://img.shields.io/badge/Version-1.0.78-green)](https://github.com/zeroboiler/enums/releases)
 [![Source: 20 files](https://img.shields.io/badge/Source-20%20files-informational)](src)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
 
@@ -45,6 +45,9 @@ Works with all three PHP 8.5+ enum types:
 - [Why ZeroBoiler Enums?](#why-zeroboiler-enums)
 - [Quick Start](#quick-start)
 - [Architecture](#architecture)
+  - [Type System](#type-system)
+  - [Metadata Resolution Order](#metadata-resolution-order)
+  - [Metadata Cache Shape](#metadata-cache-shape)
 - [Attributes Reference](#attributes-reference)
 - [API Reference](#api-reference)
 - [Artisan Commands](#artisan-commands)
@@ -207,6 +210,29 @@ this priority (highest wins):
 2. **Class-level attribute** — `#[EnumLabel(...)]`, `#[EnumColor(...)]`, etc.
 3. **Auto-generated / default** — Case name → "Title Case" for labels,
    `'secondary'` for colors, `null` for descriptions and icons.
+
+### Metadata Cache Shape
+
+The cached metadata resolved by `EnumMetadataResolver` has the following shape.
+This is the same structure stored in `EnumCache` for each enum class:
+
+```php
+// @phpstan-type EnumMetadataShape
+[
+    'labels'      => [int|string => string],  // case value → human-readable label
+    'descriptions' => [int|string => string],  // case value → description (sparse)
+    'colors'      => [int|string => string],  // case value → color name
+    'icons'       => [int|string => string],  // case value → icon identifier (sparse)
+]
+```
+
+For backed enums, keys are the backed values (`'active'`, `1`, `0`).
+For pure enums, keys are the case names (`'ACTIVE'`, `'PENDING'`).
+
+Arrays may be sparse — only cases with explicitly defined metadata
+(via attributes or class-level mappings) have entries. The `label()`
+accessor falls back to auto-generation; `color()` falls back to `'secondary'`;
+`description()` and `icon()` return `null` for missing entries.
 
 ---
 
