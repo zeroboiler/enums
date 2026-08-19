@@ -35,7 +35,7 @@ use Attribute;
  * @see Color For per-case color override
  * @see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::color() For the color accessor
  */
-#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_CLASS_CONSTANT)]
+#[Attribute(Attribute::TARGET_CLASS)]
 final class EnumColor
 {
     /**
