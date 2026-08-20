@@ -3,7 +3,7 @@
 [![PHP 8.5+](https://img.shields.io/badge/PHP-8.5%2B-777BB4)](https://php.net)
 [![Laravel 13+](https://img.shields.io/badge/Laravel-13%2B-FF2D20)](https://laravel.com)
 [![PHPStan Level 9](https://img.shields.io/badge/PHPStan-Level%209-blue)](https://phpstan.org)
-[![Tests: 341 files](https://img.shields.io/badge/Tests-341%20files-brightgreen)](tests)
+[![Tests: 342 files](https://img.shields.io/badge/Tests-342%20files-brightgreen)](tests)
 [![Version 1.0.79](https://img.shields.io/badge/Version-1.0.79-green)](https://github.com/zeroboiler/enums/releases)
 [![Source: 20 files](https://img.shields.io/badge/Source-20%20files-informational)](src)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-yellow)]()
@@ -125,7 +125,7 @@ The service provider is auto-discovered via Laravel's package discovery.
 
 **Package Statistics:**
 - 20 source files in `src/` (8 attributes, 1 trait, 4 infrastructure, 2 console commands, 1 cast, 1 rule, 1 exception, 1 facade, 1 service provider)
-- 337 test files in `tests/` (33 fixtures)
+- 342 test files in `tests/` (33 fixtures)
 - PHPStan Level 9 (`phpstan.neon`)
 - 100% `declare(strict_types=1)` coverage
 - Zero `mixed` return types in public API
