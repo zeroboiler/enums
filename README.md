@@ -44,6 +44,7 @@ Works with all three PHP 8.5+ enum types:
 - [Installation](#installation)
 - [Why ZeroBoiler Enums?](#why-zeroboiler-enums)
 - [Quick Start](#quick-start)
+- [Quick Reference Card](#quick-reference-card)
 - [Architecture](#architecture)
   - [Type System](#type-system)
   - [Metadata Resolution Order](#metadata-resolution-order)
@@ -67,6 +68,46 @@ Works with all three PHP 8.5+ enum types:
 - [Source Code Structure](#source-code-structure)
 - [Changelog](#changelog)
 - [License](#license)
+
+---
+
+## Quick Reference Card
+
+| Operation | Method | Returns |
+|-----------|--------|---------|
+| Get label | `$case->label()` | `string` |
+| Get description | `$case->description()` | `\?string` |
+| Get color | `$case->color()` | `string` (default: `'secondary'`) |
+| Get icon | `$case->icon()` | `\?string` |
+| Get backed value | `$case->toValue()` | `int\string` |
+| Compare (instance or name) | `$case->is(...)` | `bool` |
+| Negate comparison | `$case->isNot(...)` | `bool` |
+| Group match | `$case->in([...])` | `bool` |
+| Group exclude | `$case->notIn([...])` | `bool` |
+| Dropdown options | `Enum::forSelect()` | `list<array{value, label}>` |
+| Full API metadata | `Enum::forApi()` | `list<array{value, name, label, description, color, icon}>` |
+| All values | `Enum::values()` | `list<string\int>` |
+| All labels | `Enum::labels()` | `list<string>` |
+| Find by name | `Enum::tryFromName('ACTIVE')` | `\?static` |
+| Find by name (throws) | `Enum::fromName('ACTIVE')` | `static` |
+| Check name exists | `Enum::hasCase('ACTIVE')` | `bool` |
+| Find by label (ci) | `Enum::tryFromLabel('Active')` | `\?static` |
+| Eloquent cast | `EnumCast::of(MyEnum::class)` | `EnumCast` |
+| Validation rule | `EnumRule::for(MyEnum::class)` | `EnumRule` |
+| Facade access | `Enum::forSelect(MyEnum::class)` | `array` |
+
+**Attributes at a glance:**
+
+| Attribute | Target | Purpose |
+|-----------|--------|---------|
+| `#[Label('...')]` | Case | Per-case label override |
+| `#[Color('...')]` | Case | Per-case color override |
+| `#[Icon('...')]` | Case | Per-case icon override |
+| `#[Description('...')]` | Case | Per-case description override |
+| `#[EnumLabel(...)]` | Class or Case | Bulk label mapping |
+| `#[EnumColor(...)]` | Class | Bulk color mapping by category |
+| `#[EnumIcon(...)]` | Class or Case | Icon mapping + default |
+| `#[EnumDescription(...)]` | Class or Case | Bulk description mapping |
 
 ---
 
