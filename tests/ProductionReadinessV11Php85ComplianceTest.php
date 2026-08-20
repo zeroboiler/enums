@@ -191,9 +191,11 @@ describe('Production Readiness V11 — PHP 8.5 & Enterprise Compliance', functio
     // ──────────────────────────────────────────────────────────────
 
     describe('EnumCache serialization safety', function (): void {
-        it('__clone() is private and returns never', function (): void {
+        it('__clone() is public (PHP engine requirement) and returns never', function (): void {
             $ref = new \ReflectionMethod(EnumCache::class, '__clone');
-            expect($ref->isPrivate())->toBeTrue();
+            // PHP's clone operator requires __clone() to be public — the method
+            // body always throws, but the visibility must remain public.
+            expect($ref->isPublic())->toBeTrue();
             $returnType = $ref->getReturnType();
             expect($returnType->getName())->toBe('never');
         });
