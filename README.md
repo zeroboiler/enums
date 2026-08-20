@@ -52,6 +52,16 @@ Works with all three PHP 8.5+ enum types:
 - [API Reference](#api-reference)
 - [Artisan Commands](#artisan-commands)
 - [Advanced Usage](#advanced-usage)
+  - [Pure Enums (no backing type)](#pure-enums-no-backing-type)
+  - [Int-Backed Enums](#int-backed-enums)
+  - [Class-Level Bulk Metadata](#class-level-bulk-metadata)
+  - [Blade View Rendering](#blade-view-rendering)
+  - [API Resource Output](#api-resource-output)
+  - [Livewire Component Integration](#livewire-component-integration)
+  - [Conditional Business Logic](#conditional-business-logic)
+  - [Database Query Scopes](#database-query-scopes)
+  - [Eloquent Model Integration](#eloquent-model-integration)
+  - [Cache Configuration](#cache-configuration)
 - [Troubleshooting](#troubleshooting)
 - [Performance & Caching](#performance--caching)
 - [Source Code Structure](#source-code-structure)
@@ -742,6 +752,142 @@ enum UserStatus: string
     #[Label('Suspended Account')]
     case SUSPENDED = 'suspended'; // label: 'Suspended Account', color: 'secondary', icon: 'heroicon-o-minus'
 }
+```
+
+### Blade View Rendering
+
+Enums are first-class PHP objects — use them directly in Blade:
+
+```blade
+{{-- Status badge with color --}}
+<span class="badge badge-{{ $user->status->color() }}">
+    {{ $user->status->label() }}
+</span>
+
+{{-- Icon from metadata --}}
+<x-heroicon name="{{ $user->status->icon() ?? 'heroicon-o-question-mark-circle' }}" class="w-4 h-4" />
+
+{{-- Tooltip with description --}}
+<span title="{{ $user->status->description() }}">
+    {{ $user->status->label() }}
+</span>
+
+{{-- Dropdown select from forSelect() --}}
+<select name="status">
+    @foreach (UserStatus::forSelect() as $option)
+        <option value="{{ $option['value'] }}" {{ old('status') === $option['value'] ? 'selected' : '' }}>
+            {{ $option['label'] }}
+        </option>
+    @endforeach
+</select>
+
+{{-- Filter buttons with color --}}
+@foreach (UserStatus::forApi() as $status)
+    <button
+        class="btn btn-{{ $status['color'] }}"
+        wire:click="filter('{{ $status['value'] }}')"
+    >
+        {{ $status['label'] }}
+    </button>
+@endforeach
+```
+
+### API Resource Output
+
+```php
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class UserResource extends JsonResource
+{
+    public function toArray($request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'status' => [
+                'value' => $this->status->toValue(),
+                'label' => $this->status->label(),
+                'color' => $this->status->color(),
+                'icon' => $this->status->icon(),
+            ],
+        ];
+    }
+}
+
+// Or expose all enum options for a settings/config endpoint:
+Route::get('/api/enums/statuses', fn () => UserStatus::forApi());
+```
+
+### Livewire Component Integration
+
+```php
+use Livewire\Component;
+
+class UserStatusFilter extends Component
+{
+    public string $filter = '';
+
+    public function render()
+    {
+        $users = User::query()
+            ->when($this->filter !== '', function ($query) {
+                $query->where('status', UserStatus::from($this->filter)->toValue());
+            })
+            ->get();
+
+        return view('livewire.user-status-filter', [
+            'users' => $users,
+            'options' => UserStatus::forSelect(),
+            'statuses' => UserStatus::forApi(),
+        ]);
+    }
+}
+```
+
+### Conditional Business Logic
+
+```php
+// Fluent state checks — replaces switch/case and match() blocks
+if ($order->status->is(OrderStatus::PENDING)) {
+    $order->process();
+}
+
+// Group checks for authorization
+if ($user->role->in([Role::ADMIN, Role::SUPER_ADMIN])) {
+    return $this->adminDashboard();
+}
+
+// Exclusion logic
+if ($user->status->notIn([UserStatus::BANNED, UserStatus::DELETED])) {
+    $user->sendNotification();
+}
+
+// Color-based UI decisions
+$badgeClass = match ($user->status->color()) {
+    'success' => 'bg-green-100 text-green-800',
+    'danger'  => 'bg-red-100 text-red-800',
+    'warning' => 'bg-yellow-100 text-yellow-800',
+    'info'    => 'bg-blue-100 text-blue-800',
+    default    => 'bg-gray-100 text-gray-800',
+};
+```
+
+### Database Query Scopes
+
+```php
+// In your model or a scope class
+public function scopeWithStatus(Builder $query, string|int $statusValue): Builder
+{
+    $status = UserStatus::tryFromLabel($statusValue)
+        ?? UserStatus::tryFrom($statusValue);
+
+    return $query->where('status', $status?->toValue());
+}
+
+// Usage — accepts both label strings and raw values
+User::withStatus('Active User')->get();
+User::withStatus('active')->get();
 ```
 
 ### Eloquent Model Integration
