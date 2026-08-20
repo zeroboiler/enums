@@ -42,7 +42,6 @@ final class EnumDescription
      * @param  string|null                       $description  Single description (case-level)
      */
     public function __construct(
-        /** @var array<int|string, string>|null */
         public readonly ?array $descriptions = null,
         public readonly ?string $description = null,
     ) {}

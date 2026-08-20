@@ -24,23 +24,26 @@ use Attribute;
  *   #[EnumIcon(default: 'heroicon-o-flag', icons: [1 => 'heroicon-o-check', 0 => 'heroicon-o-x-mark'])]
  *   enum SystemStatus: int { ... }
  *
- * Per-case override (always wins over class-level):
- *   #[Icon('heroicon-o-check-circle')]
+ * Usage (case-level — $default acts as the override value):
+ *   #[EnumIcon(default: 'heroicon-o-check-circle')]
  *   case ACTIVE = 'active';
  *
- * @see Icon For per-case icon override
+ * Per-case overrides always win over class-level definitions
+ * (both the default icon and per-value icon maps).
+ * If neither is set, icon() returns null.
+ *
+ * @see Icon For per-case icon override (preferred for clarity)
  * @see \ZeroBoiler\Enums\Concerns\HasEnumMetadata::icon() For the icon accessor
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_CLASS_CONSTANT)]
 final class EnumIcon
 {
     /**
-     * @param  string|null  $default  Default icon for all cases (class-level)
-     * @param  array<int|string, string>  $icons  Map of case value => icon (class-level, optional)
+     * @param  string|null  $default  Default icon for all cases (class-level), or per-case override (case-level)
+     * @param  array<int|string, string>  $icons  Map of case value => icon (class-level only)
      */
     public function __construct(
         public readonly ?string $default = null,
-        /** @var array<int|string, string> */
         public readonly array $icons = [],
     ) {}
 }

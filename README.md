@@ -368,9 +368,10 @@ enum UserStatus: string
 
 #### `#[EnumIcon(array $icons, string&#124;null $default)]`
 
-**Target:** `TARGET_CLASS &#124; TARGET_CLASS_CONSTANT`
+**Target:** `TARGET_CLASS | TARGET_CLASS_CONSTANT`
 
 Maps case values to icon identifiers with an optional default fallback.
+Can also be used at case level where `$default` acts as the override value.
 
 ```php
 use ZeroBoiler\Enums\Attributes\EnumIcon;
@@ -388,8 +389,15 @@ enum UserStatus: string
 }
 ```
 
+Case-level usage (alternative to `#[Icon]`):
+
+```php
+#[EnumIcon(default: 'heroicon-o-check-circle')]
+case ACTIVE = 'active'; // icon: 'heroicon-o-check-circle'
+```
+
 - **`$icons`** (`array<int&#124;string, string>`, default `[]`) — Map of case value → icon identifier
-- **`$default`** (`string&#124;null`, default `null`) — Default icon for cases without specific icon
+- **`$default`** (`string&#124;null`, default `null`) — Default icon for cases without specific icon (class-level), or per-case override (case-level)
 
 ---
 

@@ -39,11 +39,11 @@ use Attribute;
 final class EnumColor
 {
     /**
-     * @param  array<int|string>  $success   Case values mapped to "success"
-     * @param  array<int|string>  $danger    Case values mapped to "danger"
-     * @param  array<int|string>  $warning   Case values mapped to "warning"
-     * @param  array<int|string>  $info      Case values mapped to "info"
-     * @param  array<int|string>  $secondary Case values mapped to "secondary"
+     * @param  list<int|string>  $success   Case values mapped to "success"
+     * @param  list<int|string>  $danger    Case values mapped to "danger"
+     * @param  list<int|string>  $warning   Case values mapped to "warning"
+     * @param  list<int|string>  $info      Case values mapped to "info"
+     * @param  list<int|string>  $secondary Case values mapped to "secondary"
      */
     public function __construct(
         public readonly array $success = [],
