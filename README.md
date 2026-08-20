@@ -79,7 +79,7 @@ Works with all three PHP 8.5+ enum types:
 | Get description | `$case->description()` | `\?string` |
 | Get color | `$case->color()` | `string` (default: `'secondary'`) |
 | Get icon | `$case->icon()` | `\?string` |
-| Get backed value | `$case->toValue()` | `int\string` |
+| Get backed value | `$case->toValue()` | `int|string` |
 | Compare (instance or name) | `$case->is(...)` | `bool` |
 | Negate comparison | `$case->isNot(...)` | `bool` |
 | Group match | `$case->in([...])` | `bool` |
