@@ -25,7 +25,6 @@ final class InspectEnumCommand extends Command
 
     protected string $description = 'Inspect a ZeroBoiler smart enum — show all metadata in a table';
 
-    #[\Override]
     public function handle(): int
     {
         /** @var string $enumClass */

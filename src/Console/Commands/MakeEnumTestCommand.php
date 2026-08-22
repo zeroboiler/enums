@@ -25,7 +25,6 @@ final class MakeEnumTestCommand extends Command
 
     protected string $description = 'Generate Pest tests for a ZeroBoiler smart enum';
 
-    #[\Override]
     public function handle(): int
     {
         /** @var string $enumClass */

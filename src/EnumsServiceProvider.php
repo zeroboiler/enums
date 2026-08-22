@@ -30,7 +30,6 @@ final class EnumsServiceProvider extends ServiceProvider
     /**
      * Register the EnumManager as a singleton bound to 'zeroboiler.enum'.
      */
-    #[\Override]
     public function register(): void
     {
         $this->app->singleton('zeroboiler.enum', fn(): EnumManager => new EnumManager);
@@ -40,7 +39,6 @@ final class EnumsServiceProvider extends ServiceProvider
      * Register artisan commands, configure cache TTL for dev environments,
      * and register cache flush listeners for long-lived processes.
      */
-    #[\Override]
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
