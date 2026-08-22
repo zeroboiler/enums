@@ -65,7 +65,7 @@ final class EnumCast implements CastsAttributes
      * @param  array<string, mixed>  $attributes  All model attributes
      * @return T|null Returns null when $value is null or doesn't match any case
      */
-    public function get(object $model, string $key, int|string|null $value, array $attributes): ?BackedEnum
+    public function get(object $model, string $key, mixed $value, array $attributes): ?BackedEnum
     {
         if ($value === null) {
             return null;
@@ -97,7 +97,7 @@ final class EnumCast implements CastsAttributes
      *
      * @throws \InvalidArgumentException If value is not a valid enum, string, or int
      */
-    public function set(object $model, string $key, BackedEnum|int|string|null $value, array $attributes): int|string|null
+    public function set(object $model, string $key, mixed $value, array $attributes): int|string|null
     {
         if ($value === null) {
             return null;
