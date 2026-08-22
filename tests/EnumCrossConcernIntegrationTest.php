@@ -495,7 +495,7 @@ enum TestIconDefaultEnum: string
     case FAILED = 'failed';
 }
 
-enum TestLabelGenEnum
+enum TestLabelGenEnum: string
 {
     use HasEnumMetadata;
 

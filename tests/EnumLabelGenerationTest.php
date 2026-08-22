@@ -6,20 +6,7 @@
 
 declare(strict_types=1);
 
-use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
-use ZeroBoiler\Enums\EnumCache;
-
-/**
- * Tests for auto-generated label behavior across various naming conventions.
- *
- * The HasEnumMetadata trait generates labels from case names when no
- * #[Label] or #[EnumLabel] attribute is present. This test verifies
- * the label generation algorithm handles all common PHP naming styles.
- */
-
-// ─── Test Fixtures ───────────────────────────────────────────────────────────
-
-namespace ZeroBoiler\Enums\Tests\EnumLabelGenerationTest;
+namespace ZeroBoiler\Enums\Tests\EnumLabelGenerationTest {
 
 enum ScreamingSnakeStatus: string
 {
@@ -91,7 +78,17 @@ enum PureEnumColor
     case LIGHT_GREEN;
 }
 
-namespace ZeroBoiler\Enums\Tests;
+}
+
+namespace ZeroBoiler\Enums\Tests {
+use ZeroBoiler\Enums\EnumCache;
+use ZeroBoiler\Enums\Tests\EnumLabelGenerationTest\CamelCaseFeature;
+use ZeroBoiler\Enums\Tests\EnumLabelGenerationTest\NumberInName;
+use ZeroBoiler\Enums\Tests\EnumLabelGenerationTest\PascalCaseRole;
+use ZeroBoiler\Enums\Tests\EnumLabelGenerationTest\PureEnumColor;
+use ZeroBoiler\Enums\Tests\EnumLabelGenerationTest\ScreamingSnakeStatus;
+use ZeroBoiler\Enums\Tests\EnumLabelGenerationTest\ShortName;
+use ZeroBoiler\Enums\Tests\EnumLabelGenerationTest\SingleChar;
 
 // ─── Test Suite ───────────────────────────────────────────────────────────────
 
@@ -226,3 +223,4 @@ describe('Auto-generated label from case names', function () {
         });
     });
 });
+}

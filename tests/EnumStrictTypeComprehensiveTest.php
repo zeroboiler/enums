@@ -6,13 +6,6 @@
 
 declare(strict_types=1);
 
-use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
-use ZeroBoiler\Enums\EnumCache;
-use ZeroBoiler\Enums\Enums\EnumCastEdgeCasesTest\IntBackedStrictStatus;
-use ZeroBoiler\Enums\Enums\EnumStrictTypeComprehensiveTest\StringBackedColor;
-use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
-use ZeroBoiler\Enums\Rules\EnumRule;
-use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 
 /**
  * Comprehensive type safety tests verifying PHPStan Level 9 compliance.
@@ -28,7 +21,7 @@ use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 
 // ─── Test Fixtures ───────────────────────────────────────────────────────────
 
-namespace ZeroBoiler\Enums\Enums\EnumStrictTypeComprehensiveTest;
+namespace ZeroBoiler\Enums\Enums\EnumStrictTypeComprehensiveTest {
 
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
 final class Label
@@ -50,7 +43,9 @@ enum StringBackedColor: string
     case BLUE = 'blue';
 }
 
-namespace ZeroBoiler\Enums\Enums\EnumCastEdgeCasesTest;
+}
+
+namespace ZeroBoiler\Enums\Enums\EnumCastEdgeCasesTest {
 
 enum IntBackedStrictStatus: int
 {
@@ -61,7 +56,16 @@ enum IntBackedStrictStatus: int
     case ARCHIVED = 2;
 }
 
-namespace ZeroBoiler\Enums\Tests;
+}
+
+namespace ZeroBoiler\Enums\Tests {
+use ZeroBoiler\Enums\Concerns\HasEnumMetadata;
+use ZeroBoiler\Enums\EnumCache;
+use ZeroBoiler\Enums\Enums\EnumCastEdgeCasesTest\IntBackedStrictStatus;
+use ZeroBoiler\Enums\Enums\EnumStrictTypeComprehensiveTest\StringBackedColor;
+use ZeroBoiler\Enums\Exceptions\InvalidEnumException;
+use ZeroBoiler\Enums\Rules\EnumRule;
+use ZeroBoiler\Enums\Support\EnumMetadataResolver;
 
 // ─── Test Suite ───────────────────────────────────────────────────────────────
 
@@ -430,3 +434,4 @@ describe('PHPStan Level 9 Type Safety', function () {
         });
     });
 });
+}

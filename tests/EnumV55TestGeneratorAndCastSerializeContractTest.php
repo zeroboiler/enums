@@ -35,10 +35,10 @@ describe('EnumTestGenerator output contract', function () {
         $cases = UserStatus::cases();
         $caseCount = count($cases);
         // Each case gets 4 test blocks: label, color, icon, description
-        expect(substr_count($php, \"it('has a non-empty label for case\"))->toBe($caseCount);
-        expect(substr_count($php, \"it('has a string color for case\"))->toBe($caseCount);
-        expect(substr_count($php, \"it('returns a string or null icon for case\"))->toBe($caseCount);
-        expect(substr_count($php, \"it('returns a string or null description for case\"))->toBe($caseCount);
+        expect(substr_count($php, "it('has a non-empty label for case"))->toBe($caseCount);
+        expect(substr_count($php, "it('has a string color for case"))->toBe($caseCount);
+        expect(substr_count($php, "it('returns a string or null icon for case"))->toBe($caseCount);
+        expect(substr_count($php, "it('returns a string or null description for case"))->toBe($caseCount);
     });
 
     it('generates string-backed value type test for string-backed enums', function () {

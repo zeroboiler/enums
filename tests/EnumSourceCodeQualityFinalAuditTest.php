@@ -297,7 +297,8 @@ describe('Enums — Production Final Audit (Source Code Quality)', function () {
     // 13. EnumTestGenerator produces valid PHP
     // -----------------------------------------------------------------------
     it('EnumTestGenerator produces valid PHP content', function () {
-        $content = EnumTestGenerator::generate(\            \ZeroBoiler\Enums\Tests\Fixtures\PaymentStatus::class
+        $content = EnumTestGenerator::generate(
+            \ZeroBoiler\Enums\Tests\Fixtures\PaymentStatus::class
         );
 
         expect($content)->toBeString();
