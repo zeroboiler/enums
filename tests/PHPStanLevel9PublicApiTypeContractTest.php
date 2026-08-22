@@ -347,27 +347,27 @@ describe('PHPStan Level 9 — Public API Type Contract', function (): void {
 
     describe('InvalidEnumException message contracts', function (): void {
         it('forName() includes class and name in message', function (): void {
-            $e = InvalidEnumException::forName('App\Enums\UserStatus', 'NONEXISTENT');
+            $e = InvalidEnumException::forName('A'p'p\E'nums\UserStatus', 'NONEXISTENT');
             $msg = $e->getMessage();
             expect($msg)->toContain('NONEXISTENT');
             expect($msg)->toContain('App\\Enums\\UserStatus');
         });
 
         it('value() includes value in message', function (): void {
-            $e = InvalidEnumException::value('App\Enums\UserStatus', 'invalid_value');
+            $e = InvalidEnumException::value('A'p'p\E'nums\UserStatus', 'invalid_value');
             $msg = $e->getMessage();
             expect($msg)->toContain('invalid_value');
             expect($msg)->toContain('App\\Enums\\UserStatus');
         });
 
         it('value() with null displays "null" in message', function (): void {
-            $e = InvalidEnumException::value('App\Enums\UserStatus', null);
+            $e = InvalidEnumException::value('A'p'p\E'nums\UserStatus', null);
             $msg = $e->getMessage();
             expect($msg)->toContain('null');
         });
 
         it('__toString() returns class name and message', function (): void {
-            $e = InvalidEnumException::forName('App\Enums\UserStatus', 'BAD');
+            $e = InvalidEnumException::forName('A'p'p\E'nums\UserStatus', 'BAD');
             $str = (string) $e;
             expect($str)->toContain('InvalidEnumException');
             expect($str)->toContain('BAD');
@@ -413,7 +413,7 @@ describe('PHPStan Level 9 — Public API Type Contract', function (): void {
         it('non-nullable rule rejects null', function (): void {
             $rule = EnumRule::for(OrderStatus::class);
             $failed = false;
-            $rule->validate('status', null, function (string $message): void use (&$failed) {
+            $rule->validate('status', null, function (string $message) use (&$failed): void {
                 $failed = true;
                 expect($message)->toBeString();
             });
@@ -423,7 +423,7 @@ describe('PHPStan Level 9 — Public API Type Contract', function (): void {
         it('nullable rule accepts null', function (): void {
             $rule = EnumRule::for(OrderStatus::class)->nullable();
             $failed = false;
-            $rule->validate('status', null, function (string $message): void use (&$failed) {
+            $rule->validate('status', null, function (string $message) use (&$failed): void {
                 $failed = true;
             });
             expect($failed)->toBeFalse();
@@ -432,7 +432,7 @@ describe('PHPStan Level 9 — Public API Type Contract', function (): void {
         it('rejects wrong PHP type for int-backed enum', function (): void {
             $rule = EnumRule::for(IntBackedPriority::class);
             $failed = false;
-            $rule->validate('priority', 'not-an-int', function (string $message): void use (&$failed) {
+            $rule->validate('priority', 'not-an-int', function (string $message) use (&$failed): void {
                 $failed = true;
             });
             expect($failed)->toBeTrue();
@@ -441,7 +441,7 @@ describe('PHPStan Level 9 — Public API Type Contract', function (): void {
         it('rejects int for string-backed enum', function (): void {
             $rule = EnumRule::for(OrderStatus::class);
             $failed = false;
-            $rule->validate('status', 123, function (string $message): void use (&$failed) {
+            $rule->validate('status', 123, function (string $message) use (&$failed): void {
                 $failed = true;
             });
             expect($failed)->toBeTrue();

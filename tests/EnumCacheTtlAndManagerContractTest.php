@@ -199,7 +199,7 @@ describe('EnumMetadataResolver cache integration', function () {
     it('resolves metadata from class-level attributes', function () {
         $meta = EnumMetadataResolver::resolve(CacheTtlStringEnum::class);
 
-n        expect($meta['labels']['active'])->toBe('Active');
+        expect($meta['labels']['active'])->toBe('Active');
         expect($meta['labels']['banned'])->toBe('Banned');
     });
 

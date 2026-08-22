@@ -50,14 +50,14 @@ describe('EnumMetadataResolver contract and edge cases', function () {
         it('setTtl accepts 0 to disable caching', function () {
             EnumCache::getInstance()->setTtl(0);
 
-n            expect(EnumCache::getInstance()->has(IntBackedPriority::class))->toBeFalse();
+            expect(EnumCache::getInstance()->has(IntBackedPriority::class))->toBeFalse();
         });
 
         it('flush clears all cache entries', function () {
             EnumMetadataResolver::resolve(IntBackedPriority::class);
             EnumMetadataResolver::resolve(PureFeatureFlag::class);
 
-n            EnumCache::flush();
+            EnumCache::flush();
 
             expect(EnumCache::getInstance()->has(IntBackedPriority::class))->toBeFalse();
             expect(EnumCache::getInstance()->has(PureFeatureFlag::class))->toBeFalse();
@@ -67,7 +67,7 @@ n            EnumCache::flush();
             EnumMetadataResolver::resolve(IntBackedPriority::class);
             EnumMetadataResolver::resolve(PureFeatureFlag::class);
 
-n            EnumCache::getInstance()->clearClass(IntBackedPriority::class);
+            EnumCache::getInstance()->clearClass(IntBackedPriority::class);
 
             expect(EnumCache::getInstance()->has(IntBackedPriority::class))->toBeFalse();
             expect(EnumCache::getInstance()->has(PureFeatureFlag::class))->toBeTrue();
@@ -164,7 +164,7 @@ n            EnumCache::getInstance()->clearClass(IntBackedPriority::class);
         it('notIn() is the exact negation of in()', function () {
             $cases = [UserStatus::ACTIVE, UserStatus::INACTIVE];
 
-n            foreach (UserStatus::cases() as $case) {
+            foreach (UserStatus::cases() as $case) {
                 expect($case->notIn($cases))->toBe(!$case->in($cases));
             }
         });

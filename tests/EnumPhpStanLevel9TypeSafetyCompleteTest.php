@@ -421,31 +421,31 @@ final class EnumPhpStanLevel9TypeSafetyCompleteTest
 
         // Valid string value passes
         $passed = true;
-        $fail = static function (string $_): void use (&$passed) { $passed = false; };
+        $fail = static function (string $_) use (&$passed): void { $passed = false; };
         $rule->validate('status', 'active', $fail);
         assert($passed === true);
 
         // Invalid string value fails
         $failed = false;
-        $fail = static function (string $_): void use (&$failed) { $failed = true; };
+        $fail = static function (string $_) use (&$failed): void { $failed = true; };
         $rule->validate('status', 'nonexistent', $fail);
         assert($failed === true);
 
         // Int value fails type check (string enum, int given)
         $failed = false;
-        $fail = static function (string $_): void use (&$failed) { $failed = true; };
+        $fail = static function (string $_) use (&$failed): void { $failed = true; };
         $rule->validate('status', 42, $fail);
         assert($failed === true);
 
         // Nullable: null passes
         $passed = true;
-        $fail = static function (string $_): void use (&$passed) { $passed = false; };
+        $fail = static function (string $_) use (&$passed): void { $passed = false; };
         $nullableRule->validate('status', null, $fail);
         assert($passed === true);
 
         // Non-nullable: null fails
         $failed = false;
-        $fail = static function (string $_): void use (&$failed) { $failed = true; };
+        $fail = static function (string $_) use (&$failed): void { $failed = true; };
         $rule->validate('status', null, $fail);
         assert($failed === true);
     }
@@ -463,19 +463,19 @@ final class EnumPhpStanLevel9TypeSafetyCompleteTest
 
         // Valid int passes
         $passed = true;
-        $fail = static function (string $_): void use (&$passed) { $passed = false; };
+        $fail = static function (string $_) use (&$passed): void { $passed = false; };
         $rule->validate('priority', 1, $fail);
         assert($passed === true);
 
         // String value fails type check (int enum, string given)
         $failed = false;
-        $fail = static function (string $_): void use (&$failed) { $failed = true; };
+        $fail = static function (string $_) use (&$failed): void { $failed = true; };
         $rule->validate('priority', '1', $fail);
         assert($failed === true);
 
         // Out-of-range int fails
         $failed = false;
-        $fail = static function (string $_): void use (&$failed) { $failed = true; };
+        $fail = static function (string $_) use (&$failed): void { $failed = true; };
         $rule->validate('priority', 999, $fail);
         assert($failed === true);
     }
@@ -493,19 +493,19 @@ final class EnumPhpStanLevel9TypeSafetyCompleteTest
 
         // Valid case name passes
         $passed = true;
-        $fail = static function (string $_): void use (&$passed) { $passed = false; };
+        $fail = static function (string $_) use (&$passed): void { $passed = false; };
         $rule->validate('flag', 'DARK_MODE', $fail);
         assert($passed === true);
 
         // Invalid case name fails
         $failed = false;
-        $fail = static function (string $_): void use (&$failed) { $failed = true; };
+        $fail = static function (string $_) use (&$failed): void { $failed = true; };
         $rule->validate('flag', 'NONEXISTENT', $fail);
         assert($failed === true);
 
         // Int value fails (pure enums use string case names)
         $failed = false;
-        $fail = static function (string $_): void use (&$failed) { $failed = true; };
+        $fail = static function (string $_) use (&$failed): void { $failed = true; };
         $rule->validate('flag', 42, $fail);
         assert($failed === true);
     }
