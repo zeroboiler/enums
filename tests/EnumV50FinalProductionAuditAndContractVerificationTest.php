@@ -401,7 +401,7 @@ describe('V50 Final Production Audit — Enum Package', function () {
             $failed = false;
             try {
                 $rule->validate('status', null, function (string $attr, string $msg = null): void {});
-            } catch (\Throwable) {
+            } catch (\Throwable $e) {
                 $failed = true;
             }
             expect($failed)->toBeFalse();

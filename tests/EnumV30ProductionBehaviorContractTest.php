@@ -350,7 +350,7 @@ describe('V30 Production Behavior Contract', function () {
             $cast = new EnumCast(UserStatus::class);
             $result = $cast->get(
                 new class {
-                    public array $attributes = [];
+                    public $attributes = [];
                 },
                 'status',
                 'active',
@@ -364,7 +364,7 @@ describe('V30 Production Behavior Contract', function () {
             $cast = new EnumCast(UserStatus::class);
             $result = $cast->get(
                 new class {
-                    public array $attributes = [];
+                    public $attributes = [];
                 },
                 'status',
                 null,
@@ -378,7 +378,7 @@ describe('V30 Production Behavior Contract', function () {
             $cast = new EnumCast(UserStatus::class);
             $result = $cast->set(
                 new class {
-                    public array $attributes = [];
+                    public $attributes = [];
                 },
                 'status',
                 UserStatus::ACTIVE,
@@ -392,7 +392,7 @@ describe('V30 Production Behavior Contract', function () {
             $cast = new EnumCast(IntBackedPriority::class);
             $result = $cast->set(
                 new class {
-                    public array $attributes = [];
+                    public $attributes = [];
                 },
                 'priority',
                 3,

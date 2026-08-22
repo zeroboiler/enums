@@ -53,7 +53,7 @@ describe('Issue #7: EnumCast::set() throws on invalid values', function (): void
             );
             // If we get here without throwing, the value should NOT be the invalid input
             expect($result)->not->toBe('definitely_not_valid');
-        } catch (InvalidArgumentException) {
+        } catch (InvalidArgumentException $e) {
             $threw = true;
         }
 

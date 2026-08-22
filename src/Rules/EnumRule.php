@@ -44,7 +44,7 @@ final readonly class EnumRule implements ValidationRule
      */
     public function __construct(
         private readonly string $enumClass,
-        private readonly bool $nullable = false,
+        private bool $nullable = false,
     ) {}
 
     /**

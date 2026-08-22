@@ -21,9 +21,9 @@ use UnitEnum;
  */
 final class InspectEnumCommand extends Command
 {
-    protected string $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
+    protected $signature = 'zeroboiler:enum-inspect {class : The enum class FQN}';
 
-    protected string $description = 'Inspect a ZeroBoiler smart enum — show all metadata in a table';
+    protected $description = 'Inspect a ZeroBoiler smart enum — show all metadata in a table';
 
     public function handle(): int
     {
@@ -81,7 +81,7 @@ final class InspectEnumCommand extends Command
             $result = $case->$method();
 
             return is_string($result) ? $result : null;
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             return null;
         }
     }
